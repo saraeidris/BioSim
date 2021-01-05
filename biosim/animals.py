@@ -6,10 +6,10 @@ class Animals:
     def __init__(self, age):
         self.age = age
 
-    def setAge(self, age):
+    def set_age(self, age):
         self.age = age
 
-    def getAge(self):
+    def get_age(self):
         return self.age
 
 
@@ -29,13 +29,13 @@ class Herbs(Animals):
         super().__init__(age)
         self.weight = rand.gauss(self.w_birth, self.sigma_birth)
 
-    def setWeight(self, weight):
+    def set_weight(self, weight):
         self.weight = weight
 
-    def getWeight(self):
+    def get_weight(self):
         return self.weight
 
-    def Fitness(self):
+    def get_fitness(self):
         if self.weight <= 0:
             return 0
         else:
@@ -43,5 +43,5 @@ class Herbs(Animals):
              (1 / (1 + exp(self.phi_weight * (self.weight - self.w_half)))))
             return fitness
 
-    def Death(self):
-        if Fitness() == 0:
+    def is_dead(self):
+            return self.get_weight() == 0

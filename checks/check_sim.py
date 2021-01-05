@@ -39,11 +39,12 @@ if __name__ == '__main__':
                            'age': 5,
                            'weight': 20}
                           for _ in range(150)]}]
-    ini_carns = [{'loc': (10, 10),
-                  'pop': [{'species': 'Carnivore',
-                           'age': 5,
-                           'weight': 20}
-                          for _ in range(40)]}]
+
+    # ini_carns = [{'loc': (10, 10),
+    #               'pop': [{'species': 'Carnivore',
+    #                        'age': 5,
+    #                        'weight': 20}
+    #                       for _ in range(40)]}]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
                  seed=123456,
