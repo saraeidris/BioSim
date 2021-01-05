@@ -1,3 +1,7 @@
+from biosim.Landscape import Highland
+from biosim.animals import Herbs
+
+
 class BioSim:
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
@@ -18,30 +22,73 @@ class BioSim:
         If img_base is None, no figures are written to file. Filenames are formed as
             ’{}_{:05d}.{}’.format(img_base, img_no, img_fmt)
         where img_no are consecutive image numbers starting from 0. img_base should contain a path and beginning of a file name. """
+
         self.island_map = island_map
-        self.ini_pop = ini_pop
+        self.ini_pop = self.create_population(ini_pop)
         self.seed = seed
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs
         self.img_base = img_base
         self.img_fmt =img_fmt
+        self.carnivore_params =  {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
+                         'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
+                         'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
+                         'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
+        self.herbivore_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
+                         'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
+                         'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+                         'omega': 0.4, 'F': 10.0}
+        self.lowland_params = {'f_max': 800}
+        self.highland_params = {'f_max': 300}
+        self.island = Highland(None, None, None, None, self.highland_params['f_max'])
+
+    def create_population(self, init_pop):
+        animals = []
+        for cell in init_pop:
+            for animal in cell:
+                if animal['species'] == 'Herbivore':
+                    animals.append(Herbs(animal['age'],
+                                         animal['weight'],
+                                         self.herbivore_params['sigma_birth'],
+                                         self.herbivore_params['phi_age'],
+                                         self.herbivore_params['a_half'],
+                                         self.herbivore_params['phi_weight'],
+                                         self.herbivore_params['w_half']))
+        return animals
 
     def set_animal_parameters(self, species, params):
-        self.species = species
-        self.params = params
-
-
         """
         Set parameters for animal species.
         :param species: String, name of animal species
-        :param params: Dict with valid parameter specification for species 
+        :param params: Dict with valid parameter specification for species
         """
+        if species == 'Carnivore':
+            self.carnivore_params = self.merge_params(self.carnivore_params, params)
+        elif species == 'Herbivore':
+            self.herbivore_params = self.merge_params(self.herbivore_params, params)
+        else:
+            raise ValueError
+
+    #Hjelpemetode bør være privat
+    def merge_params(self, params, params2):
+       return {**params, **params2}
+
+
+
+    #Må fikses
     def set_landscape_parameters(self, landscape, params):
         """
         Set parameters for landscape type.
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape """
+        if landscape == 'L':
+            self.lowland_params = self.merge_params(self.lowland_params, params)
+        if landscape == 'H':
+            self.highland_params = self.merge_params(self.highland_params, params)
+        raise ValueError
+
+
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
         Run simulation while visualizing the result.
@@ -50,6 +97,12 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
+
+    def feeding(self, species):
+        isinstance()
+
+
+
 
     def add_population(self, population):
         """

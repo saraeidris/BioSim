@@ -3,7 +3,7 @@
 import textwrap
 import matplotlib.pyplot as plt
 
-from biosim.simulation import BioSim
+from biosim.BioSim import BioSim
 
 """
 Compatibility check for BioSim simulations.
@@ -60,5 +60,5 @@ if __name__ == '__main__':
     sim.set_landscape_parameters('L', {'f_max': 700})
 
     sim.simulate(num_years=100, vis_years=1)
-    sim.add_population(population=ini_carns)
+    #sim.add_population(population=ini_carns)
     sim.simulate(num_years=100, vis_years=1)
