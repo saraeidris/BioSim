@@ -56,19 +56,13 @@ class Herbs(Animals):
                        (1 / (1 + exp(self.phi_weight * (self.weight - self.w_half)))))
             return fitness
 
-    # def mate(self):
-    #     born_herbs = []
-    #     if len(self.ini_pop) > 1:
-    #         for _ in self.ini_pop:
-    #             if not self.weight < self.zeta(self.w_birth + self.sigma_birth):
-    #                 if self.gamma * self.get_fitness() * (len(self.ini_pop) - 1) < random.random():
-    #                     born_herbs.append(self.set_newborn())
-    #
-    # def set_newborn(self):
-    #     return {'loc': self.ini_pop[0]['loc'],
-    #             'pop': {'species': 'Herbivore',
-    #                     'age': 0,
-    #                     'weight': random.gauss(self.w_birth, self.sigma_birth)}}
+    def mate(self, ini_pop):
+        born_herbs = []
+        if len(ini_pop) > 1:
+            for _ in ini_pop:
+                if not self.weight < self.zeta(self.w_birth + self.sigma_birth):
+                    if self.gamma * self.get_fitness() * (len(ini_pop) - 1) < random.random():
+
 
     # def is_dead(self):
     #     if self.get_weight == 0:

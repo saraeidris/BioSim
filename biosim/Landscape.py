@@ -1,11 +1,14 @@
-
+import random
 
 class Landscape:
-    def __init__(self, top, left, right, bottom):
+    def __init__(self, top, left, right, bottom, num_animals, w_birth, sigma_birth):
         self.top = top
         self.left = left
         self.right = right
         self.bottom = bottom
+        self.num_animals = num_animals
+        self.w_birth = w_birth
+        self.sigma_birth = sigma_birth
 
     def get_top(self):
         return self.top
@@ -22,6 +25,12 @@ class Landscape:
     def count_num_animals(self):
         return self.num_animals
 
+
+    def set_newborn(self, ini_pop):
+        return {'loc': ini_pop[0]['loc'],
+                'pop': {'species': 'Herbivore',
+                        'age': 0,
+                        'weight': random.gauss(self.w_birth, self.sigma_birth)}}
 
 class Water(Landscape):
     pass
@@ -41,6 +50,7 @@ class Dessert(Landscape):
     @staticmethod
     def is_habitable():
         return True
+
 
 
 
