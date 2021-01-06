@@ -1,3 +1,5 @@
+
+
 class Landscape:
     def __init__(self, top, left, right, bottom):
         self.top = top
@@ -16,6 +18,9 @@ class Landscape:
 
     def get_bottom(self):
         return self.bottom
+
+    def count_num_animals(self):
+        return self.num_animals
 
 
 class Water(Landscape):
@@ -36,6 +41,7 @@ class Dessert(Landscape):
     @staticmethod
     def is_habitable():
         return True
+
 
 
 class Highland(Landscape):

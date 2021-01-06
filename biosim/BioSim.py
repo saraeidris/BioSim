@@ -60,7 +60,10 @@ class BioSim:
                                          self.herbivore_params['phi_weight'],
                                          self.herbivore_params['w_half'],
                                          self.herbivore_params['beta'],
-                                         self.herbivore_params['F']))
+                                         self.herbivore_params['F'],
+                                         self.herbivore_params['gamma'],
+                                         self.herbivore_params['zeta'],
+                                         self.herbivore_params['w_birth']))
         print(animals)
         return animals
 
@@ -112,6 +115,15 @@ class BioSim:
                 print(animal.get_fitness())
                 print(animal.get_age())
 
+
+
+    def grow(self):
+        self.island.set_fodder(self.highland_params['f_max'])
+
+    def age(self):
+        for animal in self.ini_pop:
+            animal.set_age(animal.get_age() + 1)
+
     def feeding(self):
         herbs = list(filter(lambda obj: isinstance(obj, Herbs), self.ini_pop))
         new_herbs_list = []
@@ -125,13 +137,6 @@ class BioSim:
         # Do carnivore stuff
 
         self.ini_pop = new_herbs_list
-
-    def grow(self):
-        self.island.set_fodder(self.highland_params['f_max'])
-
-    def age(self):
-        for animal in self.ini_pop:
-            animal.set_age(animal.get_age() + 1)
 
     def add_population(self, population):
         """
