@@ -15,7 +15,7 @@ class Animals:
 
 class Herbs(Animals):
     def __init__(self, age, weight, cell, sigma_birth, phi_age, a_half, phi_weight, w_half, beta, F, gamma, zeta,
-                 w_birth):
+                 w_birth, eta):
         super().__init__(age)
         self.cell = cell
         self.sigma_birth = sigma_birth
@@ -29,6 +29,7 @@ class Herbs(Animals):
         self.gamma = gamma
         self.zeta = zeta
         self.w_birth = w_birth
+        self.eta = eta
 
     def set_weight(self, weight):
         self.weight = weight
@@ -62,6 +63,10 @@ class Herbs(Animals):
             for _ in ini_pop:
                 if not self.weight < self.zeta(self.w_birth + self.sigma_birth):
                     if self.gamma * self.get_fitness() * (len(ini_pop) - 1) < random.random():
+
+    def weightloss(self):
+        self.weight -= self.eta*self.weight
+
 
 
     # def is_dead(self):

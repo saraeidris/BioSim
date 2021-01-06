@@ -1,6 +1,6 @@
 import random
 
-from biosim.Landscape import Highland
+from biosim.landscape import Highland
 from biosim.animals import Herbs
 
 
