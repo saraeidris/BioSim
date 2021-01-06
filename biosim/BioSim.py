@@ -25,7 +25,6 @@ class BioSim:
             ’{}_{:05d}.{}’.format(img_base, img_no, img_fmt)
         where img_no are consecutive image numbers starting from 0. img_base should contain a path and beginning of a file name. """
         self.island_map = island_map
-        self.seed = seed
         random.seed(seed)
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
@@ -44,6 +43,7 @@ class BioSim:
         self.highland_params = {'f_max': 300}
         self.island = Highland(None, None, None, None, self.highland_params['f_max'])
         self.ini_pop = self.create_population(ini_pop)
+
 
     def create_population(self, init_pop):
         animals = []
@@ -109,7 +109,7 @@ class BioSim:
         for _ in range(num_years):
             self.feeding()
             self.grow()
-            self.age()
+            self.ages()
             for animal in self.ini_pop:
                 print(animal.get_weight())
                 print(animal.get_fitness())
@@ -120,7 +120,7 @@ class BioSim:
     def grow(self):
         self.island.set_fodder(self.highland_params['f_max'])
 
-    def age(self):
+    def ages(self):
         for animal in self.ini_pop:
             animal.set_age(animal.get_age() + 1)
 
