@@ -1,6 +1,3 @@
-#import random
-from .animals import Animals
-
 
 class Landscape:
     d_landscape = {'f_max_h': 300, 'f_max_l': 800}
@@ -30,20 +27,26 @@ class Landscape:
         return self.bottom
 
     def num_herbs(self):
-        return len(self.ini_pop)
+        return len(self.ini_pop)  # bytt ut
 
-    @staticmethod
-    def set_newborn(self, ini_pop):
-        new_herbs = []
-        for animal in ini_pop:
-            if animal.mate:
-                new_herbs.append(animal.__class__())
+    def give_birth(self):
+        if len(self.ini_pop) > 1:  # bytt ut
+            offspring_herbs = []
+            for herb in self.ini_pop:  # bytt ut
+                offspring = herb.mate(self.ini_pop)  # bytt ut
+                if offspring:
+                    offspring_herbs.append(offspring)
 
     def death(self, ini_pop):
         def survivors(pop):
             return [animal for animal in pop if not animal.dies()]
 
         self.ini_pop = survivors(ini_pop)
+
+    def weight_loss(self):
+        for animal in self.ini_pop:
+            animal.lose_weight()
+            animal.get_fitness()
 
 
 class Water(Landscape):

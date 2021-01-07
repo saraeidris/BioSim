@@ -42,12 +42,20 @@ class BioSim:
                                  'omega': 0.4, 'F': 10.0}
         self.lowland_params = {'f_max': 800}
         self.highland_params = {'f_max': 300}
-        self.island = Highland(None, None, None, None, self.highland_params['f_max'],
-                               self.herbivore_params['w_birth'],
-                               self.herbivore_params['sigma_birth'],
-                               self.ini_pop)
+        self.island = island_map
+        # Highland(None, None, None, None, self.highland_params['f_max'],
+                               # self.herbivore_params['w_birth'],
+                               # self.herbivore_params['sigma_birth'],
+                               # self.ini_pop)
         self.ini_pop = self.create_population(ini_pop)
 
+    def annual_cycle(self):
+        self.island[35].update_fodder()
+        self.island[35].eat()
+        self.island[35].mate()
+        self.island[35].ages()
+        self.island[35].lose_weight()
+        self.island[35].death()
 
 
     def create_population(self, init_pop):
@@ -131,25 +139,29 @@ class BioSim:
 
         self.ini_pop = new_herbs_list
 
-    def add_population(self, population):
-
-        """
-        Add a population to the island
-        :param population: List of """
+    # def add_population(self, population):
+    #
+    #     """
+    #     Add a population to the island
+    #     :param population: List of """
 
     # @property
     # def year(self):
     # """Last year simulated."""
 
     # @property
-    # def num_animals(self):
-    # """Total number of animals
-    # dictionaries specifying population
-    # on island."""
+    # def num_animals(self, ini_pop):
     #
-    # @property
-    # def num_animals_per_species(self):
-    # """Number of animals per species in island, as dictionary."""
+    #     """
+    #     Total number of animals
+    #     dictionaries specifying population
+    #     on island.
+    #     """
+    #     return ini_pop
     #
+    #  @property
+    #  def num_animals_per_species(self):
+    #  """Number of animals per species in island, as dictionary."""
+
     # def make_movie(self):
     # """Create MPEG4 movie from visualization images saved."""

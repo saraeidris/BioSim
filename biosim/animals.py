@@ -24,9 +24,25 @@ class Animals:
 
     def ages(self):
         self.age += 1
+       # self.get_fitness()
 
     def get_age(self):
         return self.age
+
+    def get_fitness(self):
+        if self.weight <= 0:
+            return 0
+        else:
+            fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
+                       (1 / (1 + exp(self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
+            return fitness
+
+    def set_weight(self):
+        if self.weight is None:
+            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+
+    def get_weight(self):
+        return self.weight
 
     @classmethod
     def set_params(cls, new_params):
@@ -35,6 +51,13 @@ class Animals:
                 raise KeyError('Invalid parameter name:' + key)
             if not isinstance(new_params[key], int) or isinstance(new_params[key], float):
                 raise ValueError('Parameters must be integers or floats')
+
+
+    def lose_weight(self):
+        self.weight -= self.params['eta'] * self.weight
+
+    def dies(self):
+        return self.get_weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
 
 
 class Herbs(Animals):
@@ -48,13 +71,6 @@ class Herbs(Animals):
         self.params = params
         self.island = island
 
-    def set_weight(self):
-        if self.weight is None:
-            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-
-    def get_weight(self):
-        return self.weight
-
     def eat(self):
         food = self.island.get_fodder()
         if food >= 0:
@@ -63,29 +79,20 @@ class Herbs(Animals):
             else:
                 self.island.set_fodder(food - self.params['F'])
                 self.weight += (self.params['F'] * self.params['beta'])
+            self.get_fitness()
         else:
             raise ValueError('Fodder value must be zero or positive')
 
-    def get_fitness(self):
-        if self.weight <= 0:
-            return 0
-        else:
-            fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
-                       (1 / (1 + exp(self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
-            return fitness
-
     def mate(self, ini_pop):
-        if len(ini_pop) > 1:
-            for _ in ini_pop:
-                if not self.weight < self.params['zeta'](self.params['w_birth'] + self.params['sigma_birth']):
-                    if random.random() < self.params['gamma'] * self.get_fitness() * (len(ini_pop) - 1):
-                        return True
-                    return False
-        else:
-            return False
+        if self.weight < self.params['zeta']*(self.params['w_birth'] + self.params['sigma_birth']):
+            return
+        if random.random() < self.params['gamma'] * self.get_fitness() * (len(ini_pop) - 1):  # bytt len(ini_pop) med num_animals property
+            offspring = self.__class__()
+            if self.weight < (self.params['xi']*offspring.weight):
+                return
+            self.weight -= (self.params['xi']*offspring.weight)
+            self.get_fitness()
+            return offspring
 
-    def weight_loss(self):
-        self.weight -= self.params['eta'] * self.weight
 
-    def dies(self):
-        return self.get_weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
+
