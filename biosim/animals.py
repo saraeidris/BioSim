@@ -4,18 +4,17 @@ from math import exp
 
 class Animals:
 
-    herbs_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
-                    'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
-                    'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
-                    'omega': 0.4, 'F': 10.0, 'weight': None}
-
-    carns_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
-                    'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
-                    'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
-                    'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0, 'weight': None}
+    # carns_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
+    #                 'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
+    #                 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
+    #                 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
     def __init__(self, age=0, weight=None):
         self.age = age
+        if weight is None:
+            self.weight = random.gauss(self.w_birth, self.sigma_birth)
+
+
 
     def ages(self):
         self.age += 1
@@ -41,24 +40,17 @@ class Animals:
 
 
 class Herbs(Animals):
-    def __init__(self, age, cell, herbivore_params):
+    d_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
+                    'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
+                    'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+                    'omega': 0.4, 'F': 10.0}
+    parameters = None
+
+    def __init__(self, age, cell):
         super().__init__(age)
         self.cell = cell
-        self.sigma_birth = herbivore_params['sigma_birth']
-        self.phi_age = herbivore_params['phi_age']
-        self.a_half = herbivore_params['a_half']
-        self.phi_weight = herbivore_params['phi_weight']
-        self.w_half = herbivore_params['w_half']
-        self.weight = herbivore_params['weight']
-        self.beta = herbivore_params['beta']
-        self.F = herbivore_params['F']
-        self.gamma = herbivore_params['gamma']
-        self.zeta = herbivore_params['zeta']
-        self.w_birth = herbivore_params['w_birth']
-        self.omega = herbivore_params['omega']
-        self.eta = herbivore_params['eta']
 
-    def b_weight(self):
+    def weight(self):
         if self.weight is None:
             self.weight = random.gauss(self.w_birth, self.sigma_birth)
 

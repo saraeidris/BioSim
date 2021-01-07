@@ -29,6 +29,9 @@ class Landscape:
 
     def set_newborn(self):
         return self.__class__()
+        for a in animals:
+            if a.birth:
+                animals.append(a.__class__())
         # return {'loc': ini_pop[0]['loc'],
         #         'pop': {'species': 'Herbivore',
         #                 'age': 0,
