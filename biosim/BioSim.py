@@ -31,6 +31,7 @@ class BioSim:
         self.hist_specs = hist_specs
         self.img_base = img_base
         self.img_fmt = img_fmt
+        self.ini_pop = ini_pop
         self.carnivore_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
                                  'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
                                  'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
@@ -43,18 +44,21 @@ class BioSim:
         self.highland_params = {'f_max': 300}
         self.island = Highland(None, None, None, None, self.highland_params['f_max'],
                                self.herbivore_params['w_birth'],
-                               self.herbivore_params['sigma_birth'])
+                               self.herbivore_params['sigma_birth'],
+                               self.ini_pop)
         self.ini_pop = self.create_population(ini_pop)
+
+
 
     def create_population(self, init_pop):
         animals = []
         for cell in init_pop:
             for animal in cell['pop']:
                 if animal['species'] == 'Herbivore':
-                    animals.append(Herbs(animal['age'],
-                                         animal['weight'],
+                    animals.append(Herbs(
+                        self.herbivore_params, self.island, animal['age'],
+                                         animal['weight']))
                                          # Må fikses på når hele øya er på plass
-                                         self.island))
         print(animals)
         return animals
 
@@ -69,7 +73,7 @@ class BioSim:
         elif species == 'Herbivore':
             self.herbivore_params = self.merge_params(self.herbivore_params, params)
         else:
-            raise KeyError
+            raise ValueError
 
     # Hjelpemetode bør være privat
     def merge_params(self, params, params2):
@@ -86,7 +90,7 @@ class BioSim:
         elif landscape == 'H':
             self.highland_params = self.merge_params(self.highland_params, params)
         else:
-            raise KeyError
+            raise ValueError
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -102,12 +106,12 @@ class BioSim:
             self.grow()
             self.ages()
             for animal in self.ini_pop:
-                print(animal.get_weight())
+                print(animal.weight())
                 print(animal.get_fitness())
                 print(animal.get_age())
 
     def grow(self):
-        self.island.set_fodder(self.highland_params['f_max'])
+        self.island.update_fodder()
 
     def ages(self):
         for animal in self.ini_pop:

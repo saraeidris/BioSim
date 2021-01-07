@@ -1,8 +1,11 @@
 #import random
+from .animals import Animals
 
 
 class Landscape:
-    def __init__(self, top, left, right, bottom, w_birth, sigma_birth):
+    d_landscape = {'f_max_h': 300, 'f_max_l': 800}
+
+    def __init__(self, top, left, right, bottom, w_birth, sigma_birth, ini_pop):
         self.top = top
         self.left = left
         self.right = right
@@ -11,6 +14,8 @@ class Landscape:
         self.sigma_birth = sigma_birth
         self.w_birth = w_birth
         self.sigma_birth = sigma_birth
+        self.ini_pop = ini_pop
+        self.fodder = 0
 
     def get_top(self):
         return self.top
@@ -25,23 +30,20 @@ class Landscape:
         return self.bottom
 
     def num_herbs(self):
-        return len(self.herb_pop)
+        return len(self.ini_pop)
 
-    def set_newborn(self):
-        return self.__class__()
-        for a in animals:
-            if a.birth:
-                animals.append(a.__class__())
-        # return {'loc': ini_pop[0]['loc'],
-        #         'pop': {'species': 'Herbivore',
-        #                 'age': 0,
-        #                 'weight': random.gauss(self.w_birth, self.sigma_birth)}}
+    @staticmethod
+    def set_newborn(self, ini_pop):
+        new_herbs = []
+        for animal in ini_pop:
+            if animal.mate:
+                new_herbs.append(animal.__class__())
 
     def death(self, ini_pop):
         def survivors(pop):
             return [animal for animal in pop if not animal.dies()]
 
-        self.herb_pop = survivors(ini_pop)
+        self.ini_pop = survivors(ini_pop)
 
 
 class Water(Landscape):
@@ -65,11 +67,15 @@ class Dessert(Landscape):
 
 
 class Highland(Landscape):
-    f_high = 300.0
+    d_landscape = None
 
-    def __init__(self, top, left, right, bottom, fodder, w_birth, sigma_birth):
-        super().__init__(top, left, right, bottom, w_birth, sigma_birth)
+    def __init__(self, d_landscape, top, left, right, bottom, w_birth, sigma_birth, ini_pop, fodder=300):
+        super().__init__(top, left, right, bottom, w_birth, sigma_birth, ini_pop)
+        self.d_landscape = d_landscape
         self.fodder = fodder
+
+    def update_fodder(self, fodder):
+        self.fodder = self.d_landscape['f_max_h']
 
     def set_fodder(self, fodder):
         self.fodder = fodder
@@ -79,14 +85,14 @@ class Highland(Landscape):
 
 
 class Lowland(Landscape):
-    f_low = 800.0
+    d_landscape = None
 
-    def __init__(self, top, left, right, bottom, fodder, w_birth, sigma_birth):
-        super().__init__(top, left, right, bottom, w_birth, sigma_birth)
+    def __init__(self, top, left, right, bottom, w_birth, sigma_birth, ini_pop, fodder=800):
+        super().__init__(top, left, right, bottom, w_birth, sigma_birth, ini_pop)
         self.fodder = fodder
 
-    def set_fodder(self, fodder):
-        self.fodder = fodder
+    def update_fodder(self):
+        self.fodder = self.d_landscape['f_max_l']
 
     def get_fodder(self):
         return self.fodder
