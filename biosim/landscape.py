@@ -1,5 +1,5 @@
 import random
-from .animals import Herbs
+
 
 class Landscape:
     def __init__(self, top, left, right, bottom, w_birth, sigma_birth, herb_pop):
@@ -12,7 +12,6 @@ class Landscape:
         self.herb_pop = herb_pop
         self.w_birth = w_birth
         self.sigma_birth = sigma_birth
-        self.herb_pop = herb_pop
 
     def get_top(self):
         return self.top
@@ -26,11 +25,8 @@ class Landscape:
     def get_bottom(self):
         return self.bottom
 
-    def num_herbs(self, ini_pop):
-        self.herb_pop = [Herbs() for _ in range(ini_pop)]
-        return self.herb_pop
-
-
+    def num_herbs(self):
+        return len(self.herb_pop)
 
     def set_newborn(self, ini_pop):
         return {'loc': ini_pop[0]['loc'],
@@ -43,6 +39,7 @@ class Landscape:
             return [animal for animal in pop if not animal.dies()]
 
         self.herb_pop = survivors(ini_pop)
+
 
 class Water(Landscape):
     pass
@@ -62,8 +59,6 @@ class Dessert(Landscape):
     @staticmethod
     def is_habitable():
         return True
-
-
 
 
 class Highland(Landscape):

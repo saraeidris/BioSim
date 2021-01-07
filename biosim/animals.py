@@ -6,31 +6,30 @@ class Animals:
     def __init__(self, age):
         self.age = age
 
-    def set_age(self, age):
-        self.age = age
+    def ages(self):
+        self.age += 1
 
     def get_age(self):
         return self.age
 
 
 class Herbs(Animals):
-    def __init__(self, age, weight, cell, sigma_birth, phi_age, a_half, phi_weight, w_half, beta, F, gamma, zeta,
-                 w_birth,omega, eta):
+    def __init__(self, age, cell, params):
         super().__init__(age)
         self.cell = cell
-        self.sigma_birth = sigma_birth
-        self.phi_age = phi_age
-        self.a_half = a_half
-        self.phi_weight = phi_weight
-        self.w_half = w_half
-        self.weight = weight
-        self.beta = beta
-        self.F = F
-        self.gamma = gamma
-        self.zeta = zeta
-        self.w_birth = w_birth
-        self.omega = omega
-        self.eta = eta
+        self.sigma_birth = params['sigma_birth']
+        self.phi_age = params['phi_age']
+        self.a_half = params['a_half']
+        self.phi_weight = params['phi_weight']
+        self.w_half = params['w_half']
+        self.weight = params['weight']
+        self.beta = params['beta']
+        self.F = params['F']
+        self.gamma = params['gamma']
+        self.zeta = params['zeta']
+        self.w_birth = params['w_birth']
+        self.omega = params['omega']
+        self.eta = params['eta']
 
     def set_weight(self, weight):
         self.weight = weight
@@ -61,19 +60,13 @@ class Herbs(Animals):
             for _ in ini_pop:
                 if not self.weight < self.zeta(self.w_birth + self.sigma_birth):
                     if random.random() < self.gamma * self.get_fitness() * (len(ini_pop) - 1):
-                        return True
-                    return False
+                        return self.set_newborn()
+                    return None
         else:
-            return False
+            return None
 
-    def weightloss(self):
-        self.weight -= self.eta*self.weight
+    def weight_loss(self):
+        self.weight -= self.eta * self.weight
 
-
-
-    # def is_dead(self):
-    #     if self.get_weight == 0:
-    #         self.ini_pop.pop()
-    #     else:
     def dies(self):
         return self.get_weight == 0 or random.random() < self.omega * (1 - self.get_fitness())

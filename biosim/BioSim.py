@@ -41,9 +41,11 @@ class BioSim:
                                  'omega': 0.4, 'F': 10.0}
         self.lowland_params = {'f_max': 800}
         self.highland_params = {'f_max': 300}
-        self.island = Highland(None, None, None, None, self.highland_params['f_max'])
+        self.island = Highland(None, None, None, None, self.highland_params['f_max'],
+                               self.herbivore_params['w_birth'],
+                               self.herbivore_params['sigma_birth'],
+                               self.highland_params['herb_pop'])
         self.ini_pop = self.create_population(ini_pop)
-
 
     def create_population(self, init_pop):
         animals = []
@@ -54,16 +56,7 @@ class BioSim:
                                          animal['weight'],
                                          # Må fikses på når hele øya er på plass
                                          self.island,
-                                         self.herbivore_params['sigma_birth'],
-                                         self.herbivore_params['phi_age'],
-                                         self.herbivore_params['a_half'],
-                                         self.herbivore_params['phi_weight'],
-                                         self.herbivore_params['w_half'],
-                                         self.herbivore_params['beta'],
-                                         self.herbivore_params['F'],
-                                         self.herbivore_params['gamma'],
-                                         self.herbivore_params['zeta'],
-                                         self.herbivore_params['w_birth']))
+                                         self.herbivore_params))
         print(animals)
         return animals
 
@@ -115,14 +108,12 @@ class BioSim:
                 print(animal.get_fitness())
                 print(animal.get_age())
 
-
-
     def grow(self):
         self.island.set_fodder(self.highland_params['f_max'])
 
     def ages(self):
         for animal in self.ini_pop:
-            animal.set_age(animal.get_age() + 1)
+            animal.ages()
 
     def feeding(self):
         herbs = list(filter(lambda obj: isinstance(obj, Herbs), self.ini_pop))
@@ -139,6 +130,7 @@ class BioSim:
         self.ini_pop = new_herbs_list
 
     def add_population(self, population):
+
         """
         Add a population to the island
         :param population: List of """
@@ -146,7 +138,7 @@ class BioSim:
     # @property
     # def year(self):
     # """Last year simulated."""
-    #
+
     # @property
     # def num_animals(self):
     # """Total number of animals
