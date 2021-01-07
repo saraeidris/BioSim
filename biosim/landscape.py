@@ -1,15 +1,14 @@
-import random
+#import random
 
 
 class Landscape:
-    def __init__(self, top, left, right, bottom, w_birth, sigma_birth, herb_pop):
+    def __init__(self, top, left, right, bottom, w_birth, sigma_birth):
         self.top = top
         self.left = left
         self.right = right
         self.bottom = bottom
         self.w_birth = w_birth
         self.sigma_birth = sigma_birth
-        self.herb_pop = herb_pop
         self.w_birth = w_birth
         self.sigma_birth = sigma_birth
 
@@ -28,11 +27,12 @@ class Landscape:
     def num_herbs(self):
         return len(self.herb_pop)
 
-    def set_newborn(self, ini_pop):
-        return {'loc': ini_pop[0]['loc'],
-                'pop': {'species': 'Herbivore',
-                        'age': 0,
-                        'weight': random.gauss(self.w_birth, self.sigma_birth)}}
+    def set_newborn(self):
+        return self.__class__()
+        # return {'loc': ini_pop[0]['loc'],
+        #         'pop': {'species': 'Herbivore',
+        #                 'age': 0,
+        #                 'weight': random.gauss(self.w_birth, self.sigma_birth)}}
 
     def death(self, ini_pop):
         def survivors(pop):
@@ -64,8 +64,8 @@ class Dessert(Landscape):
 class Highland(Landscape):
     f_high = 300.0
 
-    def __init__(self, top, left, right, bottom, fodder, w_birth, sigma_birth, herb_pop):
-        super().__init__(top, left, right, bottom, w_birth, sigma_birth, herb_pop)
+    def __init__(self, top, left, right, bottom, fodder, w_birth, sigma_birth):
+        super().__init__(top, left, right, bottom, w_birth, sigma_birth)
         self.fodder = fodder
 
     def set_fodder(self, fodder):
@@ -78,8 +78,8 @@ class Highland(Landscape):
 class Lowland(Landscape):
     f_low = 800.0
 
-    def __init__(self, top, left, right, bottom, fodder, w_birth, sigma_birth, herb_pop):
-        super().__init__(top, left, right, bottom, w_birth, sigma_birth, herb_pop)
+    def __init__(self, top, left, right, bottom, fodder, w_birth, sigma_birth):
+        super().__init__(top, left, right, bottom, w_birth, sigma_birth)
         self.fodder = fodder
 
     def set_fodder(self, fodder):

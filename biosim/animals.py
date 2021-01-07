@@ -3,7 +3,18 @@ from math import exp
 
 
 class Animals:
-    def __init__(self, age):
+
+    herbs_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
+                    'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
+                    'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+                    'omega': 0.4, 'F': 10.0, 'weight': None}
+
+    carns_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
+                    'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
+                    'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
+                    'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0, 'weight': None}
+
+    def __init__(self, age=0, weight=None):
         self.age = age
 
     def ages(self):
@@ -13,23 +24,43 @@ class Animals:
         return self.age
 
 
+    @classmethod
+    def set_params(cls, new_params):
+        for key in new_params:
+            if key not in cls.herbs_params:
+                raise KeyError('Invalid parameter name:' + key)
+            if not isinstance(new_params[key], int) or isinstance(new_params[key], float):
+                raise ValueError('Parameters must be integers or floats')
+
+
+
+    @classmethod
+    def get_params(cls):
+
+        return
+
+
 class Herbs(Animals):
-    def __init__(self, age, cell, params):
+    def __init__(self, age, cell, herbivore_params):
         super().__init__(age)
         self.cell = cell
-        self.sigma_birth = params['sigma_birth']
-        self.phi_age = params['phi_age']
-        self.a_half = params['a_half']
-        self.phi_weight = params['phi_weight']
-        self.w_half = params['w_half']
-        self.weight = params['weight']
-        self.beta = params['beta']
-        self.F = params['F']
-        self.gamma = params['gamma']
-        self.zeta = params['zeta']
-        self.w_birth = params['w_birth']
-        self.omega = params['omega']
-        self.eta = params['eta']
+        self.sigma_birth = herbivore_params['sigma_birth']
+        self.phi_age = herbivore_params['phi_age']
+        self.a_half = herbivore_params['a_half']
+        self.phi_weight = herbivore_params['phi_weight']
+        self.w_half = herbivore_params['w_half']
+        self.weight = herbivore_params['weight']
+        self.beta = herbivore_params['beta']
+        self.F = herbivore_params['F']
+        self.gamma = herbivore_params['gamma']
+        self.zeta = herbivore_params['zeta']
+        self.w_birth = herbivore_params['w_birth']
+        self.omega = herbivore_params['omega']
+        self.eta = herbivore_params['eta']
+
+    def b_weight(self):
+        if self.weight is None:
+            self.weight = random.gauss(self.w_birth, self.sigma_birth)
 
     def set_weight(self, weight):
         self.weight = weight
