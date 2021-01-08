@@ -1,6 +1,5 @@
 import random
 from math import exp
-from .landscape import Landscape
 
 
 class Animal:
@@ -76,14 +75,12 @@ class Herbivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self, get_fodder):
-        food = get_fodder
-        if food >= 0:
-            if food < self.params['F']:
-                self.weight += (food * self.params['beta'])
-                return food
+    def eat(self, fodder):
+        if fodder >= 0:
+            if fodder < self.params['F']:
+                self.weight += (fodder * self.params['beta'])
+                return fodder
             else:
-                get_fodder(food - self.params['F'])
                 self.weight += (self.params['F'] * self.params['beta'])
                 return self.params['F']
         else:
@@ -109,6 +106,7 @@ class Carnivore:
                 return 0
             elif carn - herb > 0 < self.params['DeltaPhiMax']:
                 self.weight += (self.weight.herb * self.params['beta'])
-                return (carn - herb) / self.params['DeltaPhiMax']
+                p = (carn - herb) / self.params['DeltaPhiMax']
+                return p
             else:
                 return 1

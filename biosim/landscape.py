@@ -1,3 +1,4 @@
+
 class Landscape:
     d_landscape = {'f_max_h': 300, 'f_max_l': 800}
 
@@ -26,9 +27,9 @@ class Landscape:
         self.num_herbs = []
         self.num_carns = []
         if self.species == 'Carnivore':
-            self.species.append(self.num_carns)
+            self.num_carns.append(self.species)
         elif self.species == 'Herbivore':
-            self.species.append(self.num_herbs)
+            self.num_herbs.append(self.species)
         return self.num_herbs, self.num_carns
 
     def get_top(self):
@@ -68,12 +69,17 @@ class Landscape:
     def eat_all(self):
         for herb in self.list_species[0]:
             if self.get_fodder() > 0:
-                self.set_fodder(self.get_fodder()-herb.eat(self.get_fodder))
+                self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
             else:
                 break
-        for carn in self.list_species[1]:
-
-
+        # for carn in self.list_species[1]:
+        #     if carn.eat() == 0:
+        #         return
+        #     elif carn.eat() == p:
+        #         if p > random.random():
+        #             herb_sorted.pop(0)
+        #     else:
+        #         herb_sorted.pop(0)
 
     def herb_sorting(self):
         herb_sorted = []

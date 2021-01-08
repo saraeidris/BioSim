@@ -1,6 +1,4 @@
 import random
-
-from biosim.landscape import Highland
 from biosim.animals import Herbivore
 
 
@@ -156,7 +154,6 @@ class BioSim:
     #     dictionaries specifying population
     #     on island.
     #     """
-    #     return ini_pop
     #
     #  @property
     #  def num_animals_per_species(self):
