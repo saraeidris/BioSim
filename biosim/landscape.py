@@ -14,6 +14,10 @@ class Landscape:
         self.ini_pop = ini_pop
         self.fodder = 0
 
+    @staticmethod
+    def is_habitable():
+        return True
+
     def get_top(self):
         return self.top
 
@@ -64,10 +68,6 @@ class Dessert(Landscape):
     def get_fodder():
         return 0
 
-    @staticmethod
-    def is_habitable():
-        return True
-
 
 class Highland(Landscape):
     d_landscape = None
@@ -77,7 +77,7 @@ class Highland(Landscape):
         self.d_landscape = d_landscape
         self.fodder = fodder
 
-    def update_fodder(self, fodder):
+    def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
 
     def set_fodder(self, fodder):

@@ -19,12 +19,12 @@ class Animals:
         if self.params is None:
             self.get_species_params()
 
-        if weight is None:
-            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        # if weight is None:
+        #     self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
     def ages(self):
         self.age += 1
-       # self.get_fitness()
+        # self.get_fitness()
 
     def get_age(self):
         return self.age
@@ -34,7 +34,7 @@ class Animals:
             return 0
         else:
             fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
-                       (1 / (1 + exp(self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
+                       (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
             return fitness
 
     def set_weight(self):
@@ -51,7 +51,6 @@ class Animals:
                 raise KeyError('Invalid parameter name:' + key)
             if not isinstance(new_params[key], int) or isinstance(new_params[key], float):
                 raise ValueError('Parameters must be integers or floats')
-
 
     def lose_weight(self):
         self.weight -= self.params['eta'] * self.weight
@@ -81,18 +80,16 @@ class Herbs(Animals):
                 self.weight += (self.params['F'] * self.params['beta'])
             self.get_fitness()
         else:
-            raise ValueError('Fodder value must be zero or positive')
+            raise ValueError('Fodder value can not be negative')
 
     def mate(self, ini_pop):
-        if self.weight < self.params['zeta']*(self.params['w_birth'] + self.params['sigma_birth']):
+        if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
             return
-        if random.random() < self.params['gamma'] * self.get_fitness() * (len(ini_pop) - 1):  # bytt len(ini_pop) med num_animals property
+        if random.random() < self.params['gamma'] * self.get_fitness() * (
+                len(ini_pop) - 1):  # bytt len(ini_pop) med num_animals property
             offspring = self.__class__()
-            if self.weight < (self.params['xi']*offspring.weight):
+            if self.weight < (self.params['xi'] * offspring.weight):
                 return
-            self.weight -= (self.params['xi']*offspring.weight)
+            self.weight -= (self.params['xi'] * offspring.weight)
             self.get_fitness()
             return offspring
-
-
-

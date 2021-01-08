@@ -6,7 +6,7 @@ def test_ani_age():
     """
     Test that a new animal has age 0.
     """
-    a = Animals(0)
+    a = Animals()
     assert a.age == 0
 
 
