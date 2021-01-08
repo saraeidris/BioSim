@@ -75,14 +75,13 @@ class Herbivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self, get_fodder):
-        food = get_fodder
+    def eat(self, fodder):
+        food = fodder
         if food >= 0:
             if food < self.params['F']:
                 self.weight += (food * self.params['beta'])
                 return food
             else:
-                get_fodder(food - self.params['F'])
                 self.weight += (self.params['F'] * self.params['beta'])
                 return self.params['F']
         else:
