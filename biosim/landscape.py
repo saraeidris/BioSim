@@ -86,10 +86,10 @@ class Landscape:
         #         herb_sorted.pop(0)
 
     def herb_sorting(self):
-        return sorted(self.num_herbs, key=lambda x: x.get_fitness())
+        return sorted(self.list_herbs, key=lambda x: x.get_fitness())
 
     def carn_sorting(self):
-        return sorted(self.num_carns, key=lambda x: x.get_fitness(), reverse=True)
+        return sorted(self.list_carns, key=lambda x: x.get_fitness(), reverse=True)
 
 
 class Water(Landscape):
@@ -100,7 +100,7 @@ class Water(Landscape):
         return False
 
 
-class Dessert(Landscape):
+class Desert(Landscape):
     pass
 
 
