@@ -11,6 +11,7 @@ class Animal:
 
     def __init__(self, age=0, weight=None):
         self.age = age
+        self.weight = weight
 
         if weight is not None:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
@@ -51,11 +52,11 @@ class Animal:
     def dies(self):
         return self.get_weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
 
-    def mate(self, ini_pop):
+    def mate(self, species_list):
         if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
             return
         if random.random() < self.params['gamma'] * self.get_fitness() * (
-                len(ini_pop) - 1):  # bytt len(ini_pop) med num_animals property
+                len(species_list) - 1):  # bytt len(ini_pop) med num_animals property
             offspring = self.__class__()
             if self.weight < (self.params['xi'] * offspring.weight):
                 return
@@ -94,14 +95,12 @@ class Carnivore:
               'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
               'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
-    def __init__(self, params, herb_sorted, carn_sorted, age=0, weight=None):
+    def __init__(self, params, age=0, weight=None):
         super().__init__(age=age, weight=weight)
         self.params = params
-        self.herb_sorted = herb_sorted
-        self.carn_sorted = carn_sorted
 
-    def eat(self):
-        for herb, carn in zip(self.herb_sorted, self.carn_sorted):
+    def eat(self, herb_sorted):
+        for herb, carn in zip(herb_sorting(), self.carn_sorted):
             if herb > carn:
                 return 0
             elif carn - herb > 0 < self.params['DeltaPhiMax']:
