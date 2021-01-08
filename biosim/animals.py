@@ -76,15 +76,16 @@ class Herbivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self):
-        food = self.get_fodder()
+    def eat(self, get_fodder):
+        food = get_fodder
         if food >= 0:
             if food < self.params['F']:
                 self.weight += (food * self.params['beta'])
+                return food
             else:
-                self.set_fodder(food - self.params['F'])
+                get_fodder(food - self.params['F'])
                 self.weight += (self.params['F'] * self.params['beta'])
-            self.get_fitness()
+                return self.params['F']
         else:
             raise ValueError('Fodder value can not be negative')
 

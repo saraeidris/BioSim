@@ -43,9 +43,6 @@ class Landscape:
     def get_bottom(self):
         return self.bottom
 
-    def num_herbs(self):
-        return len(self.ini_pop)  # bytt ut
-
     def give_birth(self):
         if len(self.ini_pop) > 1:  # bytt ut
             offspring_herbs = []
@@ -64,6 +61,19 @@ class Landscape:
         for animal in self.ini_pop:
             animal.lose_weight()
             animal.get_fitness()
+
+    def set_fodder(self, fodder):
+        self.fodder = fodder
+
+    def eat_all(self):
+        for herb in self.list_species[0]:
+            if self.get_fodder() > 0:
+                self.set_fodder(self.get_fodder()-herb.eat(self.get_fodder))
+            else:
+                break
+        for carn in self.list_species[1]:
+
+
 
     def herb_sorting(self):
         herb_sorted = []
@@ -96,12 +106,6 @@ class Highland(Landscape):
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
-
-    def get_fodder():
-        return 0
-
-    def set_fodder(self, fodder):
-        self.fodder = fodder
 
     def get_fodder(self):
         return self.fodder
