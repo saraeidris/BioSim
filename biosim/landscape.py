@@ -1,8 +1,7 @@
-
 class Landscape:
     d_landscape = {'f_max_h': 300, 'f_max_l': 800}
 
-    def __init__(self, top, left, right, bottom, w_birth, sigma_birth, ini_pop):
+    def __init__(self, top, left, right, bottom, w_birth, sigma_birth, ini_pop, species):
         self.top = top
         self.left = left
         self.right = right
@@ -13,6 +12,7 @@ class Landscape:
         self.sigma_birth = sigma_birth
         self.ini_pop = ini_pop
         self.fodder = 0
+        self.species = species
 
     @staticmethod
     def is_habitable():
@@ -21,6 +21,15 @@ class Landscape:
     @staticmethod
     def get_fodder():
         return 0
+
+    def list_species(self):
+        self.num_herbs = []
+        self.num_carns = []
+        if self.species == 'Carnivore':
+            self.species.append(self.num_carns)
+        elif self.species == 'Herbivore':
+            self.species.append(self.num_herbs)
+        return self.num_herbs, self.num_carns
 
     def get_top(self):
         return self.top
@@ -66,6 +75,14 @@ class Landscape:
 
 
 
+    def herb_sorting(self):
+        herb_sorted = []
+        return sorted(self.num_herbs, key=lambda x: x.get_fitness(), reverse=True).append(herb_sorted)
+
+    def carn_sorting(self):
+        carn_sorted = []
+        return sorted(self.num_carns, key=lambda x: x.get_fitness(), reverse=True).append(carn_sorted)
+
 
 class Water(Landscape):
     pass
@@ -77,7 +94,6 @@ class Water(Landscape):
 
 class Dessert(Landscape):
     pass
-
 
 
 class Highland(Landscape):
