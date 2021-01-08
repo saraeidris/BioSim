@@ -1,7 +1,7 @@
 import random
 
 from biosim.landscape import Highland
-from biosim.animals import Herbs
+from biosim.animals import Herbivore
 
 
 class BioSim:
@@ -44,9 +44,9 @@ class BioSim:
         self.highland_params = {'f_max': 300}
         self.island = island_map
         # Highland(None, None, None, None, self.highland_params['f_max'],
-                               # self.herbivore_params['w_birth'],
-                               # self.herbivore_params['sigma_birth'],
-                               # self.ini_pop)
+        # self.herbivore_params['w_birth'],
+        # self.herbivore_params['sigma_birth'],
+        # self.ini_pop)
         self.ini_pop = self.create_population(ini_pop)
 
     def annual_cycle(self):
@@ -57,16 +57,15 @@ class BioSim:
         self.island[35].lose_weight()
         self.island[35].death()
 
-
     def create_population(self, init_pop):
         animals = []
         for cell in init_pop:
             for animal in cell['pop']:
                 if animal['species'] == 'Herbivore':
-                    animals.append(Herbs(
-                        self.herbivore_params, self.island, animal['age'],
-                                         animal['weight']))
-                                         # Må fikses på når hele øya er på plass
+                    animals.append(Herbivore(
+                        self.herbivore_params, animal['age'],
+                        animal['weight']))
+                    # Må fikses på når hele øya er på plass
         print(animals)
         return animals
 
@@ -126,7 +125,7 @@ class BioSim:
             animal.ages()
 
     def feeding(self):
-        herbs = list(filter(lambda obj: isinstance(obj, Herbs), self.ini_pop))
+        herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
         new_herbs_list = []
         # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
         while len(herbs) > 0:
