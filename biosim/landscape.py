@@ -18,6 +18,10 @@ class Landscape:
     def is_habitable():
         return True
 
+    @staticmethod
+    def get_fodder():
+        return 0
+
     def get_top(self):
         return self.top
 
@@ -64,9 +68,6 @@ class Water(Landscape):
 class Dessert(Landscape):
     pass
 
-    @staticmethod
-    def get_fodder():
-        return 0
 
 
 class Highland(Landscape):
@@ -79,6 +80,9 @@ class Highland(Landscape):
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
+
+    def get_fodder():
+        return 0
 
     def set_fodder(self, fodder):
         self.fodder = fodder

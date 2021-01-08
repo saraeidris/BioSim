@@ -16,8 +16,6 @@ class Animals:
 
     def __init__(self, age=0, weight=None):
         self.age = age
-        if self.params is None:
-            self.get_species_params()
 
         # if weight is None:
         #     self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
@@ -65,18 +63,17 @@ class Herbs(Animals):
               'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
               'omega': 0.4, 'F': 10.0}
 
-    def __init__(self, params, island, age=0, weight=None):
+    def __init__(self, params, age=0, weight=None):
         super().__init__(age=age, weight=weight)
         self.params = params
-        self.island = island
 
     def eat(self):
-        food = self.island.get_fodder()
+        food = self.get_fodder()
         if food >= 0:
             if food < self.params['F']:
                 self.weight += (food * self.params['beta'])
             else:
-                self.island.set_fodder(food - self.params['F'])
+                self.set_fodder(food - self.params['F'])
                 self.weight += (self.params['F'] * self.params['beta'])
             self.get_fitness()
         else:
