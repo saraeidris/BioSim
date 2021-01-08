@@ -67,11 +67,11 @@ class Landscape:
 
     def herb_sorting(self):
         herb_sorted = []
-        return sorted(self.num_herbs, key=lambda x: x.get_fitness(), reverse=True).append(herb_sorted)
+        return herb_sorted.append(sorted(self.num_herbs, key=lambda x: x.get_fitness(), reverse=True))
 
     def carn_sorting(self):
         carn_sorted = []
-        return sorted(self.num_carns, key=lambda x: x.get_fitness(), reverse=True).append(carn_sorted)
+        return carn_sorted.append(sorted(self.num_carns, key=lambda x: x.get_fitness(), reverse=True))
 
 
 class Water(Landscape):

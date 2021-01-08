@@ -1,5 +1,6 @@
 import random
 from math import exp
+from .landscape import Landscape
 
 
 class Animal:
@@ -11,6 +12,7 @@ class Animal:
 
     def __init__(self, age=0, weight=None):
         self.age = age
+        self.weight = weight
 
         if weight is not None:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
@@ -93,14 +95,15 @@ class Carnivore:
               'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
               'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
-    def __init__(self, params, herb_sorted, carn_sorted, age=0, weight=None):
+    def __init__(self, params, age=0, weight=None):
         super().__init__(age=age, weight=weight)
         self.params = params
         self.herb_sorted = herb_sorted
         self.carn_sorted = carn_sorted
+        self.weight = weight
 
-    def eat(self):
-        for herb, carn in zip(self.herb_sorted, self.carn_sorted):
+    def eat(self, herb_sorted, carn_sorted):
+        for herb, carn in zip(herb_sorted, carn_sorted):
             if herb > carn:
                 return 0
             elif carn - herb > 0 < self.params['DeltaPhiMax']:
