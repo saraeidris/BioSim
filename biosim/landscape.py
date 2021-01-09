@@ -4,14 +4,26 @@
 class Landscape:
     d_landscape = None
 
-    def __init__(self, top, left, right, bottom, ini_pop):
+    def __init__(self, ini_pop):
         self.list_herbs = []
         self.list_carns = []
-        self.top = top
-        self.left = left
-        self.right = right
-        self.bottom = bottom
+        # self.top = top
+        # self.left = left
+        # self.right = right
+        # self.bottom = bottom
         self.ini_pop = ini_pop
+
+
+
+    def split_animals(self):
+
+        for animal in self.ini_pop:
+            if animal == 'Herbivore':
+                self.list_herbs.append(animal)
+            elif animal == 'Carnivore':
+                self.list_carns.append(animal)
+
+
 
     @staticmethod
     def is_habitable():
@@ -98,9 +110,8 @@ class Desert(Landscape):
 class Highland(Landscape):
     d_landscape = {'f_max_h': 300}
 
-    def __init__(self, d_landscape, top, left, right, bottom, ini_pop):
-        super().__init__(top, left, right, bottom, ini_pop)
-        self.d_landscape = d_landscape
+    def __init__(self, ini_pop):
+        super().__init__(ini_pop)
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
@@ -108,13 +119,11 @@ class Highland(Landscape):
     def get_fodder(self):
         return self.fodder
 
-
 class Lowland(Landscape):
     d_landscape = {'f_max_l': 800}
 
-    def __init__(self, top, left, right, bottom, ini_pop, d_landscape):
-        super().__init__(top, left, right, bottom, ini_pop)
-        self.d_landscape = d_landscape
+    def __init__(self, ini_pop):
+        super().__init__(ini_pop)
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_l']

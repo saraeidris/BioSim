@@ -1,4 +1,6 @@
 import random
+
+from biosim.RossumIsland import RossumIsland
 from biosim.animals import Herbivore
 from biosim.landscape import Landscape, Lowland, Highland
 
@@ -114,12 +116,16 @@ class BioSim:
         Image files will be numbered consecutively.
         """
 
+        rosum = RossumIsland(self.island_map)
+        rosum.set_init_population()
+
         for _ in range(num_years):
+            rosum.fodder_grow()
+            rosum.eat_all()
             self.feeding()
-            self.fodder_grow()
             self.ages()
             for animal in self.ini_pop:
-                print(animal.weight())
+                print(animal.weight)
                 print(animal.get_fitness())
                 print(animal.get_age())
 
@@ -170,3 +176,6 @@ class BioSim:
 
     # def make_movie(self):
     # """Create MPEG4 movie from visualization images saved."""
+
+    def add_population(self, population):
+        pass
