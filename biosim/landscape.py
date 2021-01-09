@@ -1,18 +1,17 @@
-import random
+
 
 
 class Landscape:
     d_landscape = None
-    {'f_max_h': 300, 'f_max_l': 800}
 
-    def __init__(self, top, left, right, bottom, ini_pop, species):
+    def __init__(self, top, left, right, bottom, ini_pop):
+        self.list_herbs = []
+        self.list_carns = []
         self.top = top
         self.left = left
         self.right = right
         self.bottom = bottom
         self.ini_pop = ini_pop
-        self.fodder = 0
-        self.species = species
 
     @staticmethod
     def is_habitable():
@@ -21,18 +20,6 @@ class Landscape:
     @staticmethod
     def get_fodder():
         return 0
-
-    def list_species(self):
-        self.list_herbs = []
-        self.list_carns = []
-        for specie in self.ini_pop:
-            if specie == 'Carnivore':
-                self.list_carns.append(self.species)
-            elif specie == 'Herbivore':
-                self.list_herbs.append(self.species)
-            else:
-                raise ValueError('Species must be either Carnivore or Herbivore')
-            return self.list_herbs, self.list_carns
 
     def get_top(self):
         return self.top
@@ -46,17 +33,32 @@ class Landscape:
     def get_bottom(self):
         return self.bottom
 
+    def eat_all(self):
+        if not len(self.herb_sorting()) == 0:
+            for herb in self.herb_sorting():
+                if self.get_fodder() > 0:
+                    self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
+                else:
+                    break
+        if not len(self.carn_sorting()) == 0:
+            for carn in self.carn_sorting():
+                killed_herbs = carn.eat(self.herb_sorting())
+                if killed_herbs is None:
+                    break
+                for killed_herb in killed_herbs:
+                    self.herb_sorting().remove(killed_herb)
+
     def give_birth(self):
-        if len(self.list_species()[0]) > 1:
+        if len(self.herb_sorting()) > 1:
             offspring_herbs = []
-            for herb in self.list_species()[0]:
-                offspring = herb.mate(self.list_species()[0])
+            for herb in self.herb_sorting():
+                offspring = herb.mate(self.herb_sorting())
                 if offspring:
                     offspring_herbs.append(offspring)
-        if len(self.list_species()[1]) > 1:
+        if len(self.herb_sorting()) > 1:
             offspring_carns = []
-            for carn in self.list_species()[1]:
-                offspring = carn.mate(self.list_species()[1])
+            for carn in self.herb_sorting():
+                offspring = carn.mate(self.herb_sorting())
                 if offspring:
                     offspring_carns.append(offspring)
 
@@ -73,21 +75,6 @@ class Landscape:
 
     def set_fodder(self, fodder):
         self.fodder = fodder
-
-    def eat_all(self):
-        if not self.list_species()[0] == 0:
-            for herb in self.list_species()[0]:
-                if self.get_fodder() > 0:
-                    self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
-                else:
-                    break
-        if not self.list_species()[1] == 0:
-            for carn in self.list_species()[1]:
-                killed_herbs = carn.eat(self.list_species()[0])
-                if killed_herbs is None:
-                    break
-                for killed_herb in killed_herbs:
-                    self.list_species()[0].remove(killed_herb)
 
     def herb_sorting(self):
         return sorted(self.list_herbs, key=lambda x: x.get_fitness())

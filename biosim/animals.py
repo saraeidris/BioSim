@@ -5,9 +5,9 @@ from math import exp
 class Animal:
     params = None
 
-    @classmethod
-    def get_species_params(cls):
-        return cls.params
+    # @classmethod
+    # def get_species_params(cls):
+    #     return cls.params
 
     def __init__(self, age=0, weight=None):
         self.age = age
@@ -18,7 +18,7 @@ class Animal:
 
     def ages(self):
         self.age += 1
-        # self.get_fitness()
+        self.get_fitness()
 
     def get_age(self):
         return self.age
@@ -58,8 +58,7 @@ class Animal:
     def mate(self, species_list):
         if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
             return
-        if random.random() < self.params['gamma'] * self.get_fitness() * (
-                len(species_list) - 1):  # bytt len(ini_pop) med num_animals property
+        if random.random() < self.params['gamma'] * self.get_fitness() * (len(species_list) - 1):
             offspring = self.__class__()
             if self.weight < (self.params['xi'] * offspring.weight):
                 return
