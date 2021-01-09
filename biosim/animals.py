@@ -3,6 +3,7 @@ from math import exp
 
 
 class Animal:
+
     params = None
 
     # @classmethod
@@ -17,6 +18,7 @@ class Animal:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
     def ages(self):
+        """Species ages by one year each year"""
         self.age += 1
         self.get_fitness()
 
@@ -24,6 +26,10 @@ class Animal:
         return self.age
 
     def get_fitness(self):
+        """
+        Calculate fitness for specie
+        :return: Current fitness for specie
+        """
         if self.weight <= 0:
             return 0
         else:
@@ -50,12 +56,23 @@ class Animal:
                 raise ValueError('Parameters must be integers or floats')
 
     def lose_weight(self):
+        """Specie loses weight"""
         self.weight -= self.params['eta'] * self.weight
 
     def dies(self):
+        """
+        Decide whether the specie dies or not
+         :return bool
+            True if specie dies
+        """
         return self.get_weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
 
     def mate(self, species_list):
+        """
+        Decide whether a specie gets an offspring
+        :param species_list:
+        :return: An offspring of the same specie
+        """
         if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
             return
         if random.random() < self.params['gamma'] * self.get_fitness() * (len(species_list) - 1):
@@ -68,6 +85,9 @@ class Animal:
 
 
 class Herbivore(Animal):
+    """
+    Subclass for Animal
+    """
     params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
               'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
               'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
@@ -78,6 +98,12 @@ class Herbivore(Animal):
         self.params = params
 
     def eat(self, fodder):
+        """
+        Decide how much fodder a herbivore eats
+        :param fodder: Amount of fodder in current cell
+        :return:
+            Fodder left in cell
+        """
         if fodder >= 0:
             if fodder < self.params['F']:
                 self.weight += (fodder * self.params['beta'])
@@ -90,6 +116,9 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
+    """
+    Subclass for Animal
+    """
     params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
               'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
               'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
@@ -100,6 +129,12 @@ class Carnivore(Animal):
         self.params = params
 
     def eat(self, herb_sorted):
+        """
+        Decides whether a carnivore kills and eat a herbivore
+        :param herb_sorted: Herbivores sorted by fitness from low to high
+        :return:
+            Amount of killed herbs
+        """
         wanted_food = self.params['F']
         killed_herbs = []
         if len(herb_sorted) == 0:
