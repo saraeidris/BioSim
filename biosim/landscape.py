@@ -3,7 +3,6 @@ import random
 
 class Landscape:
     d_landscape = None
-    {'f_max_h': 300, 'f_max_l': 800}
 
     def __init__(self, top, left, right, bottom, ini_pop, species):
         self.top = top
