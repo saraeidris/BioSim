@@ -1,4 +1,4 @@
-
+import random
 class Landscape:
     d_landscape = {'f_max_h': 300, 'f_max_l': 800}
 
@@ -70,20 +70,15 @@ class Landscape:
     def set_fodder(self, fodder):
         self.fodder = fodder
 
-    def eat_all(self):
-        for herb in self.list_species()[0]:
-            if self.get_fodder() > 0:
-                self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
-            else:
-                break
-        # for carn in self.list_species[1]:
-        #     if carn.eat() == 0:
-        #         return
-        #     elif carn.eat() == p:
-        #         if p > random.random():
-        #             herb_sorted.pop(0)
-        #     else:
-        #         herb_sorted.pop(0)
+    # def eat_all(self, list_herbs):
+    #     for herb in self.list_species()[0]:
+    #         if self.get_fodder() > 0:
+    #             self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
+    #         else:
+    #             break
+    #     for carn in self.list_species()[1]:
+    #         if carn.eat() > random.random():
+    #             list_herbs.pop(0)
 
     def herb_sorting(self):
         return sorted(self.list_herbs, key=lambda x: x.get_fitness())
