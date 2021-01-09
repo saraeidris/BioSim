@@ -1,5 +1,6 @@
 import random
 from biosim.animals import Herbivore
+from biosim.landscape import Landscape, Lowland, Highland
 
 
 class BioSim:
@@ -108,15 +109,16 @@ class BioSim:
 
         for _ in range(num_years):
             self.feeding()
-            self.grow()
+            self.fodder_grow()
             self.ages()
             for animal in self.ini_pop:
                 print(animal.weight())
                 print(animal.get_fitness())
                 print(animal.get_age())
 
-    def grow(self):
-        self.island.update_fodder()
+    def fodder_grow(self):
+        Lowland.update_fodder()
+        Highland.update_fodder()
 
     def ages(self):
         for animal in self.ini_pop:
@@ -129,7 +131,7 @@ class BioSim:
         while len(herbs) > 0:
             index = random.randint(0, len(herbs) - 1)
             herb = herbs.pop(index)
-            herb.eat()
+            herb.eat(Landscape.get_fodder())
             new_herbs_list.append(herb)
 
         # Do carnivore stuff

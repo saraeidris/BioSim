@@ -2,7 +2,8 @@ import random
 
 
 class Landscape:
-    d_landscape = {'f_max_h': 300, 'f_max_l': 800}
+    d_landscape = None
+    {'f_max_h': 300, 'f_max_l': 800}
 
     def __init__(self, top, left, right, bottom, ini_pop, species):
         self.top = top
@@ -88,7 +89,6 @@ class Landscape:
                 for killed_herb in killed_herbs:
                     self.list_species()[0].remove(killed_herb)
 
-
     def herb_sorting(self):
         return sorted(self.list_herbs, key=lambda x: x.get_fitness())
 
@@ -109,12 +109,11 @@ class Desert(Landscape):
 
 
 class Highland(Landscape):
-    d_landscape = None
+    d_landscape = {'f_max_h': 300}
 
-    def __init__(self, d_landscape, top, left, right, bottom, ini_pop, fodder=300):
+    def __init__(self, d_landscape, top, left, right, bottom, ini_pop):
         super().__init__(top, left, right, bottom, ini_pop)
         self.d_landscape = d_landscape
-        self.fodder = fodder
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
@@ -124,11 +123,11 @@ class Highland(Landscape):
 
 
 class Lowland(Landscape):
-    d_landscape = None
+    d_landscape = {'f_max_l': 800}
 
-    def __init__(self, top, left, right, bottom, ini_pop, fodder=800):
+    def __init__(self, top, left, right, bottom, ini_pop, d_landscape):
         super().__init__(top, left, right, bottom, ini_pop)
-        self.fodder = fodder
+        self.d_landscape = d_landscape
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_l']
