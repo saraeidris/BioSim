@@ -1,4 +1,6 @@
 import random
+
+
 class Landscape:
     d_landscape = {'f_max_h': 300, 'f_max_l': 800}
 
@@ -22,13 +24,14 @@ class Landscape:
     def list_species(self):
         self.list_herbs = []
         self.list_carns = []
-        if self.species == 'Carnivore':
-            self.species.append(self.list_carns)
-        elif self.species == 'Herbivore':
-            self.species.append(self.list_herbs)
-        else:
-            raise ValueError('Species must be either Carnivore or Herbivore')
-        return self.list_herbs, self.list_carns
+        for specie in self.ini_pop:
+            if specie == 'Carnivore':
+                self.list_carns.append(self.species)
+            elif specie == 'Herbivore':
+                self.list_herbs.append(self.species)
+            else:
+                raise ValueError('Species must be either Carnivore or Herbivore')
+            return self.list_herbs, self.list_carns
 
     def get_top(self):
         return self.top
@@ -70,15 +73,21 @@ class Landscape:
     def set_fodder(self, fodder):
         self.fodder = fodder
 
-    # def eat_all(self, list_herbs):
-    #     for herb in self.list_species()[0]:
-    #         if self.get_fodder() > 0:
-    #             self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
-    #         else:
-    #             break
-    #     for carn in self.list_species()[1]:
-    #         if carn.eat() > random.random():
-    #             list_herbs.pop(0)
+    def eat_all(self):
+        if not self.list_species()[0] == 0:
+            for herb in self.list_species()[0]:
+                if self.get_fodder() > 0:
+                    self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
+                else:
+                    break
+        if not self.list_species()[1] == 0:
+            for carn in self.list_species()[1]:
+                killed_herbs = carn.eat(self.list_species()[0])
+                if killed_herbs is None:
+                    break
+                for killed_herb in killed_herbs:
+                    self.list_species()[0].remove(killed_herb)
+
 
     def herb_sorting(self):
         return sorted(self.list_herbs, key=lambda x: x.get_fitness())

@@ -31,6 +31,9 @@ class Animal:
                        (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
             return fitness
 
+    def set_fitness(self, fitness):
+        self.fitness = fitness
+
     def set_weight(self):
         if self.weight is None:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
@@ -87,7 +90,7 @@ class Herbivore(Animal):
             raise ValueError('Fodder value can not be negative')
 
 
-class Carnivore:
+class Carnivore(Animal):
     params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
               'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
               'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
@@ -98,12 +101,27 @@ class Carnivore:
         self.params = params
 
     def eat(self, herb_sorted):
-        for herb, carn in zip(herb_sorting(), self.carn_sorted):
-            if herb > carn:
-                return 0
-            elif carn - herb > 0 < self.params['DeltaPhiMax']:
-                self.weight += (self.weight.herb * self.params['beta'])
-                p = (carn - herb) / self.params['DeltaPhiMax']
-                return p
+        wanted_food = self.params['F']
+        killed_herbs = []
+        if len(herb_sorted) == 0:
+            return
+        for herb in herb_sorted:
+            if wanted_food == 0:
+                break
+            if self.get_fitness() <= herb.get_fitness():
+                break
+            elif self.get_fitness() - herb.get_fitness() < self.params['DeltaPhiMax']:
+                p = (self.get_fitness() - herb.get_fitness()) / self.params['DeltaPhiMax']
             else:
-                return 1
+                p = 1
+            if random.random() <= p:
+                if wanted_food < herb.weight:
+                    self.weight += self.params['beta'] * wanted_food
+                    killed_herbs.append(herb)
+                    self.get_fitness()
+                    return killed_herbs
+                self.weight += self.params['beta'] * herb.weight
+                wanted_food -= herb.weight
+                killed_herbs.append(herb)
+                self.get_fitness()
+        return killed_herbs
