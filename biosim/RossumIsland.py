@@ -59,10 +59,11 @@ class RossumIsland:
                     if animal['species'] == 'Herbivore':
                         herbs_list.append(Herbivore(self.params, animal['age'],
                                                     animal['weight']))
-                #  if animal['species'] == 'Carnivore':
-                #   carn_list.append(Carnivore())
-                cell.list_herbs = herbs_list
-                cell.list_carns = carn_list
+                    if animal['species'] == 'Carnivore':
+                        carn_list.append(Carnivore(self.params, animal['age'],
+                                                   animal['weight']))
+                cell.list_herbs = cell.list_herbs + herbs_list
+                cell.list_carns = cell.list_carns + carn_list
 
     def get_animal_stats(self):
         dict = {}
