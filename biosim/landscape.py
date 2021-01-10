@@ -1,4 +1,4 @@
-import random
+#import random
 
 class Landscape:
     d_landscape = None
@@ -53,24 +53,20 @@ class Landscape:
     # def get_bottom(self):
     #     return self.bottom
 
-    def eat_all(self):
-        shuffle_herbs = random.shuffle(self.list_herbs)
-        shuffle_carns = random.shuffle(self.list_carns)
-        if not shuffle_herbs is None:
-        # if not (shuffle_herbs is None and len(shuffle_herbs) == 0):
-            for herb in shuffle_herbs:
+    def eat_all(self): #Kan bruke shuffle her kanskje?
+        if not len(self.herb_sorting()) == 0:
+            for herb in self.herb_sorting():
                 if self.get_fodder() > 0:
-                    self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder()))
+                    self.set_fodder(self.get_fodder() - herb.consumed_fodder(self.get_fodder()))
                 else:
                     break
-        if not shuffle_carns is None:
-        #if not len(shuffle_carns) == 0:
-            for carn in shuffle_carns:
-                killed_herbs = carn.eat(shuffle_herbs)
+        if not len(self.carn_sorting()) == 0:
+            for carn in self.carn_sorting():
+                killed_herbs = carn.consumed_herbs(self.herb_sorting())
                 if killed_herbs is None:
                     break
                 for killed_herb in killed_herbs:
-                    shuffle_herbs.remove(killed_herb)
+                    self.herb_sorting().remove(killed_herb)
 
     def give_birth(self):
         if len(self.herb_sorting()) > 1:
@@ -79,12 +75,14 @@ class Landscape:
                 offspring = herb.mate(self.herb_sorting())
                 if offspring:
                     offspring_herbs.append(offspring)
+            self.list_herbs += offspring_herbs
         if len(self.herb_sorting()) > 1:
             offspring_carns = []
             for carn in self.herb_sorting():
                 offspring = carn.mate(self.herb_sorting())
                 if offspring:
                     offspring_carns.append(offspring)
+            self.list_carns += offspring_carns
 
     def ages(self):
         """Species ages by one year each year"""
@@ -115,6 +113,7 @@ class Landscape:
 
     def get_population(self):
         return len(self.list_herbs), len(self.list_carns)
+
     def get_animals(self):
         return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
 

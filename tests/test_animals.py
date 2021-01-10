@@ -1,4 +1,4 @@
-from biosim.animals import Animals
+from biosim.animals import Animal, Herbivore
 import pytest
 
 
@@ -6,7 +6,7 @@ def test_ani_age():
     """
     Test that a new animal has age 0.
     """
-    a = Animals()
+    a = Animal(0, 5)
     assert a.age == 0
 
 
@@ -15,11 +15,23 @@ def test_ani_aging():
     This test is *determinstic*: for each call to ages(),
     the age must increase by one year.
     """
-    a = Animals()
+    a = Animal(weight=5)
     for n in range(5):
-        a.ages()
+        a.age()
 
         assert a.get_age() == n + 1
+
+def test_animal_should_eat_when_fodder_is_available():
+    animal = Herbivore({'F': 10, 'beta': 0.9}, weight=5)
+    consumed_fodder = animal.consumed_fodder(100)
+
+    assert consumed_fodder == 10
+
+def test_animal_should_eat_all_remaining_food_when_fodder_is_less_than_F():
+    animal = Herbivore({'F': 10, 'beta': 0.9}, weight=5)
+    consumed_fodder = animal.consumed_fodder(7)
+
+    assert consumed_fodder == 7
 
 
 # @pytest.fixture

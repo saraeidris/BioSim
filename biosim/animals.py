@@ -13,9 +13,8 @@ class Animal:
     def __init__(self, age=0, weight=None):
         self.age = age
         self.weight = weight
-
         if weight is None:
-            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
     def get_age(self):
         return self.age
@@ -35,9 +34,9 @@ class Animal:
     def set_fitness(self, fitness):
         self.fitness = fitness
 
-    def set_weight(self):
-        if self.weight is None:
-            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+    # def set_weight(self):
+    #     if self.weight is None:
+    #         self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
     def get_weight(self):
         return self.weight
@@ -95,17 +94,17 @@ class Herbivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self, fodder):
+    def consumed_fodder(self, available_fodder):
         """
         Decide how much fodder a herbivore eats
-        :param fodder: Amount of fodder in current cell
+        :param available_fodder: Amount of fodder in current cell
         :return:
             Fodder left in cell
         """
-        if fodder >= 0:
-            if fodder < self.params['F']:
-                self.weight += (fodder * self.params['beta'])
-                return fodder
+        if available_fodder >= 0:
+            if available_fodder < self.params['F']:
+                self.weight += (available_fodder * self.params['beta'])
+                return available_fodder
             else:
                 self.weight += (self.params['F'] * self.params['beta'])
                 return self.params['F']
@@ -126,7 +125,7 @@ class Carnivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self, herb_sorted):
+    def consumed_herbs(self, herb_sorted):
         """
         Decides whether a carnivore kills and eat a herbivore
         :param herb_sorted: Herbivores sorted by fitness from low to high
