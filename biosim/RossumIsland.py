@@ -91,5 +91,5 @@ class RossumIsland:
                 cell.eat_all()
                 cell.give_birth()
                 cell.ages()
-                cell.weight_loss()
+                cell.lose_weight()
                 cell.death()

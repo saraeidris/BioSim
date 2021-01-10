@@ -50,7 +50,7 @@ class Animal:
             if not isinstance(new_params[key], int) or isinstance(new_params[key], float):
                 raise ValueError('Parameters must be integers or floats')
 
-    def lose_weight(self):
+    def weight_loss(self):
         """Specie loses weight"""
         self.weight -= self.params['eta'] * self.weight
 
@@ -95,7 +95,7 @@ class Herbivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self, fodder):
+    def consumed_fodder(self, fodder):
         """
         Decide how much fodder a herbivore eats
         :param fodder: Amount of fodder in current cell
@@ -126,7 +126,7 @@ class Carnivore(Animal):
         super().__init__(age=age, weight=weight)
         self.params = params
 
-    def eat(self, herb_sorted):
+    def consumed_herbs(self, herb_sorted):
         """
         Decides whether a carnivore kills and eat a herbivore
         :param herb_sorted: Herbivores sorted by fitness from low to high
