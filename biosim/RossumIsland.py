@@ -3,11 +3,11 @@ from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 
 
 class RossumIsland:
-    def __init__(self, island_map, params):
+    def __init__(self, island_map):#, params):
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
         # self.island_coloumn_length = len(island_map) trengs denne?
         self.island_row_length = len(island_map.splitlines()[0])
-        self.params = params
+        #self.params = params
 
         self.island = []
         for lines in island_map.splitlines():
@@ -61,10 +61,10 @@ class RossumIsland:
                 carn_list = []
                 for animal in dict['pop']:
                     if animal['species'] == 'Herbivore':
-                        herbs_list.append(Herbivore(self.params, animal['age'],
+                        herbs_list.append(Herbivore(Herbivore.params, animal['age'],
                                                     animal['weight']))
                     if animal['species'] == 'Carnivore':
-                        carn_list.append(Carnivore(self.params, animal['age'],
+                        carn_list.append(Carnivore(Carnivore.params, animal['age'],
                                                    animal['weight']))
                 cell.list_herbs = cell.list_herbs + herbs_list
                 cell.list_carns = cell.list_carns + carn_list

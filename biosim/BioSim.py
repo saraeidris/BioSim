@@ -56,7 +56,7 @@ class BioSim:
         # self.herbivore_params['w_birth'],
         # self.herbivore_params['sigma_birth'],
         # self.ini_pop)
-        self.island = RossumIsland(island_map, self.herbivore_params)
+        self.island = RossumIsland(island_map)#, self.herbivore_params)
         self.current_year = 0
         self.island.set_init_population(self.ini_pop)
 
