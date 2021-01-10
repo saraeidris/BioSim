@@ -1,4 +1,7 @@
 import random
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
 
 from biosim.RossumIsland import RossumIsland
 from biosim.animals import Herbivore
@@ -32,7 +35,6 @@ class BioSim:
             ’{}_{:05d}.{}’.format(img_base, img_no, img_fmt)
         where img_no are consecutive image numbers starting from 0.
         img_base should contain a path and beginning of a file name. """
-        self.island_map = island_map
         random.seed(seed)
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
@@ -50,32 +52,12 @@ class BioSim:
                                  'omega': 0.4, 'F': 10.0}
         self.lowland_params = {'f_max': 800}
         self.highland_params = {'f_max': 300}
-        self.island = island_map
         # Highland(None, None, None, None, self.highland_params['f_max'],
         # self.herbivore_params['w_birth'],
         # self.herbivore_params['sigma_birth'],
         # self.ini_pop)
-        self.ini_pop = self.create_population(ini_pop)
+        self.island = RossumIsland(island_map, self.herbivore_params)
 
-    def annual_cycle(self):
-        self.island[35].update_fodder()
-        self.island[35].eat()
-        self.island[35].mate()
-        self.island[35].ages()
-        self.island[35].lose_weight()
-        self.island[35].death()
-
-    def create_population(self, init_pop):
-        animals = []
-        for cell in init_pop:
-            for animal in cell['pop']:
-                if animal['species'] == 'Herbivore':
-                    animals.append(Herbivore(
-                        self.herbivore_params, animal['age'],
-                        animal['weight']))
-                    # Må fikses på når hele øya er på plass
-        print(animals)
-        return animals
 
     def set_animal_parameters(self, species, params):
         """
@@ -116,18 +98,23 @@ class BioSim:
         Image files will be numbered consecutively.
         """
 
-        rosum = RossumIsland(self.island_map)
-        rosum.set_init_population()
+        self.island.set_init_population(self.ini_pop)
 
         for _ in range(num_years):
-            rosum.fodder_grow()
-            rosum.eat_all()
+            self.island.fodder_grow()
+            self.island.eat_all()
             self.feeding()
             self.ages()
-            for animal in self.ini_pop:
-                print(animal.weight)
-                print(animal.get_fitness())
-                print(animal.get_age())
+
+        print(self.island.get_animal_stats())
+
+        import pandas as pd
+        ser = pd.Series(list(self.island.get_animal_stats().values()),
+                        index=pd.MultiIndex.from_tuples(self.island.get_animal_stats().keys()))
+        df = ser.unstack().fillna(0)
+        sns.heatmap(df, cmap='YlGnBu')
+        # (10, 27)
+        plt.show()
 
     def fodder_grow(self):
         Lowland.update_fodder()
@@ -151,11 +138,12 @@ class BioSim:
 
         self.ini_pop = new_herbs_list
 
-    # def add_population(self, population):
-    #
-    #     """
-    #     Add a population to the island
-    #     :param population: List of """
+    def add_population(self, population):
+        """
+        Add a population to the island
+        :param population: List of """
+
+
 
     # @property
     # def year(self):
@@ -176,6 +164,3 @@ class BioSim:
 
     # def make_movie(self):
     # """Create MPEG4 movie from visualization images saved."""
-
-    def add_population(self, population):
-        pass

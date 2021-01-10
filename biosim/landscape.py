@@ -11,7 +11,6 @@ class Landscape:
         # self.left = left
         # self.right = right
         # self.bottom = bottom
-        self.ini_pop = ini_pop
 
 
 
@@ -49,7 +48,7 @@ class Landscape:
         if not len(self.herb_sorting()) == 0:
             for herb in self.herb_sorting():
                 if self.get_fodder() > 0:
-                    self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder))
+                    self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder()))
                 else:
                     break
         if not len(self.carn_sorting()) == 0:
@@ -93,6 +92,9 @@ class Landscape:
 
     def carn_sorting(self):
         return sorted(self.list_carns, key=lambda x: x.get_fitness(), reverse=True)
+
+    def get_population(self):
+        return len(self.list_carns) + len(self.list_herbs)
 
 
 class Water(Landscape):
