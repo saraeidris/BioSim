@@ -57,6 +57,7 @@ class BioSim:
         # self.herbivore_params['sigma_birth'],
         # self.ini_pop)
         self.island = RossumIsland(island_map, self.herbivore_params)
+        self.landscape = Landscape()
 
     def set_animal_parameters(self, species, params):
         """
@@ -108,10 +109,14 @@ class BioSim:
 
         print(self.island.get_animal_stats())
 
-        animal_count = self.island.count_animals()
-        fig, (ax1, ax2) = plt.plot(1, figsize=(15, 6))
-        animal_count.plot(ax=ax1, title='Animal count')
+        plt.plot(num_years, self.landscape.list_herbs)
+        plt.plot(num_years, self.landscape.list_carns)
+        plt.title('Animal count')
+        plt.show()
 
+
+        # animal_count = self.island.count_animals()
+        # animal_count.plot(ax=ax1, title='Animal count')
 
         ser = pd.Series(list(self.island.get_animal_stats().values()),
                         index=pd.MultiIndex.from_tuples(self.island.get_animal_stats().keys()))
@@ -120,10 +125,6 @@ class BioSim:
         # (10, 27)
 
         plt.show()
-
-    def fodder_grow(self):
-        Lowland.update_fodder()
-        Highland.update_fodder()
 
     # def ages(self):
     #     for animal in self.ini_pop:
