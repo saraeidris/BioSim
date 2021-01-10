@@ -13,6 +13,9 @@ class Landscape:
         # self.right = right
         # self.bottom = bottom
 
+    def update_fodder(self):
+        self.fodder = None
+
 
 
     def split_animals(self):
@@ -22,6 +25,9 @@ class Landscape:
                 self.list_herbs.append(animal)
             elif animal['species'] == 'Carnivore':
                 self.list_carns.append(animal)
+
+    def num_animals(self):
+        return len(self.list_animals)
 
 
 
@@ -74,16 +80,22 @@ class Landscape:
                 if offspring:
                     offspring_carns.append(offspring)
 
-    def death(self, ini_pop):
+    def ages(self):
+        """Species ages by one year each year"""
+        for animal in self.list_animals:
+            animal.age += 1
+        #self.get_fitness()
+
+    def death(self):
         def survivors(pop):
             return [animal for animal in pop if not animal.dies()]
 
-        self.ini_pop = survivors(ini_pop)
+        self.list_animals = survivors(self.list_animals)
 
     def weight_loss(self):
-        for animal in self.ini_pop:
+        for animal in self.list_animals:
             animal.lose_weight()
-            animal.get_fitness()
+            #animal.get_fitness()
 
     def set_fodder(self, fodder):
         self.fodder = fodder
@@ -113,8 +125,8 @@ class Desert(Landscape):
 class Highland(Landscape):
     d_landscape = {'f_max_h': 300}
 
-    def __init__(self, ini_pop):
-        super().__init__(ini_pop)
+    def __init__(self):
+        super().__init__()
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
@@ -125,8 +137,8 @@ class Highland(Landscape):
 class Lowland(Landscape):
     d_landscape = {'f_max_l': 800}
 
-    def __init__(self, ini_pop):
-        super().__init__(ini_pop)
+    def __init__(self):
+        super().__init__()
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_l']

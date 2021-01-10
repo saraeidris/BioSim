@@ -17,11 +17,6 @@ class Animal:
         if weight is None:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
-    def ages(self):
-        """Species ages by one year each year"""
-        self.age += 1
-        self.get_fitness()
-
     def get_age(self):
         return self.age
 
@@ -79,7 +74,7 @@ class Animal:
         if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
             return
         if random.random() < self.params['gamma'] * self.get_fitness() * (len(species_list) - 1):
-            offspring = self.__class__()
+            offspring = self.__class__(self.params)
             if self.weight < (self.params['xi'] * offspring.weight):
                 return
             self.weight -= (self.params['xi'] * offspring.weight)

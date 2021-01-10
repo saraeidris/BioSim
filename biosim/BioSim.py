@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from biosim.RossumIsland import RossumIsland
-from biosim.animals import Herbivore
+from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Landscape, Lowland, Highland
 
 
@@ -87,7 +87,7 @@ class BioSim:
         elif landscape == 'H':
             self.highland_params = self.merge_params(self.highland_params, params)
         else:
-            raise ValueError
+            raise ValueError(landscape + 'does not have any parameters')
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -101,10 +101,11 @@ class BioSim:
         self.island.set_init_population(self.ini_pop)
 
         for _ in range(num_years):
-            self.island.fodder_grow()
-            self.island.eat_all()
-            self.feeding()
-            self.ages()
+            self.island.annual_cycle()
+            # self.island.fodder_grow()
+            # self.island.eat_all()
+            # self.feeding()
+            # self.ages()
 
         print(self.island.get_animal_stats())
 
@@ -120,23 +121,23 @@ class BioSim:
         Lowland.update_fodder()
         Highland.update_fodder()
 
-    def ages(self):
-        for animal in self.ini_pop:
-            animal.ages()
+    # def ages(self):
+    #     for animal in self.ini_pop:
+    #         animal.ages()
 
-    def feeding(self):
-        herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
-        new_herbs_list = []
-        # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
-        while len(herbs) > 0:
-            index = random.randint(0, len(herbs) - 1)
-            herb = herbs.pop(index)
-            herb.eat(Landscape.get_fodder())
-            new_herbs_list.append(herb)
+    # def feeding(self):
+    #     herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
+    #     new_herbs_list = []
+    #     # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
+    #     while len(herbs) > 0:
+    #         index = random.randint(0, len(herbs) - 1)
+    #         herb = herbs.pop(index)
+    #         herb.eat(Landscape.get_fodder())
+    #         new_herbs_list.append(herb)
 
         # Do carnivore stuff
 
-        self.ini_pop = new_herbs_list
+    #    self.ini_pop = new_herbs_list
 
     def add_population(self, population):
 

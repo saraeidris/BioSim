@@ -28,12 +28,14 @@ class RossumIsland:
             if land_type not in island_dict:
                 raise ValueError('Character not allowed as a part of island map')
 
-        return [island_dict[land]([]) for land in line]
+        return [island_dict[land]() for land in line]
 
-    def count_animals(self):
-        num_animals = []
-        for specie in self.species:
-            num_animals.append(specie)
+    def num_animals(self):
+        number = 0
+        for row in self.island:
+            for cell in row:
+                number += cell.num_animals
+        return number
 
     def fodder_grow(self):
         for rows in self.island:
@@ -73,9 +75,11 @@ class RossumIsland:
         return dict
 
     def annual_cycle(self):
-        self.island[10][10].update_fodder()
-        self.island[10][10].eat()
-        self.island[10][10].mate()
-        self.island[10][10].ages()
-        self.island[10][10].lose_weight()
-        self.island[10][10].death()
+        for row in self.island:
+            for cell in row:
+                cell.update_fodder()
+                cell.eat_all()
+                cell.give_birth()
+                cell.ages()
+                cell.weight_loss()
+                cell.death()
