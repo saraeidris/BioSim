@@ -1,6 +1,4 @@
 
-
-
 class Landscape:
     d_landscape = None
 
@@ -12,8 +10,6 @@ class Landscape:
         # self.left = left
         # self.right = right
         # self.bottom = bottom
-
-
 
     def split_animals(self):
 
@@ -113,8 +109,8 @@ class Desert(Landscape):
 class Highland(Landscape):
     d_landscape = {'f_max_h': 300}
 
-    def __init__(self, ini_pop):
-        super().__init__(ini_pop)
+    def __init__(self):
+        super().__init__()
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_h']
@@ -125,8 +121,8 @@ class Highland(Landscape):
 class Lowland(Landscape):
     d_landscape = {'f_max_l': 800}
 
-    def __init__(self, ini_pop):
-        super().__init__(ini_pop)
+    def __init__(self):
+        super().__init__()
 
     def update_fodder(self):
         self.fodder = self.d_landscape['f_max_l']

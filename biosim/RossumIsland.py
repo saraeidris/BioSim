@@ -28,7 +28,7 @@ class RossumIsland:
             if land_type not in island_dict:
                 raise ValueError('Character not allowed as a part of island map')
 
-        return [island_dict[land]([]) for land in line]
+        return [island_dict[land]() for land in line]
 
     def count_animals(self):
         num_animals = []

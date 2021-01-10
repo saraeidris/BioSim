@@ -58,7 +58,6 @@ class BioSim:
         # self.ini_pop)
         self.island = RossumIsland(island_map, self.herbivore_params)
 
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -109,12 +108,24 @@ class BioSim:
         print(self.island.get_animal_stats())
 
         import pandas as pd
+        animal_count = self.island.num_animals()
+        fig,(ax1, ax2) = plt.subplot(1, 2, figsize=15, 6)
+        animal_count.plot(ax = ax1, title= 'Animal count')
+        ax.plot()
+
         ser = pd.Series(list(self.island.get_animal_stats().values()),
                         index=pd.MultiIndex.from_tuples(self.island.get_animal_stats().keys()))
         df = ser.unstack().fillna(0)
         sns.heatmap(df, cmap='YlGnBu')
         # (10, 27)
+        plt.figure()
         plt.show()
+
+        df = pd.DataFrame(list(self.island.get_animal_stats().values()),
+                          index=pd.MultiIndex.from_tuples(self.island.get_animal_stats().keys()))
+        df = df.cumsum()
+        plt.figure()
+        df.plot()
 
     def fodder_grow(self):
         Lowland.update_fodder()
@@ -144,8 +155,6 @@ class BioSim:
         Add a population to the island
         :param population: List of """
         self.island.set_init_population(population)
-
-
 
     # @property
     # def year(self):
