@@ -109,10 +109,10 @@ class BioSim:
         print(self.island.get_animal_stats())
 
         import pandas as pd
-        animal_count = self.island.num_animals()
-        fig,(ax1, ax2) = plt.subplot(1, 2, figsize=15, 6)
-        animal_count.plot(ax = ax1, title= 'Animal count')
-        ax.plot()
+        # animal_count = self.island.num_animals()
+        # fig,(ax1, ax2) = plt.subplot(1, 2, figsize=15, 6)
+        # animal_count.plot(ax = ax1, title= 'Animal count')
+        # ax.plot()
 
         ser = pd.Series(list(self.island.get_animal_stats().values()),
                         index=pd.MultiIndex.from_tuples(self.island.get_animal_stats().keys()))

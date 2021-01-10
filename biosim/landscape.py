@@ -25,7 +25,7 @@ class Landscape:
                 self.list_carns.append(animal)
 
     def num_animals(self):
-        return len(self.list_animals)
+        return len(self.list_herbs + self.list_carns)
 
 
 
