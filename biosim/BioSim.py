@@ -70,10 +70,15 @@ class BioSim:
             self.herbivore_params = self.merge_params(self.herbivore_params, params)
         else:
             raise ValueError('Species must be either Carnivore or Herbivore')
+        for key in params:
+            if isinstance(params[key], str) or params[key] < 0:
+                raise ValueError(key + ' must be a positive integer og float')
+        if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
+            raise ValueError(params['DeltaPhiMax'] + ' must be strictly positive')
 
     # Hjelpemetode bør være privat
-    def merge_params(self, params, params2):
-        return {**params, **params2}
+    def merge_params(self, params1, params2):
+        return {**params1, **params2}
 
     # Må fikses
     def set_landscape_parameters(self, landscape, params):

@@ -1,10 +1,12 @@
+import random
+
 class Landscape:
     d_landscape = None
 
     def __init__(self):
         self.list_herbs = []
         self.list_carns = []
-        self.list_animals = self.list_herbs + self.list_carns
+        #self.list_animals = self.list_herbs + self.list_carns
         # self.top = top
         # self.left = left
         # self.right = right
@@ -15,14 +17,16 @@ class Landscape:
 
     def split_animals(self):
 
-        for animal in self.list_animals:
+        for animal in self.get_list_animals:
             if animal['species'] == 'Herbivore':
                 self.list_herbs.append(animal)
-            elif animal['species'] == 'Carnivore':
+            else:
                 self.list_carns.append(animal)
 
-    def num_animals(self):
-        return len(self.list_carns + self.list_herbs)
+    def get_list_animals(self):
+        return self.list_herbs + self.list_carns
+
+    def set_list_animals(self, ):
 
     @staticmethod
     def is_habitable():
@@ -45,19 +49,23 @@ class Landscape:
     #     return self.bottom
 
     def eat_all(self):
-        if not len(self.herb_sorting()) == 0:
-            for herb in self.herb_sorting():
+        shuffle_herbs = random.shuffle(self.list_herbs)
+        shuffle_carns = random.shuffle(self.list_carns)
+        if not shuffle_herbs is None:
+        # if not (shuffle_herbs is None and len(shuffle_herbs) == 0):
+            for herb in shuffle_herbs:
                 if self.get_fodder() > 0:
                     self.set_fodder(self.get_fodder() - herb.eat(self.get_fodder()))
                 else:
                     break
-        if not len(self.carn_sorting()) == 0:
-            for carn in self.carn_sorting():
-                killed_herbs = carn.eat(self.herb_sorting())
+        if not shuffle_carns is None:
+        #if not len(shuffle_carns) == 0:
+            for carn in shuffle_carns:
+                killed_herbs = carn.eat(shuffle_herbs)
                 if killed_herbs is None:
                     break
                 for killed_herb in killed_herbs:
-                    self.herb_sorting().remove(killed_herb)
+                    shuffle_herbs.remove(killed_herb)
 
     def give_birth(self):
         if len(self.herb_sorting()) > 1:
@@ -75,7 +83,7 @@ class Landscape:
 
     def ages(self):
         """Species ages by one year each year"""
-        for animal in self.list_animals:
+        for animal in self.get_animals()[2]:
             animal.age += 1
         # self.get_fitness()
 
@@ -83,7 +91,7 @@ class Landscape:
         def survivors(pop):
             return [animal for animal in pop if not animal.dies()]
 
-        self.list_animals = survivors(self.list_animals)
+        self.list_animals() = survivors(self.list_animals())
 
     def weight_loss(self):
         for animal in self.list_animals:
@@ -100,7 +108,9 @@ class Landscape:
         return sorted(self.list_carns, key=lambda x: x.get_fitness(), reverse=True)
 
     def get_population(self):
-        return len(self.list_carns) + len(self.list_herbs)
+        return len(self.list_herbs), len(self.list_carns), (len(self.list_carns) + len(self.list_herbs))
+    def get_animals(self):
+        return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
 
 
 class Water(Landscape):
