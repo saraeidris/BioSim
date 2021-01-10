@@ -1,4 +1,3 @@
-
 class Landscape:
     d_landscape = None
 
@@ -14,8 +13,6 @@ class Landscape:
     def update_fodder(self):
         self.fodder = None
 
-
-
     def split_animals(self):
 
         for animal in self.list_animals:
@@ -25,9 +22,7 @@ class Landscape:
                 self.list_carns.append(animal)
 
     def num_animals(self):
-        return len(self.list_herbs + self.list_carns)
-
-
+        return len(self.list_carns + self.list_herbs)
 
     @staticmethod
     def is_habitable():
@@ -82,7 +77,7 @@ class Landscape:
         """Species ages by one year each year"""
         for animal in self.list_animals:
             animal.age += 1
-        #self.get_fitness()
+        # self.get_fitness()
 
     def death(self):
         def survivors(pop):
@@ -93,7 +88,7 @@ class Landscape:
     def weight_loss(self):
         for animal in self.list_animals:
             animal.lose_weight()
-            #animal.get_fitness()
+            # animal.get_fitness()
 
     def set_fodder(self, fodder):
         self.fodder = fodder
@@ -131,6 +126,7 @@ class Highland(Landscape):
 
     def get_fodder(self):
         return self.fodder
+
 
 class Lowland(Landscape):
     d_landscape = {'f_max_l': 800}

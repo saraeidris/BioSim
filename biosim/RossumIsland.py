@@ -34,7 +34,8 @@ class RossumIsland:
         number = 0
         for row in self.island:
             for cell in row:
-                number += cell.num_animals()
+                if not isinstance(cell, Water):
+                    number += cell.num_animals()
         return number
 
     def fodder_grow(self):
