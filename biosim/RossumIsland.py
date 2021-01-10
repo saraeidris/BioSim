@@ -23,7 +23,8 @@ class RossumIsland:
             if not (rows[0] == 'W' or rows[-1] == 'W'):
                 raise ValueError('Outer edges of map must be water')
 
-    def splits(self, line, island_dict):
+    @staticmethod
+    def splits(line, island_dict):
         for land_type in line:
             if land_type not in island_dict:
                 raise ValueError('Character not allowed as a part of island map')
@@ -87,9 +88,10 @@ class RossumIsland:
     def annual_cycle(self):
         for row in self.island:
             for cell in row:
-                cell.update_fodder()
-                cell.eat_all()
-                cell.give_birth()
-                cell.ages()
-                cell.lose_weight()
-                cell.death()
+                if not isinstance(cell, Water):
+                    cell.update_fodder()
+                    cell.eat_all()
+                    cell.give_birth()
+                    cell.ages()
+                    cell.lose_weight()
+                    cell.death()
