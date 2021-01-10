@@ -68,12 +68,21 @@ class RossumIsland:
                 cell.list_herbs = cell.list_herbs + herbs_list
                 cell.list_carns = cell.list_carns + carn_list
 
-    def get_animal_stats(self):
+    def get_animal_population_for_each_cell(self):
         dict = {}
         for y, rows in enumerate(self.island):
             for x, cell in enumerate(rows):
                 dict[(x, y)] = cell.get_population()
         return dict
+
+    def get_number_of_animals(self):
+        number_of_herbs = 0
+        number_of_carns = 0
+        for rows in self.island:
+            for cell in rows:
+                number_of_herbs += len(cell.list_herbs)
+                number_of_carns += len(cell.list_carns)
+        return number_of_herbs, number_of_carns
 
     def annual_cycle(self):
         for row in self.island:
