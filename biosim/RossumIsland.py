@@ -30,7 +30,7 @@ class RossumIsland:
 
         return [island_dict[land]() for land in line]
 
-    def count_animals(self):
+    def num_animals(self):
         number = 0
         for row in self.island:
             for cell in row:
