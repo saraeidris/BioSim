@@ -56,10 +56,10 @@ class Landscape:
                 if offspring:
                     offspring_herbs.append(offspring)
             self.list_herbs += offspring_herbs
-        if len(self.herb_sorting()) > 1:
+        if len(self.carn_sorting()) > 1:
             offspring_carns = []
-            for carn in self.herb_sorting():
-                offspring = carn.mate(self.herb_sorting())
+            for carn in self.carn_sorting():
+                offspring = carn.mate(self.carn_sorting())
                 if offspring:
                     offspring_carns.append(offspring)
             self.list_carns += offspring_carns

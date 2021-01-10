@@ -98,7 +98,7 @@ class Herbivore(Animal):
     def consumed_fodder(self, available_fodder):
         """
         Decide how much fodder a herbivore eats
-        :param available_fodder: Amount of fodder in current cell
+        :param fodder: Amount of fodder in current cell
         :return:
             Fodder left in cell
         """
