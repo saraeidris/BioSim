@@ -108,7 +108,7 @@ class Landscape:
         return sorted(self.list_carns, key=lambda x: x.get_fitness(), reverse=True)
 
     def get_population(self):
-        return len(self.list_herbs), len(self.list_carns), (len(self.list_carns) + len(self.list_herbs))
+        return len(self.list_herbs), len(self.list_carns)
     def get_animals(self):
         return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
 
