@@ -139,9 +139,11 @@ class BioSim:
         self.ini_pop = new_herbs_list
 
     def add_population(self, population):
+
         """
         Add a population to the island
         :param population: List of """
+        self.island.set_init_population(population)
 
 
 
