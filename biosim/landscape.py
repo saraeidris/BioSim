@@ -4,9 +4,10 @@
 class Landscape:
     d_landscape = None
 
-    def __init__(self, ini_pop):
+    def __init__(self):
         self.list_herbs = []
         self.list_carns = []
+        self.list_animals = self.list_herbs + self.list_carns
         # self.top = top
         # self.left = left
         # self.right = right
@@ -16,10 +17,10 @@ class Landscape:
 
     def split_animals(self):
 
-        for animal in self.ini_pop:
-            if animal == 'Herbivore':
+        for animal in self.list_animals:
+            if animal['species'] == 'Herbivore':
                 self.list_herbs.append(animal)
-            elif animal == 'Carnivore':
+            elif animal['species'] == 'Carnivore':
                 self.list_carns.append(animal)
 
 
@@ -32,17 +33,17 @@ class Landscape:
     def get_fodder():
         return 0
 
-    def get_top(self):
-        return self.top
-
-    def get_left(self):
-        return self.left
-
-    def get_right(self):
-        return self.right
-
-    def get_bottom(self):
-        return self.bottom
+    # def get_top(self):
+    #     return self.top
+    #
+    # def get_left(self):
+    #     return self.left
+    #
+    # def get_right(self):
+    #     return self.right
+    #
+    # def get_bottom(self):
+    #     return self.bottom
 
     def eat_all(self):
         if not len(self.herb_sorting()) == 0:

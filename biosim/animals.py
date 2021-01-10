@@ -59,6 +59,9 @@ class Animal:
         """Specie loses weight"""
         self.weight -= self.params['eta'] * self.weight
 
+    def migrate(self):
+        return random.random() < self.params['mu'] * self.get_fitness()
+
     def dies(self):
         """
         Decide whether the specie dies or not
