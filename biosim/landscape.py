@@ -1,6 +1,4 @@
 
-
-
 class Landscape:
     d_landscape = None
 
