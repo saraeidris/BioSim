@@ -15,9 +15,13 @@ class Landscape:
     def update_fodder(self):
         self.fodder = None
 
+    # def update_animal_lists(self):
+    #     self.list_herbs =
+    #     self.list_carns =
+
     def split_animals(self):
 
-        for animal in self.get_list_animals:
+        for animal in self.get_list_animals():
             if animal['species'] == 'Herbivore':
                 self.list_herbs.append(animal)
             else:
@@ -26,7 +30,8 @@ class Landscape:
     def get_list_animals(self):
         return self.list_herbs + self.list_carns
 
-    def set_list_animals(self, ):
+    def set_list_animals(self):
+        pass
 
     @staticmethod
     def is_habitable():
@@ -91,10 +96,11 @@ class Landscape:
         def survivors(pop):
             return [animal for animal in pop if not animal.dies()]
 
-        self.list_animals() = survivors(self.list_animals())
+        self.list_herbs = survivors(self.list_herbs)
+        self.list_carns = survivors(self.list_carns)
 
     def weight_loss(self):
-        for animal in self.list_animals:
+        for animal in (self.list_herbs + self.list_carns):
             animal.lose_weight()
             # animal.get_fitness()
 

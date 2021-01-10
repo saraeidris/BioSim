@@ -57,7 +57,9 @@ class BioSim:
         # self.herbivore_params['sigma_birth'],
         # self.ini_pop)
         self.island = RossumIsland(island_map, self.herbivore_params)
-        self.landscape = Landscape()
+        self.current_year = 0
+        self.island.set_init_population(self.ini_pop)
+
 
     def set_animal_parameters(self, species, params):
         """
@@ -103,30 +105,29 @@ class BioSim:
         Image files will be numbered consecutively.
         """
 
-        self.island.set_init_population(self.ini_pop)
+        list_with_population_for_all_years = []
+        list_with_years = []
 
         for _ in range(num_years):
             self.island.annual_cycle()
-            # self.island.fodder_grow()
-            # self.island.eat_all()
-            # self.feeding()
-            # self.ages()
+            list_with_years.append(self.current_year)
+            list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
-        print(self.island.get_animal_stats())
+            self.current_year += 1
 
-        plt.plot(num_years, self.landscape.list_herbs)
-        plt.plot(num_years, self.landscape.list_carns)
+        print(self.island.get_animal_population_for_each_cell())
+
+        plt.plot(list_with_years, list_with_population_for_all_years)
         plt.title('Animal count')
         plt.show()
-
 
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')
 
-        ser = pd.Series(list(self.island.get_animal_stats().values()),
-                        index=pd.MultiIndex.from_tuples(self.island.get_animal_stats().keys()))
+        ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
+                        index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
         df = ser.unstack().fillna(0)
-        sns.heatmap(df, cmap='YlGnBu')
+        #sns.heatmap(df)
         # (10, 27)
 
         plt.show()
