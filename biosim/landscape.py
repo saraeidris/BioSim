@@ -47,6 +47,16 @@ class Landscape:
                     break
                 for killed_herb in killed_herbs:
                     self.herb_sorting().remove(killed_herb)
+                    #self.herb_sorting() = [killed_herb for killed_herb in self.herb_sorting() if not killed_herb in killed_herbs]
+
+    # def migration(self, ):
+    #     move_north = []
+    #     move_south = []
+    #     move_east = []
+    #     move_west = []
+    #     for herb in self.list_herbs:
+    #         if herb.migrate():
+
 
     def give_birth(self):
         if len(self.herb_sorting()) > 1:

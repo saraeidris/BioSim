@@ -157,68 +157,74 @@ class BioSim:
 list_with_population_for_all_years = []
 list_with_years = []
 
-for _ in range(num_years):
-    self.island.annual_cycle()
-    list_with_years.append(self.current_year)
-    list_with_population_for_all_years.append(self.island.get_number_of_animals())
+        for _ in range(num_years):
+            self.island.annual_cycle()
+            list_with_years.append(self.current_year)
+            list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
-    self.current_year += 1
+            self.current_year += 1
 
-print(self.island.get_animal_population_for_each_cell())
+        print(self.island.get_animal_population_for_each_cell())
 
-plt.plot(list_with_years, list_with_population_for_all_years)
-plt.title('Animal count')
-plt.show()
+        plt.plot(list_with_years, list_with_population_for_all_years)
+        plt.title('Animal count')
+        plt.show()
 
-ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
-                index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
-df = ser.unstack().fillna(0)
-# sns.heatmap(df)
-# (10, 27)
+        # animal_count = self.island.count_animals()
+        # animal_count.plot(ax=ax1, title='Animal count')
 
-plt.show()
+        ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
+                        index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
+        df = ser.unstack().fillna(0)
+        #sns.heatmap(df)
+        # (10, 27)
 
+        plt.show()
 
-# def ages(self):
-#     for animal in self.ini_pop:
-#         animal.ages()
+    # def ages(self):
+    #     for animal in self.ini_pop:
+    #         animal.ages()
 
-# def feeding(self):
-#     herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
-#     new_herbs_list = []
-#     # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
-#     while len(herbs) > 0:
-#         index = random.randint(0, len(herbs) - 1)
-#         herb = herbs.pop(index)
-#         herb.eat(Landscape.get_fodder())
-#         new_herbs_list.append(herb)
+    # def feeding(self):
+    #     herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
+    #     new_herbs_list = []
+    #     # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
+    #     while len(herbs) > 0:
+    #         index = random.randint(0, len(herbs) - 1)
+    #         herb = herbs.pop(index)
+    #         herb.eat(Landscape.get_fodder())
+    #         new_herbs_list.append(herb)
 
-# Do carnivore stuff
+    # Do carnivore stuff
 
-#    self.ini_pop = new_herbs_list
+    #    self.ini_pop = new_herbs_list
 
-def add_population(self, population):
-    """
-    Add a population to the island
-    :param population: List of """
-    self.island.set_init_population(population)
+    def add_population(self, population):
 
-# @property
-# def year(self):
-# """Last year simulated."""
+        """
+        Add a population to the island
+        :param population: List of """
+        self.island.set_init_population(population)
 
-# @property
-# def num_animals(self, ini_pop):
-#
-#     """
-#     Total number of animals
-#     dictionaries specifying population
-#     on island.
-#     """
-#
-#  @property
-#  def num_animals_per_species(self):
-#  """Number of animals per species in island, as dictionary."""
+    # @property
+    # def year(self):
+    # """Last year simulated."""
 
-# def make_movie(self):
-# """Create MPEG4 movie from visualization images saved."""
+    # @property
+    # def num_animals(self, ini_pop):
+    #
+    #     """
+    #     Total number of animals
+    #     dictionaries specifying population
+    #     on island.
+    #     """
+    #
+    @property
+    def num_animals_per_species(self):
+        """Number of animals per species in island, as dictionary."""
+        num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
+                           'Carnivore': self.island.get_number_of_animals()[1]}
+        return num_animal_dict
+
+    # def make_movie(self):
+    # """Create MPEG4 movie from visualization images saved."""
