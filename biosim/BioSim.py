@@ -56,10 +56,10 @@ class BioSim:
         # self.herbivore_params['w_birth'],
         # self.herbivore_params['sigma_birth'],
         # self.ini_pop)
-        self.island = RossumIsland(island_map)#, self.herbivore_params)
+        self.island = RossumIsland(island_map)  # , self.herbivore_params)
         self.current_year = 0
         self.island.set_init_population(self.ini_pop)
-
+        self.island_map = island_map
 
     def set_animal_parameters(self, species, params):
         """
@@ -105,74 +105,120 @@ class BioSim:
         Image files will be numbered consecutively.
         """
 
-        list_with_population_for_all_years = []
-        list_with_years = []
+        _map = self.island_map
 
-        for _ in range(num_years):
-            self.island.annual_cycle()
-            list_with_years.append(self.current_year)
-            list_with_population_for_all_years.append(self.island.get_number_of_animals())
+        #                   R    G    B
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
 
-            self.current_year += 1
+        map_rgb = [[rgb_value[column] for column in row]
+                   for row in _map.splitlines()]
 
-        print(self.island.get_animal_population_for_each_cell())
+        fig = plt.figure()
 
-        plt.plot(list_with_years, list_with_population_for_all_years)
-        plt.title('Animal count')
+        axim = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
+
+        axim.imshow(map_rgb)
+
+        axim.set_xticks(range(len(map_rgb[0])))
+        axim.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        axim.set_yticks(range(len(map_rgb)))
+        axim.set_yticklabels(range(1, 1 + len(map_rgb)))
+
+        axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
+        axlg.axis('off')
+        for ix, name in enumerate(('Water', 'Lowland',
+                                   'Highland', 'Desert')):
+            axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+                                         edgecolor='none',
+                                         facecolor=rgb_value[name[0]]))
+            axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
+
         plt.show()
 
-        # animal_count = self.island.count_animals()
-        # animal_count.plot(ax=ax1, title='Animal count')
+#     def update(n_steps):
+#         fig = plt.figure()
+#         ax = fig.add_subplot(1, 1, 1)
+#         ax.set_xlim(0, n_steps)
+#         ax.set_ylim(0, 1)
+#
+#         line = ax.plot(np.arange(n_steps),
+#                        np.full(n_steps, np.nan), 'b-')[0]
+#
+#
+# for n in range(n_steps):
+#     ydata = line.get_ydata()
+#     ydata[n] = np.random.random()
+#     line.set_ydata(ydata)
+#     plt.pause(1e-6)
 
-        ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
-                        index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
-        df = ser.unstack().fillna(0)
-        #sns.heatmap(df)
-        # (10, 27)
+list_with_population_for_all_years = []
+list_with_years = []
 
-        plt.show()
+for _ in range(num_years):
+    self.island.annual_cycle()
+    list_with_years.append(self.current_year)
+    list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
-    # def ages(self):
-    #     for animal in self.ini_pop:
-    #         animal.ages()
+    self.current_year += 1
 
-    # def feeding(self):
-    #     herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
-    #     new_herbs_list = []
-    #     # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
-    #     while len(herbs) > 0:
-    #         index = random.randint(0, len(herbs) - 1)
-    #         herb = herbs.pop(index)
-    #         herb.eat(Landscape.get_fodder())
-    #         new_herbs_list.append(herb)
+print(self.island.get_animal_population_for_each_cell())
 
-    # Do carnivore stuff
+plt.plot(list_with_years, list_with_population_for_all_years)
+plt.title('Animal count')
+plt.show()
 
-    #    self.ini_pop = new_herbs_list
+ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
+                index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
+df = ser.unstack().fillna(0)
+# sns.heatmap(df)
+# (10, 27)
 
-    def add_population(self, population):
+plt.show()
 
-        """
-        Add a population to the island
-        :param population: List of """
-        self.island.set_init_population(population)
 
-    # @property
-    # def year(self):
-    # """Last year simulated."""
+# def ages(self):
+#     for animal in self.ini_pop:
+#         animal.ages()
 
-    # @property
-    # def num_animals(self, ini_pop):
-    #
-    #     """
-    #     Total number of animals
-    #     dictionaries specifying population
-    #     on island.
-    #     """
-    #
-    #  @property
-    #  def num_animals_per_species(self):
-    #  """Number of animals per species in island, as dictionary."""
+# def feeding(self):
+#     herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
+#     new_herbs_list = []
+#     # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
+#     while len(herbs) > 0:
+#         index = random.randint(0, len(herbs) - 1)
+#         herb = herbs.pop(index)
+#         herb.eat(Landscape.get_fodder())
+#         new_herbs_list.append(herb)
 
-    # def make_movie(self):
-    # """Create MPEG4 movie from visualization images saved."""
+# Do carnivore stuff
+
+#    self.ini_pop = new_herbs_list
+
+def add_population(self, population):
+    """
+    Add a population to the island
+    :param population: List of """
+    self.island.set_init_population(population)
+
+# @property
+# def year(self):
+# """Last year simulated."""
+
+# @property
+# def num_animals(self, ini_pop):
+#
+#     """
+#     Total number of animals
+#     dictionaries specifying population
+#     on island.
+#     """
+#
+#  @property
+#  def num_animals_per_species(self):
+#  """Number of animals per species in island, as dictionary."""
+
+# def make_movie(self):
+# """Create MPEG4 movie from visualization images saved."""
