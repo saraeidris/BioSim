@@ -20,6 +20,9 @@ class Animal:
     def get_age(self):
         return self.age
 
+    def aging(self):
+        self.age += 1
+
     def get_fitness(self):
         """
         Calculate fitness for specie

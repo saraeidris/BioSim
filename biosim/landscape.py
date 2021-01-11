@@ -27,21 +27,23 @@ class Landscape:
     def get_fodder():
         return 0
 
-    def eat_all(self): # Kan bruke shuffle her kanskje?
-        if not len(self.herb_sorting()) == 0:
-            for herb in self.herb_sorting():
+    def eat_all(self):
+        if not len(self.list_herbs) == 0:
+            random.shuffle(self.list_herbs)
+            for herb in self.list_herbs:
                 if self.get_fodder() > 0:
                     self.set_fodder(self.get_fodder() - herb.consumed_fodder(self.get_fodder()))
                 else:
                     break
-        if not len(self.carn_sorting()) == 0:
-            for carn in self.carn_sorting():
-                killed_herbs = carn.consumed_herbs(self.herb_sorting())
+        if not len(self.list_carns) == 0:
+            sorted_carns = sorted(self.list_carns, key=lambda x: x.get_fitness(), reverse=True)
+            sorted_herbs = sorted(self.list_herbs, key=lambda x: x.get_fitness())
+            for carn in sorted_carns:
+                killed_herbs = carn.consumed_herbs(sorted_herbs)
                 if killed_herbs is None:
                     break
-                for killed_herb in killed_herbs:
-                    self.herb_sorting().remove(killed_herb)
-                    #self.herb_sorting() = [killed_herb for killed_herb in self.herb_sorting() if not killed_herb in killed_herbs]
+                for herb in killed_herbs:
+                    sorted_herbs.remove(herb)
 
     # def migration(self, around):
     #     move_north = []
@@ -51,19 +53,18 @@ class Landscape:
     #     for herb in self.list_herbs:
     #         if herb.migrate():
 
-
     def give_birth(self):
-        if len(self.herb_sorting()) > 1:
+        if len(self.list_herbs) > 1:
             offspring_herbs = []
-            for herb in self.herb_sorting():
-                offspring = herb.mate(self.herb_sorting())
+            for herb in self.list_herbs:
+                offspring = herb.mate(self.list_herbs)
                 if offspring:
                     offspring_herbs.append(offspring)
             self.list_herbs += offspring_herbs
-        if len(self.carn_sorting()) > 1:
+        if len(self.list_carns) > 1:
             offspring_carns = []
-            for carn in self.carn_sorting():
-                offspring = carn.mate(self.carn_sorting())
+            for carn in self.list_carns:
+                offspring = carn.mate(self.list_carns)
                 if offspring:
                     offspring_carns.append(offspring)
             self.list_carns += offspring_carns
@@ -71,9 +72,9 @@ class Landscape:
     def ages(self):
         """Species ages by one year each year"""
         for herb in self.list_herbs:
-            herb.age += 1
+            herb.aging()
         for carn in self.list_carns:
-            carn.age += 1
+            carn.aging()
 
     def death(self):
         def survivors(pop):
@@ -88,12 +89,6 @@ class Landscape:
 
     def set_fodder(self, fodder):
         self.fodder = fodder
-
-    def herb_sorting(self):
-        return sorted(self.list_herbs, key=lambda x: x.get_fitness())
-
-    def carn_sorting(self):
-        return sorted(self.list_carns, key=lambda x: x.get_fitness(), reverse=True)
 
     def get_population(self):
         return len(self.list_herbs), len(self.list_carns)

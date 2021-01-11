@@ -146,7 +146,7 @@ class BioSim:
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
-            self.current_year += 1
+            #self.current_year += 1
 
             print(self.island.get_animal_population_for_each_cell())
 
