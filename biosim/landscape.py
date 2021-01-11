@@ -44,6 +44,7 @@ class Landscape:
                     continue
                 for herb in killed_herbs:
                     sorted_herbs.remove(herb)
+            self.list_herbs = sorted_herbs
 
     # def migration(self, around):
     #     move_north = []

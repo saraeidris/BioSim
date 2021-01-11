@@ -64,7 +64,8 @@ class RossumIsland:
                         herbs_list.append(Herbivore(animal['age'],
                                                     animal['weight']))
                     if animal['species'] == 'Carnivore':
-                        carn_list.append(Carnivore())
+                        carn_list.append(Carnivore(animal['age'],
+                                                   animal['weight']))
                 cell.list_herbs += herbs_list
                 cell.list_carns += carn_list
 
