@@ -138,24 +138,26 @@ class BioSim:
 
         plt.show()
 
-#     def update(n_steps):
-#         fig = plt.figure()
-#         ax = fig.add_subplot(1, 1, 1)
-#         ax.set_xlim(0, n_steps)
-#         ax.set_ylim(0, 1)
-#
-#         line = ax.plot(np.arange(n_steps),
-#                        np.full(n_steps, np.nan), 'b-')[0]
-#
-#
-# for n in range(n_steps):
-#     ydata = line.get_ydata()
-#     ydata[n] = np.random.random()
-#     line.set_ydata(ydata)
-#     plt.pause(1e-6)
+        list_with_population_for_all_years = []
+        list_with_years = []
 
-list_with_population_for_all_years = []
-list_with_years = []
+        for _ in range(num_years):
+            self.island.annual_cycle()
+            list_with_years.append(self.current_year)
+            list_with_population_for_all_years.append(self.island.get_number_of_animals())
+
+            self.current_year += 1
+
+        print(self.island.get_animal_population_for_each_cell())
+
+    # def update(self, num_years):
+    #     fig = plt.figure()
+    #     ax = fig.add_subplot(1, 1, 1)
+    #     ax.set_xlim(0, num_years)
+    #     ax.set_ylim(0, 1)
+
+        list_with_population_for_all_years = []
+        list_with_years = []
 
         for _ in range(num_years):
             self.island.annual_cycle()
@@ -170,6 +172,17 @@ list_with_years = []
             plt.title('Animal count')
             plt.pause(10e-3)
         plt.show()
+
+        #  line = ax.plot(list_with_years, list_with_population_for_all_years, 'b-')[0]
+
+
+        # for n in range(num_years):
+        #     ydata = line.get_ydata()
+        #     ydata[n] = np.random.random()
+        #     line.set_ydata(ydata)
+        #     plt.pause(1e-6)
+
+
 
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')
