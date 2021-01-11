@@ -37,8 +37,11 @@ class TestLandscape:
             assert carn.age == 3
 
     def test_update_fodder(self):
-        land_fodder = Landscape().update_fodder()
-        high_fodder = Highland().update_fodder()
+        l_u = Landscape().update_fodder()
+        h_u = Highland().update_fodder()
+        assert l_u is None
+        assert h_u == 300
+
 
 
 

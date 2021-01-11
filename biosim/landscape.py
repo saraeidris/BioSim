@@ -7,9 +7,10 @@ class Landscape:
     def __init__(self):
         self.list_herbs = []
         self.list_carns = []
+        self.fodder = None
 
     def update_fodder(self):
-        self.fodder = None
+        pass
 
     # def split_animals(self):
     #

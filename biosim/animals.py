@@ -17,9 +17,6 @@ class Animal:
         if weight is None:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
-    def get_age(self):
-        return self.age
-
     def aging(self):
         self.age += 1
 
@@ -36,7 +33,7 @@ class Animal:
             return fitness
 
     # def set_fitness(self, fitness):
-    #     self.fitness = fitness
+    #      get_fitness() = fitness
 
     # def set_weight(self):
     #     if self.weight is None:
@@ -66,7 +63,7 @@ class Animal:
          :return bool
             True if specie dies
         """
-        return self.get_weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
+        return self.weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
 
     def mate(self, species_list):
         """
@@ -130,7 +127,7 @@ class Carnivore(Animal):
         wanted_food = self.params['F']
         killed_herbs = []
         if len(herb_sorted) == 0:
-            return
+            return killed_herbs
         for herb in herb_sorted:
             if wanted_food == 0:
                 break

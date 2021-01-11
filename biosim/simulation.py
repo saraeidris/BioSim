@@ -146,23 +146,23 @@ class BioSim:
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
             self.current_year += 1
 
-        fig = plt.figure()
-        ax = fig.add_subplot(1, 1, 1)
-        ax.set_xlim(0, num_years)
-        ax.set_ylim(0, 6000)
-
-        line = ax.plot(list_with_years, list_with_population_for_all_years, 'b-')[0]
-
-        for n in range(num_years):
-            ydata = line.get_ydata()
-            ydata[n] = line.get_xdata()
-            line.set_ydata(ydata)
-            plt.pause(1e-6)
-
-            plt.plot(list_with_years, list_with_population_for_all_years)
-            plt.title('Animal count')
-            plt.pause(10e-3)
-        plt.show()
+        # fig = plt.figure()
+        # ax = fig.add_subplot(1, 1, 1)
+        # ax.set_xlim(0, num_years)
+        # ax.set_ylim(0, 6000)
+        #
+        # line = ax.plot(list_with_years, list_with_population_for_all_years, 'b-')[0]
+        #
+        # for n in range(num_years):
+        #     ydata = line.get_ydata()
+        #     ydata[n] = line.get_xdata()
+        #     line.set_ydata(ydata)
+        #     plt.pause(1e-6)
+        #
+        #     plt.plot(list_with_years, list_with_population_for_all_years)
+        #     plt.title('Animal count')
+        #     plt.pause(10e-3)
+        # plt.show()
 
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')

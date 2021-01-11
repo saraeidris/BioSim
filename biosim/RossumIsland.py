@@ -88,7 +88,7 @@ class RossumIsland:
     def annual_cycle(self):
         for row in self.island:
             for cell in row:
-                if not isinstance(cell, Water):
+                if cell.is_habitable():
                     cell.update_fodder()
                     cell.eat_all()
                     cell.give_birth()
