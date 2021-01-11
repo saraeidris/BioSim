@@ -9,12 +9,13 @@ def set_params(request):
     Animal.set_params(Animal.params)
 
 
-def test_ani_age():
+def test_animal_age():
     """
     Test that a new animal has age 0.
     """
     a = Animal(0, 5)
     assert a.age == 0
+
 
 def test_animal_should_eat_when_fodder_is_available():
     animal = Herbivore({'F': 10, 'beta': 0.9}, weight=5)
@@ -22,11 +23,17 @@ def test_animal_should_eat_when_fodder_is_available():
 
     assert consumed_fodder == 10
 
-def test_animal_should_eat_all_remaining_food_when_fodder_is_less_than_F():
+
+def test_herbivore_should_eat_all_remaining_food_when_fodder_is_less_than_F():
     animal = Herbivore({'F': 10, 'beta': 0.9}, weight=5)
     consumed_fodder = animal.consumed_fodder(7)
 
     assert consumed_fodder == 7
+
+def test_carnivore_kills_herbivores_until_F_is_max():
+    animal = Carnivore({})
+
+
 
 
 

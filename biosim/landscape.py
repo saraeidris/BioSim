@@ -40,8 +40,8 @@ class Landscape:
             sorted_herbs = sorted(self.list_herbs, key=lambda x: x.get_fitness())
             for carn in sorted_carns:
                 killed_herbs = carn.consumed_herbs(sorted_herbs)
-                if killed_herbs is None:
-                    break
+                if len(killed_herbs) == 0:
+                    continue
                 for herb in killed_herbs:
                     sorted_herbs.remove(herb)
 

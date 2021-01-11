@@ -144,8 +144,7 @@ class Carnivore(Animal):
                 if wanted_food < herb.weight:
                     self.weight += self.params['beta'] * wanted_food
                     killed_herbs.append(herb)
-                    self.get_fitness()
-                    return killed_herbs
+                    break
                 self.weight += self.params['beta'] * herb.weight
                 wanted_food -= herb.weight
                 killed_herbs.append(herb)
