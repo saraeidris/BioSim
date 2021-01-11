@@ -136,49 +136,41 @@ class BioSim:
                                          facecolor=rgb_value[name[0]]))
             axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
 
-        plt.show()
-
+    #def update(self, num_years):
         list_with_population_for_all_years = []
         list_with_years = []
-
         for _ in range(num_years):
+
             self.island.annual_cycle()
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
+            self.current_year += 1
 
-            #self.current_year += 1
+        fig = plt.figure()
+        ax = fig.add_subplot(1, 1, 1)
+        ax.set_xlim(0, num_years)
+        ax.set_ylim(0, 6000)
 
-            print(self.island.get_animal_population_for_each_cell())
+        line = ax.plot(list_with_years, list_with_population_for_all_years, 'b-')[0]
 
-    # def update(self, num_years):
-    #     fig = plt.figure()
-    #     ax = fig.add_subplot(1, 1, 1)
-    #     ax.set_xlim(0, num_years)
-    #     ax.set_ylim(0, 1)
+        for n in range(num_years):
+            ydata = line.get_ydata()
+            ydata[n] = line.get_xdata()
+            line.set_ydata(ydata)
+            plt.pause(1e-6)
 
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
             plt.pause(10e-3)
         plt.show()
 
-        #  line = ax.plot(list_with_years, list_with_population_for_all_years, 'b-')[0]
-
-
-        # for n in range(num_years):
-        #     ydata = line.get_ydata()
-        #     ydata[n] = np.random.random()
-        #     line.set_ydata(ydata)
-        #     plt.pause(1e-6)
-
-
-
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')
 
-        #ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
+        # ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
         #                index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
-        #df = ser.unstack().fillna(0)
-        #sns.heatmap(df)
+        # df = ser.unstack().fillna(0)
+        # sns.heatmap(df)
         # (10, 27)
 
         # plt.show()
