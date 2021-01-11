@@ -3,11 +3,11 @@ from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 
 
 class RossumIsland:
-    def __init__(self, island_map):#, params):
+    def __init__(self, island_map): # , params):
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
         # self.island_coloumn_length = len(island_map) trengs denne?
         self.island_row_length = len(island_map.splitlines()[0])
-        #self.params = params
+        # self.params = params
 
         self.island = []
         for lines in island_map.splitlines():
@@ -92,6 +92,14 @@ class RossumIsland:
                     cell.update_fodder()
                     cell.eat_all()
                     cell.give_birth()
+        #self.migration()
                     cell.ages()
                     cell.lose_weight()
                     cell.death()
+
+    # def migration(self):
+    #     for row in range(1, len(self.island) - 1):
+    #         for col in range(1, self.island_row_length - 1):
+    #             cell = self.island[row][col]
+    #             if cell.is_habitable():
+    #                 cell.migrate()

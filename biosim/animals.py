@@ -15,7 +15,7 @@ class Animal:
         self.weight = weight
 
         if weight is None:
-             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
 
     def get_age(self):
         return self.age
@@ -29,11 +29,11 @@ class Animal:
             return 0
         else:
             fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
-                       (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
+            (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
             return fitness
 
-    def set_fitness(self, fitness):
-        self.fitness = fitness
+    # def set_fitness(self, fitness):
+    #     self.fitness = fitness
 
     # def set_weight(self):
     #     if self.weight is None:
@@ -78,7 +78,6 @@ class Animal:
             if self.weight < (self.params['xi'] * offspring.weight):
                 return
             self.weight -= (self.params['xi'] * offspring.weight)
-            self.get_fitness()
             return offspring
 
 
@@ -98,7 +97,7 @@ class Herbivore(Animal):
     def consumed_fodder(self, available_fodder):
         """
         Decide how much fodder a herbivore eats
-        :param fodder: Amount of fodder in current cell
+        :param available_fodder: Amount of fodder in current cell
         :return:
             Fodder left in cell
         """
@@ -155,5 +154,4 @@ class Carnivore(Animal):
                 self.weight += self.params['beta'] * herb.weight
                 wanted_food -= herb.weight
                 killed_herbs.append(herb)
-                self.get_fitness()
         return killed_herbs

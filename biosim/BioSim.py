@@ -59,6 +59,7 @@ class BioSim:
         self.island = RossumIsland(island_map)#, self.herbivore_params)
         self.current_year = 0
         self.island.set_init_population(self.ini_pop)
+        self.island_map = island_map
 
 
     def set_animal_parameters(self, species, params):
@@ -170,9 +171,12 @@ class BioSim:
     #     on island.
     #     """
     #
-    #  @property
-    #  def num_animals_per_species(self):
-    #  """Number of animals per species in island, as dictionary."""
+    @property
+    def num_animals_per_species(self):
+        """Number of animals per species in island, as dictionary."""
+        num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
+                           'Carnivore': self.island.get_number_of_animals()[1]}
+        return num_animal_dict
 
     # def make_movie(self):
     # """Create MPEG4 movie from visualization images saved."""
