@@ -61,13 +61,11 @@ class RossumIsland:
                 carn_list = []
                 for animal in dict['pop']:
                     if animal['species'] == 'Herbivore':
-                        herbs_list.append(Herbivore(animal['age'],
-                                                    animal['weight']))
+                        herbs_list.append(Herbivore())
                     if animal['species'] == 'Carnivore':
-                        carn_list.append(Carnivore(animal['age'],
-                                                   animal['weight']))
-                cell.list_herbs = cell.list_herbs + herbs_list
-                cell.list_carns = cell.list_carns + carn_list
+                        carn_list.append(Carnivore())
+                cell.list_herbs += herbs_list
+                cell.list_carns += carn_list
 
     def get_animal_population_for_each_cell(self):
         dict = {}

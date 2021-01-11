@@ -3,7 +3,6 @@ from math import exp
 
 
 class Animal:
-
     params = None
 
     # @classmethod
@@ -29,7 +28,7 @@ class Animal:
             return 0
         else:
             fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
-            (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
+                       (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
             return fitness
 
     # def set_fitness(self, fitness):
