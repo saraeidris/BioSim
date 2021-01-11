@@ -148,25 +148,13 @@ class BioSim:
 
             self.current_year += 1
 
-        print(self.island.get_animal_population_for_each_cell())
+            print(self.island.get_animal_population_for_each_cell())
 
     # def update(self, num_years):
     #     fig = plt.figure()
     #     ax = fig.add_subplot(1, 1, 1)
     #     ax.set_xlim(0, num_years)
     #     ax.set_ylim(0, 1)
-
-        list_with_population_for_all_years = []
-        list_with_years = []
-
-        for _ in range(num_years):
-            self.island.annual_cycle()
-            list_with_years.append(self.current_year)
-            list_with_population_for_all_years.append(self.island.get_number_of_animals())
-
-            self.current_year += 1
-
-            print(self.island.get_animal_population_for_each_cell())
 
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
