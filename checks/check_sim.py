@@ -63,7 +63,7 @@ if __name__ == '__main__':
                   'pop': [{'species': 'Herbivore',
                            'age': 5,
                            'weight': 30}
-                          for _ in range(150)]}
+                          for _ in range(5)]}
                  ]
 
     ini_carns = [{'loc': (10, 12),

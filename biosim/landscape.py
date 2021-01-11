@@ -77,6 +77,7 @@ class Landscape:
         for carn in self.list_carns:
             carn.aging()
 
+
     def death(self):
         def survivors(pop):
             return [animal for animal in pop if not animal.dies()]

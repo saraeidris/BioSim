@@ -137,6 +137,19 @@ class BioSim:
             axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
         plt.show()
     #def update(self, num_years):
+
+        fig = plt.figure()
+
+        # normal subplots
+        ax1 = fig.add_subplot(2, 3, 1)
+        ax2 = fig.add_subplot(2, 3, 3)
+        ax3 = fig.add_subplot(2, 3, 4)
+        ax4 = fig.add_subplot(2, 3, 5)
+        ax5 = fig.add_subplot(2, 3, 6)
+
+        # axes for text
+        axim = fig.add_axes([0.4, 0.8, 0.2, 0.2])  # llx, lly, w, h
+        axim.axis('off')  # turn off coordinate system
         list_with_population_for_all_years = []
         list_with_years = []
         for _ in range(num_years):
@@ -145,7 +158,27 @@ class BioSim:
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
             self.current_year += 1
-        # fig = plt.figure()
+
+        ax2 = plt.plot(list_with_years, list_with_population_for_all_years)
+        ax2 = plt.title('Animal count')
+        ax2 = plt.pause(10e-3)
+        plt.show()
+
+        template = 'Count: {:5d}'
+        txt = axim.text(0.5, 0.5, template.format(0),
+                        horizontalalignment='center',
+                        verticalalignment='center',
+                        transform=axim.transAxes)  # relative coordinates
+
+        plt.pause(0.01)  # pause required to make figure visible
+
+        input('Press ENTER to begin counting')
+
+        for k in range(30):
+            txt.set_text(template.format(k))
+            plt.pause(0.1)  # pause required to make update visible
+
+            # fig = plt.figure()
         # ax = fig.add_subplot(1, 1, 1)
         # ax.set_xlim(0, num_years)
         # ax.set_ylim(0, 6000)
@@ -158,10 +191,6 @@ class BioSim:
         #     line.set_ydata(ydata)
         #     plt.pause(1e-6)
         #
-            plt.plot(list_with_years, list_with_population_for_all_years)
-            plt.title('Animal count')
-            plt.pause(10e-3)
-        plt.show()
 
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')
