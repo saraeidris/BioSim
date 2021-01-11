@@ -1,4 +1,4 @@
-#import random
+import random
 
 
 class Landscape:
@@ -18,12 +18,6 @@ class Landscape:
     #             self.list_herbs.append(animal)
     #         else:
     #             self.list_carns.append(animal)
-
-    def get_list_animals(self):
-        return self.list_herbs + self.list_carns
-
-    def set_list_animals(self):
-        pass
 
     @staticmethod
     def is_habitable():
@@ -49,7 +43,7 @@ class Landscape:
                     self.herb_sorting().remove(killed_herb)
                     #self.herb_sorting() = [killed_herb for killed_herb in self.herb_sorting() if not killed_herb in killed_herbs]
 
-    # def migration(self, ):
+    # def migration(self, around):
     #     move_north = []
     #     move_south = []
     #     move_east = []

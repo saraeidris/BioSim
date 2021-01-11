@@ -61,7 +61,6 @@ class BioSim:
         self.island.set_init_population(self.ini_pop)
         self.island_map = island_map
 
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -78,7 +77,7 @@ class BioSim:
             if isinstance(params[key], str) or params[key] < 0:
                 raise ValueError(key + ' must be a positive integer og float')
         if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
-            raise ValueError(params['DeltaPhiMax'] + ' must be strictly positive')
+            raise ValueError('DeltaPhiMax must be strictly positive')
 
     # Hjelpemetode bør være privat
     def merge_params(self, params1, params2):
@@ -116,22 +115,23 @@ class BioSim:
 
             self.current_year += 1
 
-        print(self.island.get_animal_population_for_each_cell())
+            print(self.island.get_animal_population_for_each_cell())
 
-        plt.plot(list_with_years, list_with_population_for_all_years)
-        plt.title('Animal count')
+            plt.plot(list_with_years, list_with_population_for_all_years)
+            plt.title('Animal count')
+            plt.pause(10e-3)
         plt.show()
 
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')
 
-        ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
-                        index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
-        df = ser.unstack().fillna(0)
+        #ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
+        #                index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
+        #df = ser.unstack().fillna(0)
         #sns.heatmap(df)
         # (10, 27)
 
-        plt.show()
+        # plt.show()
 
     # def ages(self):
     #     for animal in self.ini_pop:
@@ -162,15 +162,15 @@ class BioSim:
     # def year(self):
     # """Last year simulated."""
 
-    # @property
-    # def num_animals(self, ini_pop):
-    #
-    #     """
-    #     Total number of animals
-    #     dictionaries specifying population
-    #     on island.
-    #     """
-    #
+    @property
+    def num_animals(self):
+        """
+        Total number of animals
+        dictionaries specifying population
+        on island.
+        """
+        return self.island.get_number_of_animals()[2]
+
     @property
     def num_animals_per_species(self):
         """Number of animals per species in island, as dictionary."""
