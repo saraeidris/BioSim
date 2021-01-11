@@ -68,13 +68,13 @@ class BioSim:
         :param params: Dict with valid parameter specification for species
         """
         if species == 'Carnivore':
-            Carnivore().params = self.merge_params(Carnivore().params, params)
+            Carnivore().set_params(self.merge_params(Carnivore().params, params))
         elif species == 'Herbivore':
-            Herbivore().params = self.merge_params(Herbivore().params, params)
+            Herbivore().set_params(self.merge_params(Herbivore().params, params))
         else:
             raise ValueError('Species must be either Carnivore or Herbivore')
         for key in params:
-            if isinstance(params[key], str) or params[key] < 0:
+            if not (isinstance(params[key], int) or isinstance(params[key], float)) or params[key] < 0:
                 raise ValueError(key + ' must be a positive integer og float')
         if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
             raise ValueError('DeltaPhiMax must be strictly positive')

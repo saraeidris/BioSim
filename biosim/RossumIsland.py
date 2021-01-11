@@ -3,7 +3,7 @@ from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 
 
 class RossumIsland:
-    def __init__(self, island_map): # , params):
+    def __init__(self, island_map):
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
         # self.island_coloumn_length = len(island_map) trengs denne?
         self.island_row_length = len(island_map.splitlines()[0])

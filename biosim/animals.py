@@ -48,8 +48,7 @@ class Animal:
         for key in new_params:
             if key not in cls.params:
                 raise KeyError('Invalid parameter name:' + key)
-            if not isinstance(new_params[key], int) or isinstance(new_params[key], float):
-                raise ValueError('Parameters must be integers or floats')
+        cls.params.update(new_params)
 
     def weight_loss(self):
         """Specie loses weight"""
@@ -64,7 +63,7 @@ class Animal:
          :return bool
             True if specie dies
         """
-        return self.weight == 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
+        return self.weight <= 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
 
     def mate(self, species_list):
         """

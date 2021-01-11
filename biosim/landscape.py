@@ -9,16 +9,15 @@ class Landscape:
         self.list_carns = []
         self.fodder = None
 
+    @classmethod
+    def set_params(cls, new_params):
+        for key in new_params:
+            if key not in cls.params:
+                raise KeyError('Invalid parameter name:' + key)
+        cls.params.update(new_params)
+
     def update_fodder(self):
         pass
-
-    # def split_animals(self):
-    #
-    #     for animal in self.get_list_animals():
-    #         if animal['species'] == 'Herbivore':
-    #             self.list_herbs.append(animal)
-    #         else:
-    #             self.list_carns.append(animal)
 
     @staticmethod
     def is_habitable():
