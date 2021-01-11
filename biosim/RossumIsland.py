@@ -61,7 +61,8 @@ class RossumIsland:
                 carn_list = []
                 for animal in dict['pop']:
                     if animal['species'] == 'Herbivore':
-                        herbs_list.append(Herbivore())
+                        herbs_list.append(Herbivore(animal['age'],
+                                                    animal['weight']))
                     if animal['species'] == 'Carnivore':
                         carn_list.append(Carnivore())
                 cell.list_herbs += herbs_list
@@ -81,7 +82,7 @@ class RossumIsland:
             for cell in rows:
                 number_of_herbs += len(cell.list_herbs)
                 number_of_carns += len(cell.list_carns)
-        return number_of_herbs, number_of_carns, number_of_herbs + number_of_carns
+        return number_of_herbs, number_of_carns #, number_of_herbs + number_of_carns
 
     def annual_cycle(self):
         for row in self.island:

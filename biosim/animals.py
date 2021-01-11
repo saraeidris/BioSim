@@ -15,6 +15,8 @@ class Animal:
 
         if weight is None:
             self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        if age is None:
+            self.age = 0
 
     def aging(self):
         self.age += 1

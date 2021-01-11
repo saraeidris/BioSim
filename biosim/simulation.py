@@ -42,14 +42,14 @@ class BioSim:
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.ini_pop = ini_pop
-        self.carnivore_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
-                                 'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
-                                 'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
-                                 'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
-        self.herbivore_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
-                                 'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
-                                 'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
-                                 'omega': 0.4, 'F': 10.0}
+        # self.carnivore_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
+        #                          'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
+        #                          'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
+        #                          'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
+        # self.herbivore_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
+        #                          'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
+        #                          'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
+        #                          'omega': 0.4, 'F': 10.0}
         self.lowland_params = {'f_max': 800}
         self.highland_params = {'f_max': 300}
         # Highland(None, None, None, None, self.highland_params['f_max'],
@@ -68,9 +68,9 @@ class BioSim:
         :param params: Dict with valid parameter specification for species
         """
         if species == 'Carnivore':
-            self.carnivore_params = self.merge_params(self.carnivore_params, params)
+            Carnivore().params = self.merge_params(Carnivore().params, params)
         elif species == 'Herbivore':
-            self.herbivore_params = self.merge_params(self.herbivore_params, params)
+            Herbivore().params = self.merge_params(Herbivore().params, params)
         else:
             raise ValueError('Species must be either Carnivore or Herbivore')
         for key in params:
@@ -135,7 +135,7 @@ class BioSim:
                                          edgecolor='none',
                                          facecolor=rgb_value[name[0]]))
             axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
-
+        plt.show()
     #def update(self, num_years):
         list_with_population_for_all_years = []
         list_with_years = []
@@ -145,7 +145,6 @@ class BioSim:
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
             self.current_year += 1
-
         # fig = plt.figure()
         # ax = fig.add_subplot(1, 1, 1)
         # ax.set_xlim(0, num_years)
@@ -159,10 +158,10 @@ class BioSim:
         #     line.set_ydata(ydata)
         #     plt.pause(1e-6)
         #
-        #     plt.plot(list_with_years, list_with_population_for_all_years)
-        #     plt.title('Animal count')
-        #     plt.pause(10e-3)
-        # plt.show()
+            plt.plot(list_with_years, list_with_population_for_all_years)
+            plt.title('Animal count')
+            plt.pause(10e-3)
+        plt.show()
 
         # animal_count = self.island.count_animals()
         # animal_count.plot(ax=ax1, title='Animal count')
