@@ -20,18 +20,43 @@ if __name__ == '__main__':
 
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
+               WHHHHHLLLLWWLLLLLLLWW
+               WHHHHHLLLLWWLLLLLLLWW
+               WHHHHHLLLLWWLLLLLLLWW
+               WWHHLLLLLLLWWLLLLLLLW
+               WWHHLLLLLLLWWLLLLLLLW
                WWWWWWWWHWWWWLLLLLLLW
                WHHHHHLLLLWWLLLLLLLWW
                WHHHHHHHHHWWLLLLLLWWW
-               WHHHHHLLLLLLLLLLLLWWW
-               WHHHHHLLLDDLLLHLLLWWW
-               WHHLLLLLDDDLLLHHHHWWW
-               WWHHHHLLLDDLLLHWWWWWW
-               WHHHLLLLLDDLLLLLLLWWW
-               WHHHHLLLLDDLLLLWWWWWW
-               WWHHHHLLLLLLLLWWWWWWW
+               WHHHHHDDDDDLLLLLLLWWW
+               WHHHHHDDDDDLLLLLLLWWW
+               WHHHHHDDDDDLLLLLLLWWW
+               WHHHHHDDDDDWWLLLLLWWW
+               WHHHHDDDDDDLLLLWWWWWW
+               WWHHHHDDDDDDLWWWWWWWW
+               WWHHHHDDDDDLLLWWWWWWW
+               WHHHHHDDDDDLLLLLLLWWW
+               WHHHHDDDDDDLLLLWWWWWW
+               WWHHHHDDDDDLLLWWWWWWW
                WWWHHHHLLLLLLLWWWWWWW
+               WWWHHHHHHWWWWWWWWWWWW
                WWWWWWWWWWWWWWWWWWWWW"""
+    # """
+    #
+    # \
+    #            WWWWWWWWWWWWWWWWWWWWW
+    #            WWWWWWWWHWWWWLLLLLLLW
+    #            WHHHHHLLLLWWLLLLLLLWW
+    #            WHHHHHHHHHWWLLLLLLWWW
+    #            WHHHHHLLLLLLLLLLLLWWW
+    #            WHHHHHLLLDDLLLHLLLWWW
+    #            WHHLLLLLDDDLLLHHHHWWW
+    #            WWHHHHLLLDDLLLHWWWWWW
+    #            WHHHLLLLLDDLLLLLLLWWW
+    #            WHHHHLLLLDDLLLLWWWWWW
+    #            WWHHHHLLLLLLLLWWWWWWW
+    #            WWWHHHHLLLLLLLWWWWWWW
+    #            WWWWWWWWWWWWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
     ini_herbs = [{'loc': (10, 10),
