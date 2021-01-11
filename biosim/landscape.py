@@ -12,9 +12,9 @@ class Landscape:
     @classmethod
     def set_params(cls, new_params):
         for key in new_params:
-            if key not in cls.params:
+            if key not in cls.d_landscape:
                 raise KeyError('Invalid parameter name:' + key)
-        cls.params.update(new_params)
+        cls.d_landscape.update(new_params)
 
     def update_fodder(self):
         pass
@@ -110,26 +110,26 @@ class Desert(Landscape):
 
 
 class Highland(Landscape):
-    d_landscape = {'f_max_h': 300}
+    d_landscape = {'f_max': 300}
 
     def __init__(self):
         super().__init__()
 
     def update_fodder(self):
-        self.fodder = self.d_landscape['f_max_h']
+        self.fodder = self.d_landscape['f_max']
 
     def get_fodder(self):
         return self.fodder
 
 
 class Lowland(Landscape):
-    d_landscape = {'f_max_l': 800}
+    d_landscape = {'f_max': 800}
 
     def __init__(self):
         super().__init__()
 
     def update_fodder(self):
-        self.fodder = self.d_landscape['f_max_l']
+        self.fodder = self.d_landscape['f_max']
 
     def get_fodder(self):
         return self.fodder

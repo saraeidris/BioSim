@@ -90,9 +90,9 @@ class BioSim:
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape """
         if landscape == 'L':
-            self.lowland_params = self.merge_params(self.lowland_params, params)
+            Lowland().set_params(self.merge_params(Lowland().d_landscape, params))
         elif landscape == 'H':
-            self.highland_params = self.merge_params(self.highland_params, params)
+            Highland().set_params(self.merge_params(Highland().d_landscape, params))
         else:
             raise ValueError(landscape + 'does not have any parameters')
 
