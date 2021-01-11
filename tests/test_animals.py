@@ -2,6 +2,13 @@ from biosim.animals import Animal, Herbivore
 import pytest
 
 
+@pytest.fixture
+def set_params(request):
+    Animal.set_params(request.param)
+    yield
+    Animal.set_params(Animal.params)
+
+
 def test_ani_age():
     """
     Test that a new animal has age 0.
@@ -9,17 +16,6 @@ def test_ani_age():
     a = Animal(0, 5)
     assert a.age == 0
 
-
-def test_ani_aging():
-    """
-    This test is *determinstic*: for each call to ages(),
-    the age must increase by one year.
-    """
-    a = Animal(weight=5)
-    for n in range(5):
-        a.age()
-
-        assert a.get_age() == n + 1
 
 def test_animal_should_eat_when_fodder_is_available():
     animal = Herbivore({'F': 10, 'beta': 0.9}, weight=5)
@@ -34,11 +30,7 @@ def test_animal_should_eat_all_remaining_food_when_fodder_is_less_than_F():
     assert consumed_fodder == 7
 
 
-# @pytest.fixture
-# def set_params(request):
-#     Animals.set_params(request.param)
-#     yield
-#     Animals.set_params(Animals.params)
+
 #
 #
 # @pytest.mark.parametrize('set_params', [{'omega': 100.0}], indirect=True)
