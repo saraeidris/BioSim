@@ -5,18 +5,27 @@ from math import exp
 class Animal:
     params = None
 
-    # @classmethod
-    # def get_species_params(cls):
-    #     return cls.params
+    @classmethod
+    def set_params(cls, new_params):
+        for key in new_params:
+            if key not in cls.params:
+                raise KeyError('Invalid parameter name:' + key)
+        cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
         self.age = age
         self.weight = weight
 
-        if weight is None:
-            self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-        if age is None:
-            self.age = 0
+        if self.weight is None:
+            self.weight = 0
+            while self.weight <= 0:
+                self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
+        if self.weight <= 0:
+            raise ValueError('All animals must have a positive weight')
+        if not isinstance(self.age, int):
+            raise ValueError('Age of animal must be an integer')
+        if self.age < 0:
+            raise ValueError('Age of animal must be a non-negative value')
 
     def aging(self):
         self.age += 1
@@ -33,22 +42,8 @@ class Animal:
                        (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
             return fitness
 
-    # def set_fitness(self, fitness):
-    #      get_fitness() = fitness
-
-    # def set_weight(self):
-    #     if self.weight is None:
-    #         self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
-
     def get_weight(self):
         return self.weight
-
-    @classmethod
-    def set_params(cls, new_params):
-        for key in new_params:
-            if key not in cls.params:
-                raise KeyError('Invalid parameter name:' + key)
-        cls.params.update(new_params)
 
     def weight_loss(self):
         """Specie loses weight"""

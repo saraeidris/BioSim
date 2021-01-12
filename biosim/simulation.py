@@ -50,13 +50,13 @@ class BioSim:
         #                          'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
         #                          'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
         #                          'omega': 0.4, 'F': 10.0}
-        self.lowland_params = {'f_max': 800}
-        self.highland_params = {'f_max': 300}
+        # self.lowland_params = {'f_max': 800}
+        # self.highland_params = {'f_max': 300}
         # Highland(None, None, None, None, self.highland_params['f_max'],
         # self.herbivore_params['w_birth'],
         # self.herbivore_params['sigma_birth'],
         # self.ini_pop)
-        self.island = RossumIsland(island_map)  # , self.herbivore_params)
+        self.island = RossumIsland(island_map)
         self.current_year = 0
         self.island.set_init_population(self.ini_pop)
         self.island_map = island_map

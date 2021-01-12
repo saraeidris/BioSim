@@ -4,17 +4,19 @@ import random
 class Landscape:
     d_landscape = None
 
-    def __init__(self):
-        self.list_herbs = []
-        self.list_carns = []
-        self.fodder = None
-
     @classmethod
     def set_params(cls, new_params):
         for key in new_params:
             if key not in cls.d_landscape:
                 raise KeyError('Invalid parameter name:' + key)
         cls.d_landscape.update(new_params)
+
+    def __init__(self):
+        self.list_herbs = []
+        self.list_carns = []
+        self.fodder = None
+        self.move_herbs = [[], [], [], []]
+        self.move_carns = [[], [], [], []]
 
     def update_fodder(self):
         pass
@@ -44,14 +46,23 @@ class Landscape:
                     continue
                 for herb in killed_herbs:
                     sorted_herbs.remove(herb)
+            self.list_herbs = sorted_herbs
 
-    # def migration(self, around):
-    #     move_north = []
-    #     move_south = []
-    #     move_east = []
-    #     move_west = []
-    #     for herb in self.list_herbs:
-    #         if herb.migrate():
+    def migrate_all(self, cells_around):
+        if len(self.list_herbs) > 0:
+            for herb in self.list_herbs:
+                if herb.migrate():
+                    num = random.randint(0, 3)
+                    if cells_around[num].is_habitable():
+                        self.move_herbs[num].append(herb)
+                        self.list_herbs.remove(herb)
+        if len(self.list_carns) > 0:
+            for carn in self.list_carns:
+                if carn.migrate():
+                    num = random.randint(0, 3)
+                    if cells_around[num].is_habitable():
+                        self.move_carns[num].append(carn)
+                        self.list_carns.remove(carn)
 
     def give_birth(self):
         if len(self.list_herbs) > 1:
@@ -95,6 +106,9 @@ class Landscape:
 
     def get_animals(self):
         return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
+
+    def is_populated(self):
+        return len(self.list_herbs + self.list_carns) > 0
 
 
 class Water(Landscape):
