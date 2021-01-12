@@ -123,9 +123,6 @@ class BioSim:
 
         axim.imshow(map_rgb)
 
-        fig = plt.figure()
-
-
         axim.set_xticks(range(len(map_rgb[0])))
         axim.set_xticklabels(range(1, 1 + len(map_rgb[0])))
         axim.set_yticks(range(len(map_rgb)))
@@ -165,8 +162,8 @@ class BioSim:
             plt.pause(10e-3)
         plt.show()
 
-        #animal_count = self.island.get_number_of_animals()
-        #animal_count.plot(ax=ax, title='Animal count')
+        # animal_count = self.island.get_number_of_animals()
+        # animal_count.plot(ax=ax, title='Animal count')
 
         # ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
         #                 index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
