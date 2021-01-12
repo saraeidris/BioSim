@@ -4,7 +4,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from biosim.RossumIsland import RossumIsland
-from biosim.animals import Herbivore, Carnivore
+from biosim.animals import Herbivore, Carnivore, Animal
 from biosim.landscape import Landscape, Lowland, Highland
 
 
@@ -60,6 +60,7 @@ class BioSim:
         self.current_year = 0
         self.island.set_init_population(self.ini_pop)
         self.island_map = island_map
+        self.animal = 0
 
     def set_animal_parameters(self, species, params):
         """
@@ -122,6 +123,9 @@ class BioSim:
 
         axim.imshow(map_rgb)
 
+        fig = plt.figure()
+
+
         axim.set_xticks(range(len(map_rgb[0])))
         axim.set_xticklabels(range(1, 1 + len(map_rgb[0])))
         axim.set_yticks(range(len(map_rgb)))
@@ -136,42 +140,42 @@ class BioSim:
                                          facecolor=rgb_value[name[0]]))
             axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
         plt.show()
-    #def update(self, num_years):
+
         list_with_population_for_all_years = []
         list_with_years = []
-        for _ in range(num_years):
 
+        for _ in range(num_years):
             self.island.annual_cycle()
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
             self.current_year += 1
-        # fig = plt.figure()
-        # ax = fig.add_subplot(1, 1, 1)
-        # ax.set_xlim(0, num_years)
-        # ax.set_ylim(0, 6000)
-        #
-        # line = ax.plot(list_with_years, list_with_population_for_all_years, 'b-')[0]
-        #
-        # for n in range(num_years):
-        #     ydata = line.get_ydata()
-        #     ydata[n] = line.get_xdata()
-        #     line.set_ydata(ydata)
-        #     plt.pause(1e-6)
-        #
+
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
             plt.pause(10e-3)
         plt.show()
+        import numpy as np
+        list_with_fitness_for_all_years = []
+        list_with_weight_for_all_years = []
+        list_with_age_for_all_years = []
+        for _ in range(num_years):
+            self.island.annual_cycle()
+            plt.hist(self.island.get_fitness_of_animal()[1])
+            plt.title('Fitness')
+            plt.pause(10e-3)
+        plt.show()
 
-        # animal_count = self.island.count_animals()
-        # animal_count.plot(ax=ax1, title='Animal count')
+        #animal_count = self.island.get_number_of_animals()
+        #animal_count.plot(ax=ax, title='Animal count')
 
         # ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
-        #                index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
+        #                 index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
         # df = ser.unstack().fillna(0)
+
+        # df = self.island.get_animal_population_for_each_cell().values()
         # sns.heatmap(df)
         # (10, 27)
-
+        #
         # plt.show()
 
     # def ages(self):

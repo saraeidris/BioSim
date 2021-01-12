@@ -1,4 +1,4 @@
-from biosim.animals import Herbivore, Carnivore
+from biosim.animals import Herbivore, Carnivore, Animal
 from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 
 
@@ -86,7 +86,16 @@ class RossumIsland:
             for cell in rows:
                 number_of_herbs += len(cell.list_herbs)
                 number_of_carns += len(cell.list_carns)
-        return number_of_herbs, number_of_carns #, number_of_herbs + number_of_carns
+        return number_of_herbs, number_of_carns  # , number_of_herbs + number_of_carns
+
+    def get_fitness_of_animal(self):
+        fitness_herbs = []
+        fitness_carns = []
+        for row in self.island:
+            for cell in row:
+                fitness_herbs.extend(cell.get_herb_fitness())
+                fitness_carns.extend(cell.get_carn_fitness())
+        return fitness_carns, fitness_herbs
 
     def annual_cycle(self):
         for row in self.island:
