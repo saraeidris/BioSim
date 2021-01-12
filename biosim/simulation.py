@@ -158,8 +158,12 @@ class BioSim:
         #     plt.pause(10e-3)
         #
         # fig.add_subplot(2, 3, 2)
-        # for _ in range(num_years):
-        #     self.island.annual_cycle()
+        plt.figure()
+        for _ in range(num_years):
+            self.island.annual_cycle()
+            sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
+            plt.pause(10e-3)
+        plt.show()
         #
         #     plt.hist(self.island.get_fitness_of_animal()[1])
         #     plt.title('Fitness')
@@ -178,10 +182,8 @@ class BioSim:
         # df = ser.unstack().fillna(0)
 
         # df = self.island.get_animal_population_for_each_cell().values()
-        sns.heatmap(self.island.get_animal_population_for_each_cell().values())
+
         # (10, 27)
-        #
-        plt.show()
 
     def add_population(self, population):
 
