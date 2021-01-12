@@ -98,6 +98,12 @@ class Landscape:
     def get_animals(self):
         return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
 
+    def get_herb_fitness(self):
+        return [herb.get_fitness() for herb in self.list_herbs]
+
+    def get_carn_fitness(self):
+        return [carn.get_fitness() for carn in self.list_carns]
+
 
 class Water(Landscape):
     pass
