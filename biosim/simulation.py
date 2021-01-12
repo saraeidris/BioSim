@@ -105,75 +105,81 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
+        import matplotlib.gridspec as gridspec
+        #
+        # fig = plt.figure(constrained_layout=False)
+        # ax1 = fig.add_subplot(2, 3, 4)
+        #
+        # # axes for text
+        # # ax1 = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
+        # ax1.axis('off')  # turn off coordinate system
+        # _map = self.island_map
+        #
+        # #                   R    G    B
+        # rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+        #              'L': (0.0, 0.6, 0.0),  # dark green
+        #              'H': (0.5, 1.0, 0.5),  # light green
+        #              'D': (1.0, 1.0, 0.5)}  # light yellow
+        #
+        # map_rgb = [[rgb_value[column] for column in row]
+        #            for row in _map.splitlines()]
+        #
+        # fig.add_subplot(2, 3, 3)
+        #
+        # #axt.imshow(map_rgb)
+        #
+        # ax1.set_xticks(range(len(map_rgb[0])))
+        # ax1.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        # ax1.set_yticks(range(len(map_rgb)))
+        # ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
+        #
+        # axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
+        # axlg.axis('off')
+        # for ix, name in enumerate(('Water', 'Lowland',
+        #                            'Highland', 'Desert')):
+        #     axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+        #                                  edgecolor='none',
+        #                                  facecolor=rgb_value[name[0]]))
+        #     axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
+        #
+        # list_with_population_for_all_years = []
+        # list_with_years = []
+        # fig.add_subplot(2, 3, 1)
+        # for _ in range(num_years):
+        #     self.island.annual_cycle()
+        #     list_with_years.append(self.current_year)
+        #     list_with_population_for_all_years.append(self.island.get_number_of_animals())
+        #     self.current_year += 1
+        #
+        #     plt.plot(list_with_years, list_with_population_for_all_years)
+        #     plt.title('Animal count')
+        #     plt.pause(10e-3)
+        #
+        # fig.add_subplot(2, 3, 2)
+        # for _ in range(num_years):
+        #     self.island.annual_cycle()
+        #
+        #     plt.hist(self.island.get_fitness_of_animal()[1])
+        #     plt.title('Fitness')
+        #     plt.pause(10e-3)
 
-        _map = self.island_map
-
-        #                   R    G    B
-        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                     'L': (0.0, 0.6, 0.0),  # dark green
-                     'H': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-
-        map_rgb = [[rgb_value[column] for column in row]
-                   for row in _map.splitlines()]
-
-        fig = plt.figure()
-
-        axim = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
-
-        axim.imshow(map_rgb)
-
-        axim.set_xticks(range(len(map_rgb[0])))
-        axim.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        axim.set_yticks(range(len(map_rgb)))
-        axim.set_yticklabels(range(1, 1 + len(map_rgb)))
-
-        axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
-        axlg.axis('off')
-        for ix, name in enumerate(('Water', 'Lowland',
-                                   'Highland', 'Desert')):
-            axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                         edgecolor='none',
-                                         facecolor=rgb_value[name[0]]))
-            axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
-        plt.show()
-
-        list_with_population_for_all_years = []
-        list_with_years = []
-
-        for _ in range(num_years):
-            self.island.annual_cycle()
-            list_with_years.append(self.current_year)
-            list_with_population_for_all_years.append(self.island.get_number_of_animals())
-            self.current_year += 1
-
-            plt.plot(list_with_years, list_with_population_for_all_years)
-            plt.title('Animal count')
-            plt.pause(10e-3)
-        plt.show()
         import numpy as np
         list_with_fitness_for_all_years = []
         list_with_weight_for_all_years = []
         list_with_age_for_all_years = []
-        for _ in range(num_years):
-            self.island.annual_cycle()
-            plt.hist(self.island.get_fitness_of_animal()[1])
-            plt.title('Fitness')
-            plt.pause(10e-3)
-        plt.show()
 
         # animal_count = self.island.get_number_of_animals()
         # animal_count.plot(ax=ax, title='Animal count')
-
+        # plt.figure()
         # ser = pd.Series(list(self.island.get_animal_population_for_each_cell().values()),
         #                 index=pd.MultiIndex.from_tuples(self.island.get_animal_population_for_each_cell().keys()))
         # df = ser.unstack().fillna(0)
 
         # df = self.island.get_animal_population_for_each_cell().values()
-        # sns.heatmap(df)
+        sns.heatmap(self.island.get_animal_population_for_each_cell().values())
         # (10, 27)
         #
-        # plt.show()
+        plt.show()
 
     # def ages(self):
     #     for animal in self.ini_pop:
