@@ -5,7 +5,6 @@ from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 class RossumIsland:
     def __init__(self, island_map):
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
-        # self.island_coloumn_length = len(island_map) trengs denne?
         self.island_row_length = len(island_map.splitlines()[0])
 
         self.island = []
@@ -38,33 +37,20 @@ class RossumIsland:
                     number += len(cell.list_animals())
         return number
 
-    def fodder_grow(self):
-        for rows in self.island:
-            for element in rows:
-                if isinstance(element, Highland) or isinstance(element, Lowland):
-                    element.update_fodder()
-
-    def eat_all(self):
-        for rows in self.island:
-            for element in rows:
-                # Hvordan få autocomplete når vi har objekter i array
-                if isinstance(element, Landscape):
-                    element.eat_all()
-
     def set_init_population(self, init_pop):
-        for dict in init_pop:
-            location = dict['loc']
+        for dic in init_pop:
+            location = dic['loc']
             try:
                 cell = self.island[location[0] - 1][location[1] - 1]
                 if isinstance(cell, Landscape) and cell.is_habitable():
                     herbs_list = []
                     carn_list = []
-                    for animal in dict['pop']:
+                    for animal in dic['pop']:
                         if animal['species'] == 'Herbivore':
                             herbs_list.append(Herbivore(animal['age'],
                                               animal['weight']))
                         if animal['species'] == 'Carnivore':
-                            carn_list.append(Carnivore())
+                            carn_list.append(Carnivore(animal['age'], animal['weight']))
                     cell.list_herbs.extend(herbs_list)
                     cell.list_carns.extend(carn_list)
                 else:
@@ -78,6 +64,11 @@ class RossumIsland:
             for x, cell in enumerate(rows):
                 dict[(x, y)] = cell.get_population()
         return dict
+
+    def get_2darray_for_pop(self):
+        herb_array = [[len(cell.list_herbs) for cell in row] for row in self.island]
+        carn_array = [[len(cell.list_carns) for cell in row] for row in self.island]
+        return herb_array, carn_array
 
     def get_number_of_animals(self):
         number_of_herbs = 0
@@ -106,6 +97,7 @@ class RossumIsland:
                         cell.eat_all()
                         cell.give_birth()
         self.migration()
+
         for row in self.island:
             for cell in row:
                 if cell.is_populated():

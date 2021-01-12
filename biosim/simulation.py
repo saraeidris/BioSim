@@ -79,23 +79,25 @@ class BioSim:
                 raise ValueError(key + ' must be a positive integer og float')
         if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
             raise ValueError('DeltaPhiMax must be strictly positive')
+        if 'eta' in params and params['eta'] > 1:
+            raise ValueError('eta must be less equal or less than 1')
 
-    # Hjelpemetode bør være privat
-    def merge_params(self, params1, params2):
+    @staticmethod
+    def merge_params(params1, params2):
         return {**params1, **params2}
 
-    # Må fikses
     def set_landscape_parameters(self, landscape, params):
         """
         Set parameters for landscape type.
         :param landscape: String, code letter for landscape
-        :param params: Dict with valid parameter specification for landscape """
+        :param params: Dict with valid parameter specification for landscape
+        """
         if landscape == 'L':
             Lowland().set_params(self.merge_params(Lowland().d_landscape, params))
         elif landscape == 'H':
             Highland().set_params(self.merge_params(Highland().d_landscape, params))
         else:
-            raise ValueError(landscape + 'does not have any parameters')
+            raise ValueError(landscape + ' is not a legal landscape type')
 
     def simulate(self, num_years, vis_years=1, img_years=None):
         """
@@ -175,24 +177,6 @@ class BioSim:
         #
         # plt.show()
 
-    # def ages(self):
-    #     for animal in self.ini_pop:
-    #         animal.ages()
-
-    # def feeding(self):
-    #     herbs = list(filter(lambda obj: isinstance(obj, Herbivore), self.ini_pop))
-    #     new_herbs_list = []
-    #     # carnivores = list(filter(lambda obj: isinstance(obj, Carnivores), self.ini_pop))
-    #     while len(herbs) > 0:
-    #         index = random.randint(0, len(herbs) - 1)
-    #         herb = herbs.pop(index)
-    #         herb.eat(Landscape.get_fodder())
-    #         new_herbs_list.append(herb)
-
-    # Do carnivore stuff
-
-    #    self.ini_pop = new_herbs_list
-
     def add_population(self, population):
 
         """
@@ -215,7 +199,9 @@ class BioSim:
 
     @property
     def num_animals_per_species(self):
-        """Number of animals per species in island, as dictionary."""
+        """
+        Number of animals per species in island, as dictionary.
+        """
         num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
                            'Carnivore': self.island.get_number_of_animals()[1]}
         return num_animal_dict

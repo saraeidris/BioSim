@@ -28,6 +28,9 @@ class Animal:
             raise ValueError('Age of animal must be a non-negative value')
 
     def aging(self):
+        """
+        Updates the age with 1 for each year.
+        """
         self.age += 1
 
     def get_fitness(self):
@@ -41,9 +44,6 @@ class Animal:
             fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
                        (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
             return fitness
-
-    def get_weight(self):
-        return self.weight
 
     def weight_loss(self):
         """Specie loses weight"""
