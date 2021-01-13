@@ -11,7 +11,6 @@ class Landscape:
                 raise KeyError('Invalid parameter name:' + key)
         cls.d_landscape.update(new_params)
 
-
     def __init__(self):
         self.list_herbs = []
         self.list_carns = []
@@ -80,8 +79,6 @@ class Landscape:
                 if offspring:
                     offspring_carns.append(offspring)
             self.list_carns += offspring_carns
-
-
 
     def ages(self):
         """Species ages by one year each year"""
