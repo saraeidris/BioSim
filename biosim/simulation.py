@@ -107,8 +107,6 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
-        import matplotlib.gridspec as gridspec
-        #
         # fig = plt.figure(constrained_layout=False)
         # ax1 = fig.add_subplot(2, 3, 4)
         #
@@ -178,7 +176,6 @@ class BioSim:
         # df = ser.unstack().fillna(0)
 
         # df = self.island.get_animal_population_for_each_cell().values()
-        sns.heatmap(self.island.get_animal_population_for_each_cell().values())
         # (10, 27)
         #
         plt.show()
@@ -190,9 +187,10 @@ class BioSim:
         :param population: List of """
         self.island.set_init_population(population)
 
-    # @property
-    # def year(self):
-    # """Last year simulated."""
+    @property
+    def year(self):
+        """Last year simulated."""
+        return
 
     @property
     def num_animals(self):

@@ -77,7 +77,7 @@ class RossumIsland:
             for cell in rows:
                 number_of_herbs += len(cell.list_herbs)
                 number_of_carns += len(cell.list_carns)
-        return number_of_herbs, number_of_carns  # , number_of_herbs + number_of_carns
+        return number_of_herbs, number_of_carns, number_of_herbs + number_of_carns
 
     def get_fitness_of_animal(self):
         fitness_herbs = []
