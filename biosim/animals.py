@@ -18,6 +18,7 @@ class Animal:
 
         if self.weight is None:
             self.weight = 0
+            # weight should be positive
             while self.weight <= 0:
                 self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
         if self.weight <= 0:
@@ -41,9 +42,13 @@ class Animal:
         if self.weight <= 0:
             return 0
         else:
-            fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
+            try:
+                fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
                        (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
-            return fitness
+
+                return fitness
+            except Exception:
+                print(self.weight, self.age)
 
     def weight_loss(self):
         """Specie loses weight"""
