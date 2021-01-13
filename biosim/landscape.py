@@ -114,7 +114,7 @@ class Landscape:
         return [carn.get_fitness() for carn in self.list_carns]
 
     def get_herb_age(self):
-        return [herb.get_age() for herb in self.list_herbs]
+        return [herb.age for herb in self.list_herbs]
 
     def get_carn_age(self):
         return [carn.age for carn in self.list_carns]

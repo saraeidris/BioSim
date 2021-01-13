@@ -1,7 +1,8 @@
-from biosim.landscape import Landscape, Water, Lowland, Highland, Desert
+from biosim.landscape import Water, Lowland, Highland
 from biosim.animals import Carnivore, Herbivore
 
 import pytest
+
 
 class TestLandscape:
 
@@ -37,10 +38,16 @@ class TestLandscape:
             assert carn.age == 3
 
     def test_update_fodder(self, highland, lowland):
-        l_u = highland.update_fodder()
-        h_u = lowland.update_fodder()
-        assert l_u is None
-        assert h_u == 300
+        highland.update_fodder()
+        lowland.update_fodder()
+        assert highland.fodder == 300
+        assert lowland.fodder == 800
+
+    def test_set_fodder(self, lowland):
+        lowland.set_fodder(700)
+        assert lowland.fodder == 700
+
+
 
 
 

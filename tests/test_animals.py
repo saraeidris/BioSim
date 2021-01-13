@@ -9,25 +9,6 @@ def set_params(request):
     Herbivore.set_params(Herbivore.params)
 
 
-@pytest.mark.parametrize('set_params', [{'omega': 10000}], indirect=True)
-def test_bact_certain_death(set_params):
-    """
-    This test is *deterministic*: We set death probability to 1,
-    thus the bacterium must always die. We call dies() multiple
-    times to test this.
-
-    Paramterization with a single-element list of parameter values will run
-    this test once. Because we set `indirect=True`, Pytest will first invoke
-    the set_params fixture defined above, passing the dictionary
-    `{'p_death': 1.0}` as `request.param` to the fixture. The fixture then
-    calls `Bacteria.set_params()` and also ensures clean-up after the test.
-    """
-
-    h = Herbivore()
-    for _ in range(100):
-        assert h.dies()
-
-
 @pytest.mark.parametrize('set_params', [{'omega': 0.0}], indirect=True)
 def test_bact_certain_survival(set_params):
     """
@@ -39,6 +20,20 @@ def test_bact_certain_survival(set_params):
     h = Herbivore()
     for _ in range(100):
         assert not h.dies()
+
+
+@pytest.mark.parametrize('set_params', [{'omega': 0.4}], indirect=True)
+def test_migration_and_death(mocker, set_params):
+    mocker.patch('random.random', return_value=0)
+    for _ in range(10):
+        h = Herbivore()
+        assert h.migrate() is True
+        assert h.dies() is True
+    mocker.patch('random.random', return_value=1)
+    for _ in range(10):
+        c = Carnivore()
+        assert c.migrate() is False
+        assert c.dies() is False
 
 
 def test_animal_age():
@@ -63,12 +58,15 @@ def test_animal_aging():
 
 def test_animal_certain_death():
     """
-    Test that animal die if weight is 0.
+    Test that animal die if weight is equal or less than 0.
     """
 
-    a = Carnivore()
-    a.weight = 0
-    assert a.dies()
+    c = Carnivore()
+    h = Herbivore()
+    c.weight = 0
+    h.weight = -3
+    assert c.dies()
+    assert h.dies()
 
 
 def test_herbivore_should_eat_when_fodder_is_available():
@@ -105,7 +103,7 @@ def test_error_when_negative_weight_given():
         Animal(0, -1)
 
 
-def test_age_set_to_zero():
+def test_age_raise_valueerror():
     with pytest.raises(ValueError):
         Animal(1.1, 1)
 
@@ -117,3 +115,7 @@ def test_get_fitness():
 
     fitness = Herbivore().get_fitness()
     assert type(fitness) == float
+
+
+
+
