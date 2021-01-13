@@ -3,10 +3,18 @@ from math import exp
 
 
 class Animal:
+    """
+    :raises ValueError if weight or age is negative, and if age is not an integer.
+    """
     params = None
 
     @classmethod
     def set_params(cls, new_params):
+        """
+        Overrides animal params
+        :param new_params: new input params
+        :return: updated dictionary of params
+        """
         cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
@@ -49,16 +57,31 @@ class Animal:
             return fitness
 
     def weight_loss(self):
-        """Specie loses weight"""
+        """
+         Decides how much weight the specie loses
+
+        :return:
+            Species final weight
+
+        """
         self.weight -= self.params['eta'] * self.weight
 
     def migrate(self):
+        """
+        Decides whether a specie migrates or stay in the same cell
+
+        :return:
+        bool
+            True if specie migrate
+        """
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
         """
         Decide whether the specie dies or not
-         :return bool
+
+         :return
+         bool
             True if specie dies
         """
         return self.weight <= 0 or (random.random() < self.params['omega'] * (1 - self.get_fitness()))
@@ -66,7 +89,8 @@ class Animal:
     def mate(self, species_list):
         """
         Decide whether a specie gets an offspring
-        :param species_list:
+
+        :param species_list: list with animals of the same specie
         :return: An offspring of the same specie
         """
         if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
@@ -91,9 +115,10 @@ class Herbivore(Animal):
     def consumed_fodder(self, available_fodder):
         """
         Decide how much fodder a herbivore eats
+
         :param available_fodder: Amount of fodder in current cell
         :return:
-            Fodder left in cell
+            Fodder left in current cell
         """
         if available_fodder >= 0:
             if available_fodder < self.params['F']:
@@ -107,6 +132,7 @@ class Herbivore(Animal):
 class Carnivore(Animal):
     """
     Subclass for Animal
+
     """
     params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
               'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,

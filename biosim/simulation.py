@@ -151,7 +151,6 @@ class BioSim:
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
 
-
             plt.pause(10e-3)
 
     # sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
