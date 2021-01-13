@@ -1,4 +1,4 @@
-from biosim.animals import Herbivore, Carnivore, Animal
+from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 
 
@@ -48,7 +48,7 @@ class RossumIsland:
                     for animal in dic['pop']:
                         if animal['species'] == 'Herbivore':
                             herbs_list.append(Herbivore(animal['age'],
-                                              animal['weight']))
+                                                        animal['weight']))
                         if animal['species'] == 'Carnivore':
                             carn_list.append(Carnivore(animal['age'], animal['weight']))
                     cell.list_herbs.extend(herbs_list)
@@ -59,11 +59,11 @@ class RossumIsland:
                 raise ValueError('Specified location does not exist')
 
     def get_animal_population_for_each_cell(self):
-        dict = {}
+        dic = {}
         for y, rows in enumerate(self.island):
             for x, cell in enumerate(rows):
-                dict[(x, y)] = cell.get_population()
-        return dict
+                dic[(x, y)] = cell.get_population()
+        return dic
 
     def get_2darray_for_pop(self):
         herb_array = [[len(cell.list_herbs) for cell in row] for row in self.island]
@@ -140,8 +140,8 @@ class RossumIsland:
     #         for lst in self.island[-2][-2].move_carns:
     #             lst.clear()
 
-            for row in range(1, len(self.island) - 1):
-                for col in range(1, self.island_row_length - 1):
+            for row in range(1, len(self.island)):
+                for col in range(1, self.island_row_length):
                     cell = self.island[row][col]
                     if cell.is_habitable():
                         north = self.island[row - 1][col]
@@ -157,9 +157,3 @@ class RossumIsland:
                             lst.clear()
                         for lst in self.island[row - 1][col - 1].move_carns:
                             lst.clear()
-
-
-
-
-
-

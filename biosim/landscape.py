@@ -88,11 +88,8 @@ class Landscape:
             carn.aging()
 
     def death(self):
-        def survivors(pop):
-            return [animal for animal in pop if not animal.dies()]
-
-        self.list_herbs = survivors(self.list_herbs)
-        self.list_carns = survivors(self.list_carns)
+        self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
+        self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
     def lose_weight(self):
         for animal in (self.list_herbs + self.list_carns):

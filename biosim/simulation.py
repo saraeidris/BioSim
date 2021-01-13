@@ -4,8 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 from biosim.RossumIsland import RossumIsland
-from biosim.animals import Herbivore, Carnivore, Animal
-from biosim.landscape import Landscape, Lowland, Highland
+from biosim.animals import Herbivore, Carnivore
+from biosim.landscape import Lowland, Highland
 
 
 class BioSim:
@@ -42,20 +42,6 @@ class BioSim:
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.ini_pop = ini_pop
-        # self.carnivore_params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
-        #                          'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
-        #                          'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
-        #                          'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
-        # self.herbivore_params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
-        #                          'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
-        #                          'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
-        #                          'omega': 0.4, 'F': 10.0}
-        # self.lowland_params = {'f_max': 800}
-        # self.highland_params = {'f_max': 300}
-        # Highland(None, None, None, None, self.highland_params['f_max'],
-        # self.herbivore_params['w_birth'],
-        # self.herbivore_params['sigma_birth'],
-        # self.ini_pop)
         self.island = RossumIsland(island_map)
         self.current_year = 0
         self.island.set_init_population(self.ini_pop)
@@ -68,19 +54,21 @@ class BioSim:
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
         """
+        for key in params:
+            if key not in Carnivore.params:
+                raise KeyError('Invalid parameter name: ' + key)
+            if not (isinstance(params[key], int) or isinstance(params[key], float)) or params[key] < 0:
+                raise ValueError(key + ' must be a positive integer og float')
+            if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
+                raise ValueError('DeltaPhiMax must be strictly positive')
+            if 'eta' in params and params['eta'] > 1:
+                raise ValueError('eta must be a value between 0 and 1')
         if species == 'Carnivore':
             Carnivore().set_params(self.merge_params(Carnivore().params, params))
         elif species == 'Herbivore':
             Herbivore().set_params(self.merge_params(Herbivore().params, params))
         else:
             raise ValueError('Species must be either Carnivore or Herbivore')
-        for key in params:
-            if not (isinstance(params[key], int) or isinstance(params[key], float)) or params[key] < 0:
-                raise ValueError(key + ' must be a positive integer og float')
-        if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
-            raise ValueError('DeltaPhiMax must be strictly positive')
-        if 'eta' in params and params['eta'] > 1:
-            raise ValueError('eta must be less equal or less than 1')
 
     @staticmethod
     def merge_params(params1, params2):

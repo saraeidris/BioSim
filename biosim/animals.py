@@ -7,18 +7,17 @@ class Animal:
 
     @classmethod
     def set_params(cls, new_params):
-        for key in new_params:
-            if key not in cls.params:
-                raise KeyError('Invalid parameter name:' + key)
         cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
         self.age = age
         self.weight = weight
 
+        if self.age is None:
+            self.age = 0
+
         if self.weight is None:
             self.weight = 0
-            # weight should be positive
             while self.weight <= 0:
                 self.weight = random.gauss(self.params['w_birth'], self.params['sigma_birth'])
         if self.weight <= 0:
@@ -42,13 +41,9 @@ class Animal:
         if self.weight <= 0:
             return 0
         else:
-            try:
-                fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
+            fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
                        (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
-
-                return fitness
-            except Exception:
-                print(self.weight, self.age)
+            return fitness
 
     def weight_loss(self):
         """Specie loses weight"""
@@ -63,7 +58,7 @@ class Animal:
          :return bool
             True if specie dies
         """
-        return self.weight <= 0 or random.random() < self.params['omega'] * (1 - self.get_fitness())
+        return self.weight <= 0 or (random.random() < self.params['omega'] * (1 - self.get_fitness()))
 
     def mate(self, species_list):
         """
@@ -104,8 +99,6 @@ class Herbivore(Animal):
             else:
                 self.weight += (self.params['F'] * self.params['beta'])
                 return self.params['F']
-        else:
-            raise ValueError('Fodder value can not be negative')
 
 
 class Carnivore(Animal):
@@ -115,7 +108,7 @@ class Carnivore(Animal):
     params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
               'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
               'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
-              'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 45}
+              'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
     def consumed_herbs(self, herb_sorted):
         """
