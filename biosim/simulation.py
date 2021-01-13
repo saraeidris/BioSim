@@ -146,7 +146,11 @@ class BioSim:
             fig.add_subplot(2, 3, 6)
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
+
+
             plt.pause(10e-3)
+
+
 
     def add_population(self, population):
 
