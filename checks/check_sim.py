@@ -19,43 +19,18 @@ if __name__ == '__main__':
 
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
-               WHHHHHLLLLWWLLLLLLLWW
-               WHHHHHLLLLWWLLLLLLLWW
-               WHHHHHLLLLWWLLLLLLLWW
-               WWHHLLLLLLLWWLLLLLLLW
-               WWHHLLLLLLLWWLLLLLLLW
                WWWWWWWWHWWWWLLLLLLLW
                WHHHHHLLLLWWLLLLLLLWW
                WHHHHHHHHHWWLLLLLLWWW
-               WHHHHHDDDDDLLLLLLLWWW
-               WHHHHHDDDDDLLLLLLLWWW
-               WHHHHHDDDDDLLLLLLLWWW
-               WHHHHHDDDDDWWLLLLLWWW
-               WHHHHDDDDDDLLLLWWWWWW
-               WWHHHHDDDDDDLWWWWWWWW
-               WWHHHHDDDDDLLLWWWWWWW
-               WHHHHHDDDDDLLLLLLLWWW
-               WHHHHDDDDDDLLLLWWWWWW
-               WWHHHHDDDDDLLLWWWWWWW
+               WHHHHHLLLLLLLLLLLLWWW
+               WHHHHHLLLDDLLLHLLLWWW
+               WHHLLLLLDDDLLLHHHHWWW
+               WWHHHHLLLDDLLLHWWWWWW
+               WHHHLLLLLDDLLLLLLLWWW
+               WHHHHLLLLDDLLLLWWWWWW
+               WWHHHHLLLLLLLLWWWWWWW
                WWWHHHHLLLLLLLWWWWWWW
-               WWWHHHHHHWWWWWWWWWWWW
                WWWWWWWWWWWWWWWWWWWWW"""
-    # """
-    #
-    # \
-    #            WWWWWWWWWWWWWWWWWWWWW
-    #            WWWWWWWWHWWWWLLLLLLLW
-    #            WHHHHHLLLLWWLLLLLLLWW
-    #            WHHHHHHHHHWWLLLLLLWWW
-    #            WHHHHHLLLLLLLLLLLLWWW
-    #            WHHHHHLLLDDLLLHLLLWWW
-    #            WHHLLLLLDDDLLLHHHHWWW
-    #            WWHHHHLLLDDLLLHWWWWWW
-    #            WHHHLLLLLDDLLLLLLLWWW
-    #            WHHHHLLLLDDLLLLWWWWWW
-    #            WWHHHHLLLLLLLLWWWWWWW
-    #            WWWHHHHLLLLLLLWWWWWWW
-    #            WWWWWWWWWWWWWWWWWWWWW"""
     geogr = textwrap.dedent(geogr)
 
     ini_herbs = [{'loc': (10, 10),
@@ -83,10 +58,6 @@ if __name__ == '__main__':
                                             'omega': 0.3, 'F': 65,
                                             'DeltaPhiMax': .9})
     sim.set_landscape_parameters('L', {'f_max': 700})
-
-    # sim.simulate(num_years=100, vis_years=1)
-    # sim.add_population(population=ini_carns)
-    # sim.simulate(num_years=100, vis_years=1)
 
     sim.simulate(num_years=100, vis_years=1)
     sim.add_population(population=ini_carns)

@@ -125,7 +125,7 @@ class BioSim:
         map_rgb = [[rgb_value[column] for column in row]
                    for row in _map.splitlines()]
 
-        fig.add_subplot(2, 3, 2)
+        fig.add_subplot(2, 3, 3)
 
         ax1.imshow(map_rgb)
 
@@ -150,12 +150,12 @@ class BioSim:
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
             self.current_year += 1
-            fig.add_subplot(2, 3, 6)
+            fig.add_subplot(2, 3, 4)
             sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
             fig.add_subplot(2, 3, 5)
             plt.hist(self.island.get_fitness_of_animal()[1])
             plt.title('Fitness')
-            fig.add_subplot(2, 3, 4)
+            fig.add_subplot(2, 3, 6)
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
             plt.pause(10e-3)
