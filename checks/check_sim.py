@@ -31,6 +31,7 @@ if __name__ == '__main__':
                WWHHHHLLLLLLLLWWWWWWW
                WWWHHHHLLLLLLLWWWWWWW
                WWWWWWWWWWWWWWWWWWWWW"""
+
     geogr = textwrap.dedent(geogr)
 
     ini_herbs = [{'loc': (10, 10),

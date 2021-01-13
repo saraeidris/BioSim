@@ -21,9 +21,6 @@ class Animal:
         self.age = age
         self.weight = weight
 
-        if self.age is None:
-            self.age = 0
-
         if self.weight is None:
             self.weight = 0
             while self.weight <= 0:
@@ -115,8 +112,7 @@ class Herbivore(Animal):
     def consumed_fodder(self, available_fodder):
         """
         Decide how much fodder a herbivore eats
-
-        :param available_fodder: Amount of fodder in current cell
+        :param available_fodder: Amount of available fodder in current cell
         :return:
             Fodder left in current cell
         """

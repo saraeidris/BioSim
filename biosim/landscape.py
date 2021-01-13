@@ -20,7 +20,7 @@ class Landscape:
     def __init__(self):
         self.list_herbs = []
         self.list_carns = []
-        self.fodder = None
+        self.fodder = 0
         self.move_herbs = [[], [], [], []]
         self.move_carns = [[], [], [], []]
 
