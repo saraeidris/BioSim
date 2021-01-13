@@ -86,7 +86,20 @@ class RossumIsland:
             for cell in row:
                 fitness_herbs.extend(cell.get_herb_fitness())
                 fitness_carns.extend(cell.get_carn_fitness())
-        return fitness_carns, fitness_herbs
+        return fitness_herbs, fitness_carns
+
+    def get_stats(self):
+        age_herbs = []
+        age_carns = []
+        weight_herbs = []
+        weight_carns = []
+        for row in self.island:
+            for cell in row:
+                age_herbs.extend(cell.get_herb_age())
+                age_carns.extend(cell.get_carn_age())
+                weight_herbs.extend(cell.get_herb_weight())
+                weight_carns.extend(cell.get_carn_weight())
+        return age_herbs, age_carns, weight_herbs, weight_carns
 
     def annual_cycle(self):
         for row in self.island:
