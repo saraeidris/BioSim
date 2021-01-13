@@ -107,7 +107,6 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
-        import matplotlib.gridspec as gridspec
 
         fig = plt.figure(constrained_layout=False)
         ax1 = fig.add_subplot(2, 3, 1)
@@ -135,7 +134,7 @@ class BioSim:
         ax1.set_yticks(range(len(map_rgb)))
         ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
 
-        axlg = fig.add_axes([0.85, 0.1, 0.1, 0.8])  # llx, lly, w, h
+        axlg = fig.add_axes([3.85, 1.1, 0.1, 0.8])  # llx, lly, w, h
         axlg.axis('off')
         for ix, name in enumerate(('Water', 'Lowland',
                                    'Highland', 'Desert')):
@@ -151,15 +150,15 @@ class BioSim:
             list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
             self.current_year += 1
+            fig.add_subplot(2, 3, 6)
             sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
             fig.add_subplot(2, 3, 5)
             plt.hist(self.island.get_fitness_of_animal()[1])
             plt.title('Fitness')
-            fig.add_subplot(2, 3, 6)
+            fig.add_subplot(2, 3, 4)
             plt.plot(list_with_years, list_with_population_for_all_years)
             plt.title('Animal count')
             plt.pause(10e-3)
-
 
     def add_population(self, population):
 
