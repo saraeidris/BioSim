@@ -13,9 +13,6 @@ class Animal:
         self.age = age
         self.weight = weight
 
-        if self.age is None:
-            self.age = 0
-
         if self.weight is None:
             self.weight = 0
             while self.weight <= 0:
@@ -46,10 +43,17 @@ class Animal:
             return fitness
 
     def weight_loss(self):
-        """Specie loses weight"""
+        """
+        Specie loses weight
+        """
         self.weight -= self.params['eta'] * self.weight
 
     def migrate(self):
+        """
+        Decide whether the specie migrates or not
+         :return bool
+            True if specie migrates
+        """
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
@@ -63,7 +67,7 @@ class Animal:
     def mate(self, species_list):
         """
         Decide whether a specie gets an offspring
-        :param species_list:
+        :param species_list: list of all animals of one specie in the cell.
         :return: An offspring of the same specie
         """
         if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
@@ -88,7 +92,7 @@ class Herbivore(Animal):
     def consumed_fodder(self, available_fodder):
         """
         Decide how much fodder a herbivore eats
-        :param available_fodder: Amount of fodder in current cell
+        :param available_fodder: Amount of available fodder in current cell
         :return:
             Fodder left in cell
         """

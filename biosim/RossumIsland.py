@@ -5,6 +5,8 @@ from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
 class RossumIsland:
     def __init__(self, island_map):
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
+        if len(island_map) == 0:
+            raise ValueError('No island map was given')
         self.island_row_length = len(island_map.splitlines()[0])
 
         self.island = []
@@ -87,6 +89,7 @@ class RossumIsland:
                 fitness_herbs.extend(cell.get_herb_fitness())
                 fitness_carns.extend(cell.get_carn_fitness())
         return fitness_carns, fitness_herbs
+
 
     def annual_cycle(self):
         for row in self.island:

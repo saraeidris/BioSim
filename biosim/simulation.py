@@ -47,6 +47,7 @@ class BioSim:
         self.island.set_init_population(self.ini_pop)
         self.island_map = island_map
         self.animal = 0
+        self._year = 0
 
     def set_animal_parameters(self, species, params):
         """
@@ -159,9 +160,10 @@ class BioSim:
         :param population: List of """
         self.island.set_init_population(population)
 
-    # @property
-    # def year(self):
-    # """Last year simulated."""
+    @property
+    def year(self):
+        """Last year simulated."""
+        return self._year
 
     @property
     def num_animals(self):
