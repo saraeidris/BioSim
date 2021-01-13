@@ -4,9 +4,41 @@ import pytest
 
 @pytest.fixture
 def set_params(request):
-    Animal.set_params(request.param)
+    Herbivore.set_params(request.param)
     yield
-    Animal.set_params(Animal.params)
+    Herbivore.set_params(Herbivore.params)
+
+
+@pytest.mark.parametrize('set_params', [{'omega': 10000}], indirect=True)
+def test_bact_certain_death(set_params):
+    """
+    This test is *deterministic*: We set death probability to 1,
+    thus the bacterium must always die. We call dies() multiple
+    times to test this.
+
+    Paramterization with a single-element list of parameter values will run
+    this test once. Because we set `indirect=True`, Pytest will first invoke
+    the set_params fixture defined above, passing the dictionary
+    `{'p_death': 1.0}` as `request.param` to the fixture. The fixture then
+    calls `Bacteria.set_params()` and also ensures clean-up after the test.
+    """
+
+    h = Herbivore()
+    for _ in range(100):
+        assert h.dies()
+
+
+@pytest.mark.parametrize('set_params', [{'omega': 0.0}], indirect=True)
+def test_bact_certain_survival(set_params):
+    """
+    This test is *deterministic*: We set death probability to 0,
+    thus the bacterium must never die. We call dies() multiple
+    times to test this.
+    """
+
+    h = Herbivore()
+    for _ in range(100):
+        assert not h.dies()
 
 
 def test_animal_age():
@@ -66,6 +98,16 @@ def test_weight_loss():
     a.weight = 20
     a.weight_loss()
     assert a.weight < 20
+
+
+def test_error_when_negative_weight_given():
+    with pytest.raises(ValueError):
+        Animal(0, -1)
+
+
+def test_age_set_to_zero():
+    with pytest.raises(ValueError):
+        Animal(1.1, 1)
 
 
 def test_get_fitness():
