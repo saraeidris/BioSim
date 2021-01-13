@@ -1,5 +1,7 @@
 from biosim.animals import Animal, Herbivore, Carnivore
 import pytest
+import random
+from scipy.stats import normaltest
 
 
 @pytest.fixture
@@ -115,6 +117,20 @@ def test_get_fitness():
 
     fitness = Herbivore().get_fitness()
     assert type(fitness) == float
+
+
+def test_weight_normal_distributed():
+    random.seed(123456)
+    alpha = 0.05
+    herb_weights = [Herbivore().weight for _ in range(1000)]
+    carn_weights = [Carnivore().weight for _ in range(1000)]
+    result_herb = normaltest(herb_weights)
+    result_carn = normaltest(carn_weights)
+    assert alpha < result_herb[1]
+    assert alpha < result_carn[1]
+
+
+
 
 
 
