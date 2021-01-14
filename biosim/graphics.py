@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 import os
+import seaborn as sns
 
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in
@@ -21,8 +22,7 @@ class Graphics:
     """Provides graphics support for RandVis."""
 
     def __init__(self,
-                 img_dir=None,
-                 img_name=None,
+                 img_base,
                  img_fmt='png'):
         """
         :param img_dir: directory for image files; no images if None
@@ -33,14 +33,7 @@ class Graphics:
         :type img_fmt: str
         """
 
-        if img_name is None:
-            img_name = _DEFAULT_GRAPHICS_NAME
-
-        if img_dir is not None:
-            self._img_base = os.path.join(img_dir, img_name)
-
-        else:
-            self._img_base = None
+        self._img_base = img_base
         self._img_fmt = img_fmt
 
         self._img_ctr = 0
@@ -48,16 +41,18 @@ class Graphics:
 
         # the following will be initialized by _setup_graphics
         self._fig = None
-        self._map_ax = None
-        self._img_axis = None
-        self._mean_ax = None
+        self._herb_heat = None
+        self._herbivore_img_axis = None
+        self._carn_img_axis = None
+        self._carn_heat = None
         self._mean_line = None
 
-    def update(self, step, sys_map, sys_mean):
+    def update(self, step, sys_map, two_d_darray_for_pop, list_with_years,
+               list_with_population_for_all_years):
         """Updates graphics with current data."""
 
-        self._update_system_map(sys_map)
-        self._update_mean_graph(step, sys_mean)
+        self._update_system_map(sys_map, two_d_darray_for_pop, list_with_years,
+                                list_with_population_for_all_years)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -116,21 +111,21 @@ class Graphics:
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
-        if self._map_ax is None:
-            self._map_ax = self._fig.add_subplot(1, 2, 1)
-            self._img_axis = None
+        if self._herb_heat is None:
+            self._herb_heat = self._fig.add_subplot(1, 2, 1)
+            self._herbivore_img_axis = None
 
         # Add right subplot for line graph of mean.
-        if self._mean_ax is None:
-            self._mean_ax = self._fig.add_subplot(1, 2, 2)
-            self._mean_ax.set_ylim(-0.05, 0.05)
+        if self._carn_heat is None:
+            self._carn_heat = self._fig.add_subplot(1, 2, 2)
+            self._carn_img_axis = None
 
         # needs updating on subsequent calls to simulate()
-        self._mean_ax.set_xlim(0, final_step + 1)
+        #self._carn_heat.set_xlim(0, final_step + 1)
 
         if self._mean_line is None:
-            mean_plot = self._mean_ax.plot(np.arange(0, final_step + 1),
-                                           np.full(final_step + 1, np.nan))
+            mean_plot = self._carn_heat.plot(np.arange(0, final_step + 1),
+                                             np.full(final_step + 1, np.nan))
             self._mean_line = mean_plot[0]
         else:
             x_data, y_data = self._mean_line.get_data()
@@ -140,22 +135,43 @@ class Graphics:
                 self._mean_line.set_data(np.hstack((x_data, x_new)),
                                          np.hstack((y_data, y_new)))
 
-    def _update_system_map(self, sys_map):
+    def _update_system_map(self, tuple_stats, two_d_array_pop, list_with_years,
+                           list_with_population_for_all_years):
         """Update the 2D-view of the system."""
+        herbivore_stats = two_d_array_pop[0]
+        carnivore_stats = two_d_array_pop[1]
 
-        if self._img_axis is not None:
-            self._img_axis.set_data(sys_map)
+        if self._herbivore_img_axis is not None:
+            self._herbivore_img_axis.set_data(herbivore_stats)
         else:
-            self._img_axis = self._map_ax.imshow(sys_map,
-                                                 interpolation='nearest',
-                                                 vmin=-0.25, vmax=0.25)
-            plt.colorbar(self._img_axis, ax=self._map_ax,
+            self._herbivore_img_axis = self._herb_heat.imshow(herbivore_stats,
+                                                              interpolation='nearest',
+                                                              vmin=0, vmax=200)
+
+            plt.colorbar(self._herbivore_img_axis, ax=self._herb_heat,
                          orientation='horizontal')
 
-    def _update_mean_graph(self, step, mean):
-        y_data = self._mean_line.get_ydata()
-        y_data[step] = mean
-        self._mean_line.set_ydata(y_data)
+        if self._carn_img_axis is not None:
+            self._carn_img_axis.set_data(carnivore_stats)
+        else:
+            self._carn_img_axis = self._carn_heat.imshow(carnivore_stats,
+                                                         interpolation='nearest',
+                                                         vmin=0, vmax=50)
+            plt.colorbar(self._carn_img_axis, ax=self._carn_heat,
+                         orientation='horizontal')
+
+        # self._mean_ax = None
+        # plt.hist(tuple_stats[4])
+        # plt.title('Fitness')
+        # self._mean_line = None
+        # plt.hist(tuple_stats[2])
+        # plt.title('weight')
+        # #self._fig.add_subplot(2, 3, 5)
+        # plt.hist(tuple_stats[0])
+        # plt.title('age')
+        # #self._fig.add_subplot(2, 3, 6)
+        # plt.plot(list_with_years, list_with_population_for_all_years)
+        # plt.title('Animal count')
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""

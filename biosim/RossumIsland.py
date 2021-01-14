@@ -81,27 +81,31 @@ class RossumIsland:
                 number_of_carns += len(cell.list_carns)
         return number_of_herbs, number_of_carns, number_of_herbs + number_of_carns
 
-    def get_fitness_of_animal(self):
-        fitness_herbs = []
-        fitness_carns = []
-        for row in self.island:
-            for cell in row:
-                fitness_herbs.extend(cell.get_herb_fitness())
-                fitness_carns.extend(cell.get_carn_fitness())
-        return fitness_herbs, fitness_carns
+    # def get_fitness_of_animal(self):
+    #     fitness_herbs = []
+    #     fitness_carns = []
+    #     for row in self.island:
+    #         for cell in row:
+    #             fitness_herbs.extend(cell.get_herb_fitness())
+    #             fitness_carns.extend(cell.get_carn_fitness())
+    #     return fitness_herbs, fitness_carns
 
     def get_stats(self):
         age_herbs = []
         age_carns = []
         weight_herbs = []
         weight_carns = []
+        fitness_herbs = []
+        fitness_carns = []
         for row in self.island:
             for cell in row:
                 age_herbs.extend(cell.get_herb_age())
                 age_carns.extend(cell.get_carn_age())
                 weight_herbs.extend(cell.get_herb_weight())
                 weight_carns.extend(cell.get_carn_weight())
-        return age_herbs, age_carns, weight_herbs, weight_carns
+                fitness_herbs.extend(cell.get_herb_fitness())
+                fitness_carns.extend(cell.get_carn_fitness())
+        return age_herbs, age_carns, weight_herbs, weight_carns, fitness_herbs, fitness_carns
 
 
     def annual_cycle(self):
