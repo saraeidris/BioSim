@@ -109,7 +109,7 @@ class Landscape:
 
     def death(self):
         """
-        Removes each animal from list that did not survive.
+        Keep animal if it don't die in method dies.
         """
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
@@ -189,9 +189,16 @@ class Highland(Landscape):
         super().__init__()
 
     def update_fodder(self):
+        """
+        Updates fodder, used to update fodder each year. Overrides method in Landscape.
+        :return:
+        """
         self.fodder = self.d_landscape['f_max']
 
     def get_fodder(self):
+        """
+        :return: Amount of fodder in current cell.
+        """
         return self.fodder
 
 
@@ -202,7 +209,14 @@ class Lowland(Landscape):
         super().__init__()
 
     def update_fodder(self):
+        """
+        Updates fodder, used to update fodder each year. Overrides method in Landscape.
+        :return:
+        """
         self.fodder = self.d_landscape['f_max']
 
     def get_fodder(self):
+        """
+        :return: Amount of fodder in current cell.
+        """
         return self.fodder
