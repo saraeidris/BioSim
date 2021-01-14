@@ -153,7 +153,7 @@ class BioSim:
             plt.title('Animal count')
 
             plt.pause(10e-3)
-            # sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
+            # sns.heatmap(self.island.get_pop_info()[0], cbar=False, cmap="YlGnBu")
 
     def add_population(self, population):
 
@@ -174,15 +174,17 @@ class BioSim:
         dictionaries specifying population
         on island.
         """
-        return self.island.get_number_of_animals()[2]
+        total_num = (self.island.get_pop_info()[2] +
+                     self.island.get_pop_info()[3])
+        return total_num
 
     @property
     def num_animals_per_species(self):
         """
         Number of animals per species in island, as dictionary.
         """
-        num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
-                           'Carnivore': self.island.get_number_of_animals()[1]}
+        num_animal_dict = {'Herbivore': self.island.get_pop_info()[2],
+                           'Carnivore': self.island.get_pop_info()[3]}
         return num_animal_dict
 
     # def make_movie(self):
