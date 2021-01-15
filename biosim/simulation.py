@@ -1,6 +1,5 @@
 import random
-import pandas as pd
-import seaborn as sns
+
 import matplotlib.pyplot as plt
 from .graphics import Graphics
 
@@ -10,6 +9,12 @@ from biosim.landscape import Lowland, Highland
 
 
 class BioSim:
+
+    DEFAULT_CMAX_ANIMALS = {'Herbivore': 100, 'Carnivore': 40}
+    DEFAULT_HIST_SPECS = {'weight': {'max': 60, 'delta': 2},
+                          'age': {'max': 60, 'delta': 2},
+                          'fitness': {'max': 1, 'delta': 0.05}}
+
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt='png'):
@@ -50,6 +55,15 @@ class BioSim:
         self._step = 0
         self._graphics = Graphics(self.img_base, self.img_fmt)
 
+        if self.cmax_animals is None:
+            self.cmax_animals = self.DEFAULT_CMAX_ANIMALS
+
+        if self.hist_specs is None:
+            self.hist_specs = self.DEFAULT_HIST_SPECS
+        if len(self.hist_specs) < 3:
+            new = self.merge_params(self.DEFAULT_HIST_SPECS, self.hist_specs)
+            self.hist_specs = new
+
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -59,8 +73,8 @@ class BioSim:
         for key in params:
             if key not in Carnivore.params:
                 raise KeyError('Invalid parameter name: ' + key)
-            if not (isinstance(params[key], int) or isinstance(params[key], float)) or params[
-                key] < 0:
+            if not (isinstance(params[key], int) or
+                    isinstance(params[key], float)) or params[key] < 0:
                 raise ValueError(key + ' must be a positive integer og float')
             if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
                 raise ValueError('DeltaPhiMax must be strictly positive')
@@ -152,7 +166,7 @@ class BioSim:
         if self._step == 0:
             self._graphics.update(self._step,
                                   self.island.get_stats(),
-                                  self.island.get_2darray_for_pop(),
+                                  self.island.get_pop_info(),
                                   self.island.get_number_of_animals())
 
         while self._step < self._final_step:
@@ -161,12 +175,11 @@ class BioSim:
             if self._step % vis_years == 0:
                 self._graphics.update(self._step,
                                       self.island.get_stats(),
-                                      self.island.get_2darray_for_pop(),
+                                      self.island.get_pop_info(),
                                       self.island.get_number_of_animals())
             self.island.annual_cycle()
 
     def add_population(self, population):
-
         """
         Add a population to the island
         :param population: List of """
@@ -184,17 +197,23 @@ class BioSim:
         dictionaries specifying population
         on island.
         """
-        return self.island.get_number_of_animals()[2]
+        total_num = (self.island.get_pop_info()[2] +
+                     self.island.get_pop_info()[3])
+        return total_num
 
     @property
     def num_animals_per_species(self):
         """
         Number of animals per species in island, as dictionary.
         """
+        num_animal_dict = {'Herbivore': self.island.get_pop_info()[2],
+                           'Carnivore': self.island.get_pop_info()[3]}
         num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
                            'Carnivore': self.island.get_number_of_animals()[1]}
         return num_animal_dict
 
     def make_movie(self):
-        """Create MPEG4 movie from visualization images saved."""
+        """
+        Create MPEG4 movie from visualization images saved.
+        """
         return self._graphics.make_movie("mp4")
