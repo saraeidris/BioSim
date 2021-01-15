@@ -1,6 +1,7 @@
 import random
 
 import matplotlib.pyplot as plt
+from .graphics import Graphics
 
 from biosim.RossumIsland import RossumIsland
 from biosim.animals import Herbivore, Carnivore

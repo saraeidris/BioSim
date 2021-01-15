@@ -6,6 +6,12 @@ class Landscape:
 
     @classmethod
     def set_params(cls, new_params):
+        """
+        Overrides default params
+        :param new_params: input of wanted params
+        :return:
+            new dictionary with updated params
+        """
         for key in new_params:
             if key not in cls.d_landscape:
                 raise KeyError('Invalid parameter name:' + key)
@@ -34,6 +40,12 @@ class Landscape:
         return 0
 
     def eat_all(self):
+        """
+        Iterates over all animals and check if they eat.
+        Herbivores eats in random order.
+        Carnivores eats in order based on fitness
+
+        """
         if not len(self.list_herbs) == 0:
             random.shuffle(self.list_herbs)
             for herb in self.list_herbs:
@@ -53,6 +65,10 @@ class Landscape:
             self.list_herbs = sorted_herbs
 
     def migrate_all(self, cells_around):
+        """
+        migrate each animal if picked cell is habitable
+        :param cells_around: cells around the animal, north, south, east and west.
+        """
         if len(self.list_herbs) > 0:
             for herb in self.list_herbs:
                 if herb.migrate():
@@ -69,6 +85,10 @@ class Landscape:
                         self.list_carns.remove(carn)
 
     def give_birth(self):
+        """
+        Animals give birth to an offspring
+         of the same specie if mate method is fulfilled.
+        """
         if len(self.list_herbs) > 1:
             offspring_herbs = []
             for herb in self.list_herbs:
@@ -90,10 +110,16 @@ class Landscape:
             animal.aging()
 
     def death(self):
+        """
+        Keep animal if it don't die in method dies.
+        """
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
     def lose_weight(self):
+        """
+        All animal in current cell loses weight.
+        """
         for animal in (self.list_herbs + self.list_carns):
             animal.weight_loss()
 
@@ -110,21 +136,36 @@ class Landscape:
         return len(self.list_herbs + self.list_carns) > 0
 
     def get_herb_fitness(self):
+        """
+        :return: fitness for all herbivores
+        """
         return [herb.get_fitness() for herb in self.list_herbs]
 
     def get_carn_fitness(self):
+        """
+        :return: fitness for all carnivores
+        """
         return [carn.get_fitness() for carn in self.list_carns]
 
     def get_herb_age(self):
         return [herb.age for herb in self.list_herbs]
 
     def get_carn_age(self):
+        """
+        :return: age for all carnivores
+        """
         return [carn.age for carn in self.list_carns]
 
     def get_herb_weight(self):
+        """
+        :return: Weight for all herbivores
+        """
         return [herb.weight for herb in self.list_herbs]
 
     def get_carn_weight(self):
+        """
+        :return: Weight for all carnivores
+        """
         return [carn.weight for carn in self.list_carns]
 
 
@@ -147,9 +188,16 @@ class Highland(Landscape):
         super().__init__()
 
     def update_fodder(self):
+        """
+        Updates fodder, used to update fodder each year. Overrides method in Landscape.
+        :return:
+        """
         self.fodder = self.d_landscape['f_max']
 
     def get_fodder(self):
+        """
+        :return: Amount of fodder in current cell.
+        """
         return self.fodder
 
 
@@ -160,7 +208,14 @@ class Lowland(Landscape):
         super().__init__()
 
     def update_fodder(self):
+        """
+        Updates fodder, used to update fodder each year. Overrides method in Landscape.
+        :return:
+        """
         self.fodder = self.d_landscape['f_max']
 
     def get_fodder(self):
+        """
+        :return: Amount of fodder in current cell.
+        """
         return self.fodder
