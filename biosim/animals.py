@@ -38,9 +38,6 @@ class Animal:
         """
         self.age += 1
 
-    def get_age(self):
-        return self.age
-
     def get_fitness(self):
         """
         Calculate fitness for specie
@@ -81,7 +78,7 @@ class Animal:
          bool
             True if specie dies
         """
-        return self.weight <= 0 or (random.random() < self.params['omega'] * (1 - self.get_fitness()))
+        return (self.weight <= 0) or (random.random() < self.params['omega'] * (1 - self.get_fitness()))
 
     def mate(self, species_list):
         """

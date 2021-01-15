@@ -1,6 +1,5 @@
 import random
-import pandas as pd
-import seaborn as sns
+
 import matplotlib.pyplot as plt
 from .graphics import Graphics
 
@@ -74,8 +73,8 @@ class BioSim:
         for key in params:
             if key not in Carnivore.params:
                 raise KeyError('Invalid parameter name: ' + key)
-            if not (isinstance(params[key], int) or isinstance(params[key], float)) or params[
-                key] < 0:
+            if not (isinstance(params[key], int) or
+                    isinstance(params[key], float)) or params[key] < 0:
                 raise ValueError(key + ' must be a positive integer og float')
             if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
                 raise ValueError('DeltaPhiMax must be strictly positive')
@@ -205,17 +204,23 @@ class BioSim:
         dictionaries specifying population
         on island.
         """
-        return self.island.get_number_of_animals()[2]
+        total_num = (self.island.get_pop_info()[2] +
+                     self.island.get_pop_info()[3])
+        return total_num
 
     @property
     def num_animals_per_species(self):
         """
         Number of animals per species in island, as dictionary.
         """
+        num_animal_dict = {'Herbivore': self.island.get_pop_info()[2],
+                           'Carnivore': self.island.get_pop_info()[3]}
         num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
                            'Carnivore': self.island.get_number_of_animals()[1]}
         return num_animal_dict
 
     def make_movie(self):
-     """Create MPEG4 movie from visualization images saved."""
-     return self._graphics.make_movie("mp4")
+        """
+        Create MPEG4 movie from visualization images saved.
+        """
+        return self._graphics.make_movie("mp4")
