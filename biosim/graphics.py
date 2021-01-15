@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 import os
-import seaborn as sns
 
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in
@@ -51,8 +50,7 @@ class Graphics:
                list_with_population_for_all_years):
         """Updates graphics with current data."""
 
-        self._update_system_map(sys_map, two_d_darray_for_pop, list_with_years,
-                                list_with_population_for_all_years)
+        self._update_herb_heatmap(two_d_darray_for_pop)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -120,23 +118,7 @@ class Graphics:
             self._carn_heat = self._fig.add_subplot(1, 2, 2)
             self._carn_img_axis = None
 
-        # needs updating on subsequent calls to simulate()
-        #self._carn_heat.set_xlim(0, final_step + 1)
-
-        if self._mean_line is None:
-            mean_plot = self._carn_heat.plot(np.arange(0, final_step + 1),
-                                             np.full(final_step + 1, np.nan))
-            self._mean_line = mean_plot[0]
-        else:
-            x_data, y_data = self._mean_line.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_step + 1)
-            if len(x_new) > 0:
-                y_new = np.full(x_new.shape, np.nan)
-                self._mean_line.set_data(np.hstack((x_data, x_new)),
-                                         np.hstack((y_data, y_new)))
-
-    def _update_system_map(self, tuple_stats, two_d_array_pop, list_with_years,
-                           list_with_population_for_all_years):
+    def _update_herb_heatmap(self, two_d_array_pop):
         """Update the 2D-view of the system."""
         herbivore_stats = two_d_array_pop[0]
         carnivore_stats = two_d_array_pop[1]

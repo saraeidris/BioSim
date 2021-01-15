@@ -44,7 +44,6 @@ class BioSim:
         self.img_fmt = img_fmt
         self.ini_pop = ini_pop
         self.island = RossumIsland(island_map)
-        self.current_year = 0
         self.island.set_init_population(self.ini_pop)
         self.island_map = island_map
         self.animal = 0
@@ -139,7 +138,6 @@ class BioSim:
         list_with_population_for_all_years = []
         list_with_years = []
         for _ in range(num_years):
-            list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
 
@@ -165,8 +163,6 @@ class BioSim:
 
         while self._step < self._final_step:
             self._step += 1
-            self.island.annual_cycle()
-            self.current_year += 1
 
             if self._step % vis_years == 0:
                 self._graphics.update(self._step,
@@ -174,6 +170,7 @@ class BioSim:
                                       self.island.get_2darray_for_pop(),
                                       list_with_years,
                                       list_with_population_for_all_years)
+            self.island.annual_cycle()
 
     def add_population(self, population):
 
