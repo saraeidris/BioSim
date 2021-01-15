@@ -46,8 +46,10 @@ class Animal:
         if self.weight <= 0:
             return 0
         else:
-            fitness = ((1 / (1 + exp(self.params['phi_age'] * (self.age - self.params['a_half'])))) *
-                       (1 / (1 + exp(-self.params['phi_weight'] * (self.weight - self.params['w_half'])))))
+            fitness = ((1 / (1 + exp(self.params['phi_age'] *
+                            (self.age - self.params['a_half'])))) *
+                       (1 / (1 + exp(-self.params['phi_weight'] *
+                            (self.weight - self.params['w_half'])))))
             return fitness
 
     def weight_loss(self):
@@ -78,7 +80,8 @@ class Animal:
          bool
             True if specie dies
         """
-        return (self.weight <= 0) or (random.random() < self.params['omega'] * (1 - self.get_fitness()))
+        return (self.weight <= 0) or (random.random() <
+                                      self.params['omega'] * (1 - self.get_fitness()))
 
     def mate(self, species_list):
         """
@@ -87,7 +90,8 @@ class Animal:
         :param species_list: list with animals of the same specie
         :return: An offspring of the same specie
         """
-        if self.weight < self.params['zeta'] * (self.params['w_birth'] + self.params['sigma_birth']):
+        if self.weight < self.params['zeta'] * (self.params['w_birth'] +
+                                                self.params['sigma_birth']):
             return
         if random.random() < self.params['gamma'] * self.get_fitness() * (len(species_list) - 1):
             offspring = self.__class__()

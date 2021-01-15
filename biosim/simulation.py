@@ -11,7 +11,7 @@ from biosim.landscape import Lowland, Highland
 class BioSim:
 
     DEFAULT_CMAX_ANIMALS = {'Herbivore': 100, 'Carnivore': 40}
-    DEFAULT_HIST_SPECS = {'weight': {'max': 80, 'delta': 2},
+    DEFAULT_HIST_SPECS = {'weight': {'max': 60, 'delta': 2},
                           'age': {'max': 60, 'delta': 2},
                           'fitness': {'max': 1, 'delta': 0.05}}
 
