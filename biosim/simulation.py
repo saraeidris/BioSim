@@ -49,6 +49,13 @@ class BioSim:
         self.animal = 0
         self._year = 0
 
+        default_cmax_animals = {'Herbivore': 100, 'Carnivore': 40}
+
+        if self.cmax_animals is None:
+            self.cmax_animals = default_cmax_animals
+
+        # if self.hist_specs is None:
+
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -58,7 +65,8 @@ class BioSim:
         for key in params:
             if key not in Carnivore.params:
                 raise KeyError('Invalid parameter name: ' + key)
-            if not (isinstance(params[key], int) or isinstance(params[key], float)) or params[key] < 0:
+            if not (isinstance(params[key], int) or
+                    isinstance(params[key], float)) or params[key] < 0:
                 raise ValueError(key + ' must be a positive integer og float')
             if 'DeltaPhiMax' in params and params['DeltaPhiMax'] <= 0:
                 raise ValueError('DeltaPhiMax must be strictly positive')

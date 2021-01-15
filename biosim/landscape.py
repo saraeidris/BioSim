@@ -9,6 +9,10 @@ class Landscape:
         for key in new_params:
             if key not in cls.d_landscape:
                 raise KeyError('Invalid parameter name:' + key)
+            if not (isinstance(new_params[key], int) or isinstance(new_params[key], float)):
+                raise ValueError(key + ' must be of type integer or float')
+            if new_params[key] < 0:
+                raise ValueError('Fodder value must be positive')
         cls.d_landscape.update(new_params)
 
     def __init__(self):
