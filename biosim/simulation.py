@@ -1,6 +1,5 @@
 import random
-import pandas as pd
-import seaborn as sns
+
 import matplotlib.pyplot as plt
 
 from biosim.RossumIsland import RossumIsland
@@ -9,6 +8,12 @@ from biosim.landscape import Lowland, Highland
 
 
 class BioSim:
+
+    DEFAULT_CMAX_ANIMALS = {'Herbivore': 100, 'Carnivore': 40}
+    DEFAULT_HIST_SPECS = {'weight': {'max': 80, 'delta': 2},
+                          'age': {'max': 60, 'delta': 2},
+                          'fitness': {'max': 1, 'delta': 0.05}}
+
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt='png'):
@@ -43,18 +48,20 @@ class BioSim:
         self.img_fmt = img_fmt
         self.ini_pop = ini_pop
         self.island = RossumIsland(island_map)
-        self.current_year = 0
         self.island.set_init_population(self.ini_pop)
         self.island_map = island_map
         self.animal = 0
-        self._year = 0
-
-        default_cmax_animals = {'Herbivore': 100, 'Carnivore': 40}
+        self._step = 0
+        self._graphics = Graphics(self.img_base, self.img_fmt)
 
         if self.cmax_animals is None:
-            self.cmax_animals = default_cmax_animals
+            self.cmax_animals = self.DEFAULT_CMAX_ANIMALS
 
-        # if self.hist_specs is None:
+        if self.hist_specs is None:
+            self.hist_specs = self.DEFAULT_HIST_SPECS
+        if len(self.hist_specs) < 3:
+            new = self.merge_params(self.DEFAULT_HIST_SPECS, self.hist_specs)
+            self.hist_specs = new
 
     def set_animal_parameters(self, species, params):
         """
@@ -104,64 +111,78 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
-
-        fig = plt.figure(constrained_layout=False)
-        ax1 = fig.add_subplot(2, 3, 1)
-
-        # axes for text
-        # ax1 = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
-        ax1.axis('off')  # turn off coordinate system
-        _map = self.island_map
-
-        #                   R    G    B
-        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                     'L': (0.0, 0.6, 0.0),  # dark green
-                     'H': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-
-        map_rgb = [[rgb_value[column] for column in row]
-                   for row in _map.splitlines()]
-
-        fig.add_subplot(2, 3, 2)
-
-        ax1.imshow(map_rgb)
-
-        ax1.set_xticks(range(len(map_rgb[0])))
-        ax1.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        ax1.set_yticks(range(len(map_rgb)))
-        ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
-
-        axlg = fig.add_axes([3.85, 1.1, 0.1, 0.8])  # llx, lly, w, h
-        axlg.axis('off')
-        for ix, name in enumerate(('Water', 'Lowland',
-                                   'Highland', 'Desert')):
-            axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-                                         edgecolor='none',
-                                         facecolor=rgb_value[name[0]]))
-            axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
-
+        #
+        # fig = plt.figure(constrained_layout=False)
+        # ax1 = fig.add_subplot(2, 3, 1)
+        #
+        # # axes for text
+        # # ax1 = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
+        # ax1.axis('off')  # turn off coordinate system
+        # _map = self.island_map
+        #
+        # #                   R    G    B
+        # rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+        #              'L': (0.0, 0.6, 0.0),  # dark green
+        #              'H': (0.5, 1.0, 0.5),  # light green
+        #              'D': (1.0, 1.0, 0.5)}  # light yellow
+        #
+        # map_rgb = [[rgb_value[column] for column in row]
+        #            for row in _map.splitlines()]
+        #
+        # fig.add_subplot(2, 3, 2)
+        #
+        # ax1.imshow(map_rgb)
+        #
+        # ax1.set_xticks(range(len(map_rgb[0])))
+        # ax1.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        # ax1.set_yticks(range(len(map_rgb)))
+        # ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
+        #
+        # axlg = fig.add_axes([3.85, 1.1, 0.1, 0.8])  # llx, lly, w, h
+        # axlg.axis('off')
+        # for ix, name in enumerate(('Water', 'Lowland',
+        #                            'Highland', 'Desert')):
+        #     axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
+        #                                  edgecolor='none',
+        #                                  facecolor=rgb_value[name[0]]))
+        #     axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
+        #
         list_with_population_for_all_years = []
         list_with_years = []
         for _ in range(num_years):
-            self.island.annual_cycle()
-            list_with_years.append(self.current_year)
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
-            self.current_year += 1
-            fig.add_subplot(2, 3, 3)
-            plt.hist(self.island.get_fitness_of_animal()[1])
-            plt.title('Fitness')
-            fig.add_subplot(2, 3, 4)
-            plt.hist(self.island.get_stats()[3])
-            plt.title('weight')
-            fig.add_subplot(2, 3, 5)
-            plt.hist(self.island.get_stats()[1])
-            plt.title('age')
-            fig.add_subplot(2, 3, 6)
-            plt.plot(list_with_years, list_with_population_for_all_years)
-            plt.title('Animal count')
 
-            plt.pause(10e-3)
-            # sns.heatmap(self.island.get_pop_info()[0], cbar=False, cmap="YlGnBu")
+
+        # sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
+
+
+        if img_years is None:
+            img_years = vis_years
+
+        if img_years % vis_years != 0:
+            raise ValueError('img_steps must be multiple of vis_steps')
+
+        self._final_step = self._step + num_years
+        self._graphics.setup(self._final_step, img_years)
+
+        # plot initial status if at very beginning of simulation
+        if self._step == 0:
+            self._graphics.update(self._step,
+                                  self.island.get_stats(),
+                                  self.island.get_2darray_for_pop(),
+                                  list_with_years,
+                                  list_with_population_for_all_years)
+
+        while self._step < self._final_step:
+            self._step += 1
+
+            if self._step % vis_years == 0:
+                self._graphics.update(self._step,
+                                      self.island.get_stats(),
+                                      self.island.get_2darray_for_pop(),
+                                      list_with_years,
+                                      list_with_population_for_all_years)
+            self.island.annual_cycle()
 
     def add_population(self, population):
 
@@ -193,7 +214,12 @@ class BioSim:
         """
         num_animal_dict = {'Herbivore': self.island.get_pop_info()[2],
                            'Carnivore': self.island.get_pop_info()[3]}
+        num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
+                           'Carnivore': self.island.get_number_of_animals()[1]}
         return num_animal_dict
 
-    # def make_movie(self):
-    # """Create MPEG4 movie from visualization images saved."""
+    def make_movie(self):
+        """
+        Create MPEG4 movie from visualization images saved.
+        """
+        return self._graphics.make_movie("mp4")

@@ -86,10 +86,8 @@ class Landscape:
 
     def ages(self):
         """Species ages by one year each year"""
-        for herb in self.list_herbs:
-            herb.aging()
-        for carn in self.list_carns:
-            carn.aging()
+        for animal in (self.list_herbs + self.list_carns):
+            animal.aging()
 
     def death(self):
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
