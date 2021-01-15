@@ -15,6 +15,10 @@ class Landscape:
         for key in new_params:
             if key not in cls.d_landscape:
                 raise KeyError('Invalid parameter name:' + key)
+            if not (isinstance(new_params[key], int) or isinstance(new_params[key], float)):
+                raise ValueError(key + ' must be of type integer or float')
+            if new_params[key] < 0:
+                raise ValueError('Fodder value must be positive')
         cls.d_landscape.update(new_params)
 
     def __init__(self):
@@ -102,10 +106,8 @@ class Landscape:
 
     def ages(self):
         """Species ages by one year each year"""
-        for herb in self.list_herbs:
-            herb.aging()
-        for carn in self.list_carns:
-            carn.aging()
+        for animal in (self.list_herbs + self.list_carns):
+            animal.aging()
 
     def death(self):
         """
@@ -146,10 +148,7 @@ class Landscape:
         return [carn.get_fitness() for carn in self.list_carns]
 
     def get_herb_age(self):
-        """
-        :return: age for all herbivores
-        """
-        return [herb.get_age() for herb in self.list_herbs]
+        return [herb.age for herb in self.list_herbs]
 
     def get_carn_age(self):
         """
