@@ -10,6 +10,12 @@ from biosim.landscape import Lowland, Highland
 
 
 class BioSim:
+
+    DEFAULT_CMAX_ANIMALS = {'Herbivore': 100, 'Carnivore': 40}
+    DEFAULT_HIST_SPECS = {'weight': {'max': 80, 'delta': 2},
+                          'age': {'max': 60, 'delta': 2},
+                          'fitness': {'max': 1, 'delta': 0.05}}
+
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
                  img_base=None, img_fmt='png'):
