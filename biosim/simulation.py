@@ -166,8 +166,7 @@ class BioSim:
         if self._step == 0:
             self._graphics.update(self._step,
                                   self.island.get_stats(),
-                                  self.island.get_pop_info(),
-                                  self.island.get_number_of_animals())
+                                  self.island.get_pop_info())
 
         while self._step < self._final_step:
             self._step += 1
@@ -175,8 +174,7 @@ class BioSim:
             if self._step % vis_years == 0:
                 self._graphics.update(self._step,
                                       self.island.get_stats(),
-                                      self.island.get_pop_info(),
-                                      self.island.get_number_of_animals())
+                                      self.island.get_pop_info())
             self.island.annual_cycle()
 
     def add_population(self, population):

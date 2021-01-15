@@ -55,7 +55,7 @@ class Graphics:
         self._animal_count = None
         self._animal_count_img_axis = None
 
-    def update(self, step, get_stats, two_d_darray_for_pop, number_of_animals):
+    def update(self, step, get_stats, two_d_darray_for_pop):
         """Updates graphics with current data."""
 
         self._update_herb_heatmap(two_d_darray_for_pop)
@@ -63,7 +63,7 @@ class Graphics:
         self._update_animal_age(get_stats)
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
-        self._update_animal_count(number_of_animals)
+        self._update_animal_count(two_d_darray_for_pop)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -191,9 +191,8 @@ class Graphics:
     def _update_animal_weight(self, get_stats):
         herbivore_stats = get_stats[2]
         carnivore_stats = get_stats[3]
-        n =
         self._herb_age_img_axis = self._animal_weight.hist(herbivore_stats,
-                                                        histtype="step", color="b", bins=int(n))
+                                                        histtype="step", color="b")
         self._carn_age_img_axis = self._animal_weight.hist(carnivore_stats,
                                                         histtype="step", color="r")
 
@@ -205,9 +204,9 @@ class Graphics:
         self._carn_fitness_img_axis = self._animal_fitness.hist(carnivore_stats,
                                                                 histtype="step", color="r")
 
-    def _update_animal_count(self, number_of_animals):
-        herbivore_stats = number_of_animals[0]
-        carnivore_stats = number_of_animals[1]
+    def _update_animal_count(self, two_d_array_for_pop):
+        herbivore_stats = two_d_array_for_pop[2]
+        carnivore_stats = two_d_array_for_pop[3]
         self._herb_number_img_axis = self._animal_count.plot(herbivore_stats)
         self._carn_number_img_axis = self._animal_count.plot(carnivore_stats)
 
