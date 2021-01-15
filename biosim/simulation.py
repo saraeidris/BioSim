@@ -187,7 +187,6 @@ class BioSim:
             self.island.annual_cycle()
 
     def add_population(self, population):
-
         """
         Add a population to the island
         :param population: List of """
@@ -217,5 +216,7 @@ class BioSim:
         return num_animal_dict
 
     def make_movie(self):
-     """Create MPEG4 movie from visualization images saved."""
-     return self._graphics.make_movie("mp4")
+        """
+        Create MPEG4 movie from visualization images saved.
+        """
+        return self._graphics.make_movie("mp4")

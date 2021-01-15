@@ -107,7 +107,6 @@ class RossumIsland:
                 fitness_carns.extend(cell.get_carn_fitness())
         return age_herbs, age_carns, weight_herbs, weight_carns, fitness_herbs, fitness_carns
 
-
     def annual_cycle(self):
         for row in self.island:
             for cell in row:
