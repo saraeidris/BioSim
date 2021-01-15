@@ -50,7 +50,6 @@ class BioSim:
         self._step = 0
         self._graphics = Graphics(self.img_base, self.img_fmt)
 
-
     def set_animal_parameters(self, species, params):
         """
         Set parameters for animal species.
@@ -100,7 +99,7 @@ class BioSim:
         Image files will be numbered consecutively.
         """
         #
-        # fig = plt.figure(constrained_layout=False)
+        # fig = plt.figure()
         # ax1 = fig.add_subplot(2, 3, 1)
         #
         # # axes for text
@@ -140,10 +139,6 @@ class BioSim:
         for _ in range(num_years):
             list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
-
-        # sns.heatmap(self.island.get_2darray_for_pop()[0], cbar=False, cmap="YlGnBu")
-
-
         if img_years is None:
             img_years = vis_years
 
@@ -158,8 +153,7 @@ class BioSim:
             self._graphics.update(self._step,
                                   self.island.get_stats(),
                                   self.island.get_2darray_for_pop(),
-                                  list_with_years,
-                                  list_with_population_for_all_years)
+                                  self.island.get_number_of_animals())
 
         while self._step < self._final_step:
             self._step += 1
@@ -168,8 +162,7 @@ class BioSim:
                 self._graphics.update(self._step,
                                       self.island.get_stats(),
                                       self.island.get_2darray_for_pop(),
-                                      list_with_years,
-                                      list_with_population_for_all_years)
+                                      self.island.get_number_of_animals())
             self.island.annual_cycle()
 
     def add_population(self, population):
@@ -203,5 +196,5 @@ class BioSim:
         return num_animal_dict
 
     def make_movie(self):
-     """Create MPEG4 movie from visualization images saved."""
-     return self._graphics.make_movie("mp4")
+        """Create MPEG4 movie from visualization images saved."""
+        return self._graphics.make_movie("mp4")

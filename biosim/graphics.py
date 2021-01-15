@@ -43,14 +43,27 @@ class Graphics:
         self._herb_heat = None
         self._herbivore_img_axis = None
         self._carn_img_axis = None
+        self._animal_age_img_axis = None
+        self._animal_weight_img_axis = None
+        self._animal_fitness_img_axis = None
+        self._animal_weight = None
+        self._carn_weight = None
         self._carn_heat = None
-        self._mean_line = None
+        self._animal_age = None
+        self._animal_fitness = None
+        self._carn_age = None
+        self._animal_count = None
+        self._animal_count_img_axis = None
 
-    def update(self, step, sys_map, two_d_darray_for_pop, list_with_years,
-               list_with_population_for_all_years):
+    def update(self, step, get_stats, two_d_darray_for_pop, number_of_animals):
         """Updates graphics with current data."""
 
         self._update_herb_heatmap(two_d_darray_for_pop)
+        self._update_carn_heatmap(two_d_darray_for_pop)
+        self._update_animal_age(get_stats)
+        self._update_animal_weight(get_stats)
+        self._update_animal_fitness(get_stats)
+        self._update_animal_count(number_of_animals)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -110,18 +123,38 @@ class Graphics:
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
         if self._herb_heat is None:
-            self._herb_heat = self._fig.add_subplot(1, 2, 1)
+            self._herb_heat = self._fig.add_axes([0.06, 0.35, 0.3, 0.2])  # llx, lly, w, h
             self._herbivore_img_axis = None
+            plt.title('Herbivore distribution')
 
-        # Add right subplot for line graph of mean.
         if self._carn_heat is None:
-            self._carn_heat = self._fig.add_subplot(1, 2, 2)
+            self._carn_heat = self._fig.add_axes([0.6, 0.35, 0.3, 0.2])
             self._carn_img_axis = None
+            plt.title('Carnivore distribution')
+
+        if self._animal_age is None:
+            self._animal_age = self._fig.add_axes([0.10, 0.1, 0.2, 0.15])
+            self._animal_age_img_axis = None
+            plt.title('animal age')
+
+        if self._animal_weight is None:
+            self._animal_weight = self._fig.add_axes([0.40, 0.1, 0.2, 0.15])
+            self._animal_weight_img_axis = None
+            plt.title('animal weight')
+
+        if self._animal_fitness is None:
+            self._animal_fitness = self._fig.add_axes([0.70, 0.1, 0.2, 0.15])
+            self._animal_fitness_img_axis = None
+            plt.title('animal fitness')
+
+        if self._animal_count is None:
+            self._animal_count = self._fig.add_axes([0.6, 0.7, 0.3, 0.2])
+            self._animal_count_img_axis = None
+            plt.title('animal count')
 
     def _update_herb_heatmap(self, two_d_array_pop):
         """Update the 2D-view of the system."""
         herbivore_stats = two_d_array_pop[0]
-        carnivore_stats = two_d_array_pop[1]
 
         if self._herbivore_img_axis is not None:
             self._herbivore_img_axis.set_data(herbivore_stats)
@@ -131,7 +164,10 @@ class Graphics:
                                                               vmin=0, vmax=200)
 
             plt.colorbar(self._herbivore_img_axis, ax=self._herb_heat,
-                         orientation='horizontal')
+                         orientation='vertical')
+
+    def _update_carn_heatmap(self, two_d_array_pop):
+        carnivore_stats = two_d_array_pop[1]
 
         if self._carn_img_axis is not None:
             self._carn_img_axis.set_data(carnivore_stats)
@@ -139,21 +175,41 @@ class Graphics:
             self._carn_img_axis = self._carn_heat.imshow(carnivore_stats,
                                                          interpolation='nearest',
                                                          vmin=0, vmax=50)
-            plt.colorbar(self._carn_img_axis, ax=self._carn_heat,
-                         orientation='horizontal')
 
-        # self._mean_ax = None
-        # plt.hist(tuple_stats[4])
-        # plt.title('Fitness')
-        # self._mean_line = None
-        # plt.hist(tuple_stats[2])
-        # plt.title('weight')
-        # #self._fig.add_subplot(2, 3, 5)
-        # plt.hist(tuple_stats[0])
-        # plt.title('age')
-        # #self._fig.add_subplot(2, 3, 6)
-        # plt.plot(list_with_years, list_with_population_for_all_years)
-        # plt.title('Animal count')
+            plt.colorbar(self._carn_img_axis, ax=self._carn_heat,
+                         orientation='vertical')
+
+    def _update_animal_age(self, get_stats):
+        herbivore_stats = get_stats[0]
+        carnivore_stats = get_stats[1]
+
+        self._herb_age_img_axis = self._animal_age.hist(herbivore_stats,
+                                                        histtype="step", color="b")
+        self._carn_age_img_axis = self._animal_age.hist(carnivore_stats,
+                                                        histtype="step", color="r")
+
+    def _update_animal_weight(self, get_stats):
+        herbivore_stats = get_stats[2]
+        carnivore_stats = get_stats[3]
+        n =
+        self._herb_age_img_axis = self._animal_weight.hist(herbivore_stats,
+                                                        histtype="step", color="b", bins=int(n))
+        self._carn_age_img_axis = self._animal_weight.hist(carnivore_stats,
+                                                        histtype="step", color="r")
+
+    def _update_animal_fitness(self, get_stats):
+        herbivore_stats = get_stats[4]
+        carnivore_stats = get_stats[5]
+        self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats,
+                                                                histtype="step", color="b")
+        self._carn_fitness_img_axis = self._animal_fitness.hist(carnivore_stats,
+                                                                histtype="step", color="r")
+
+    def _update_animal_count(self, number_of_animals):
+        herbivore_stats = number_of_animals[0]
+        carnivore_stats = number_of_animals[1]
+        self._herb_number_img_axis = self._animal_count.plot(herbivore_stats)
+        self._carn_number_img_axis = self._animal_count.plot(carnivore_stats)
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""

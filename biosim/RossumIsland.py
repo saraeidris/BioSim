@@ -70,7 +70,7 @@ class RossumIsland:
     def get_2darray_for_pop(self):
         herb_array = [[len(cell.list_herbs) for cell in row] for row in self.island]
         carn_array = [[len(cell.list_carns) for cell in row] for row in self.island]
-        return herb_array, carn_array
+        return herb_array, carn_array,
 
     def get_number_of_animals(self):
         number_of_herbs = 0
