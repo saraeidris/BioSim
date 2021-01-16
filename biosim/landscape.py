@@ -123,14 +123,15 @@ class Landscape:
 
     def death(self):
         """
-        Keep animal if it don't die in method dies.
+        Keep animal if it don't die in method dies().
         """
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
-    def lose_weight(self, pyvid):
+    def lose_weight(self, pyvid=False):
         """
-        All animal in current cell loses weight.
+        calls the weight_loss method on all animals in the cell.
+        :param pyvid: True if this is a year with pyvid (Pythonvirus disease).
         """
         for animal in (self.list_herbs + self.list_carns):
             animal.weight_loss(pyvid, len(self.list_herbs + self.list_carns))

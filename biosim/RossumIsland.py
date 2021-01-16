@@ -109,50 +109,49 @@ class RossumIsland:
                     cell.death()
 
     def migration(self):
-        if len(self.island) > 3 or len(self.island[0]) > 3:
-            for row in range(1, len(self.island) - 1): # må fjerne -1 på versjon 2
-                for col in range(1, self.island_row_length - 1): # må fjerne -1 på versjon 2
+        if not (len(self.island) < 3 or len(self.island[0]) < 3):
+            for row in range(1, len(self.island)): # må fjerne -1 på versjon 2
+                for col in range(1, self.island_row_length): # må fjerne -1 på versjon 2
                     cell = self.island[row][col]
-                    if cell.is_habitable() and cell.is_populated():
-                        north = self.island[row - 1][col]
-                        south = self.island[row + 1][col]
-                        east = self.island[row][col + 1]
-                        west = self.island[row][col - 1]
-                        cells_around = (north, south, east, west)
-                        cell.migrate_all(cells_around)
-    #                     if north.is_habitable():
-    #                         cell.list_herbs.extend(north.move_herbs[1])
-    #                         cell.list_carns.extend(north.move_carns[1])
-    #                     if west.is_habitable():
-    #                         cell.list_herbs.extend(north.move_herbs[2])
-    #                         cell.list_carns.extend(north.move_carns[2])
-    #                 finished_cell = self.island[row - 1][col - 1]
-    #                 if finished_cell.is_habitable():
-    #                     for lst in finished_cell.move_herbs:
-    #                         lst.clear()
-    #                     for lst in finished_cell.move_carns:
-    #                         lst.clear()
-    #                     if self.island[row][col - 1].is_habitable():
-    #                         finished_cell.list_herbs.extend(self.island[row][col - 1].move_herbs[0])
-    #                         finished_cell.list_carns.extend(self.island[row][col - 1].move_carns[0])
-    #                     if self.island[row - 1][col].is_habitable():
-    #                         finished_cell.list_herbs.extend(self.island[row - 1][col].move_herbs[3])
-    #                         finished_cell.list_carns.extend(self.island[row - 1][col].move_carns[3])
+                    north = self.island[row - 1][col]  # V2
+                    west = self.island[row][col - 1]  # V2
+                    if row < len(self.island) - 1 and col < self.island_row_length - 1: # V2
+                        south = self.island[row + 1][col]  # V2
+                        east = self.island[row][col + 1] # V2
+                        if cell.is_habitable(): #and cell.is_populated(): # cell is populated må bort i versjon 2
+                        # north = self.island[row - 1][col] # V1
+                        # south = self.island[row + 1][col] # V1
+                        # east = self.island[row][col + 1] # V1
+                        # west = self.island[row][col - 1] # V1
+                            cells_around = (north, south, east, west)
+                            cell.migrate_all(cells_around) # Her slutter versjon 1
+                            if north.is_habitable() or west.is_habitable():
+                                cell.list_herbs.extend(north.move_herbs[1] + west.move_herbs[2])
+                                cell.list_carns.extend(north.move_carns[1] + west.move_carns[2])
+                    finished_cell = self.island[row - 1][col - 1]
+                    if finished_cell.is_habitable():
+                        for lst in finished_cell.move_herbs + finished_cell.move_carns:
+                            lst.clear()
+                        if north.is_habitable() or west.is_habitable():
+                            finished_cell.list_herbs.extend(west.move_herbs[0] +
+                                                            north.move_herbs[3])
+                            finished_cell.list_carns.extend(west.move_carns[0] +
+                                                            north.move_carns[3])
 
-            for row in range(1, len(self.island)):
-                for col in range(1, self.island_row_length):
-                    cell = self.island[row][col]
-                    if cell.is_habitable():
-                        north = self.island[row - 1][col]
-                        south = self.island[row + 1][col]
-                        east = self.island[row][col + 1]
-                        west = self.island[row][col - 1]
-                        cell.list_herbs.extend(north.move_herbs[1] + south.move_herbs[0] +
-                                               east.move_herbs[3] + west.move_herbs[2])
-                        cell.list_carns.extend(north.move_carns[1] + south.move_carns[0] +
-                                               east.move_carns[3] + west.move_carns[2])
-                    if self.island[row - 1][col - 1].is_habitable():
-                        for lst in self.island[row - 1][col - 1].move_herbs:
-                            lst.clear()
-                        for lst in self.island[row - 1][col - 1].move_carns:
-                            lst.clear()
+            # for row in range(1, len(self.island)):
+            #     for col in range(1, self.island_row_length):
+            #         cell = self.island[row][col]
+            #         if cell.is_habitable():
+            #             north = self.island[row - 1][col]
+            #             south = self.island[row + 1][col]
+            #             east = self.island[row][col + 1]
+            #             west = self.island[row][col - 1]
+            #             cell.list_herbs.extend(north.move_herbs[1] + south.move_herbs[0] +
+            #                                    east.move_herbs[3] + west.move_herbs[2])
+            #             cell.list_carns.extend(north.move_carns[1] + south.move_carns[0] +
+            #                                    east.move_carns[3] + west.move_carns[2])
+            #         if self.island[row - 1][col - 1].is_habitable():
+            #             for lst in self.island[row - 1][col - 1].move_herbs:
+            #                 lst.clear()
+            #             for lst in self.island[row - 1][col - 1].move_carns:
+            #                 lst.clear()
