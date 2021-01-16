@@ -47,18 +47,18 @@ class Animal:
             return 0
         else:
             fitness = ((1 / (1 + exp(self.params['phi_age'] *
-                            (self.age - self.params['a_half'])))) *
+                       (self.age - self.params['a_half'])))) *
                        (1 / (1 + exp(-self.params['phi_weight'] *
-                            (self.weight - self.params['w_half'])))))
+                       (self.weight - self.params['w_half'])))))
             return fitness
 
-    def weight_loss(self, pyvid, num_animals):
+    def weight_loss(self, pyvid=False, num_animals=None):
         """
         Reduces the weight of the animal with eta * its own weight.
         If the animal get pyvid (Pythonvirus Disease), it loses
         4 times the normal weight loss.
         """
-        if pyvid and random.random() < 0.0075 * num_animals:
+        if pyvid and random.random() < 0.005 * num_animals:
             self.weight -= 4 * self.params['eta'] * self.weight
         else:
             self.weight -= self.params['eta'] * self.weight
@@ -84,17 +84,17 @@ class Animal:
         return (self.weight <= 0) or (random.random() <
                                       self.params['omega'] * (1 - self.get_fitness()))
 
-    def mate(self, species_list):
+    def mate(self, n):
         """
-        Decide whether a specie gets an offspring
+        Decide whether a specie gets an offspring or not.
 
-        :param species_list: list with animals of the same specie
-        :return: An offspring of the same specie
+        :param n: number of animals of the same specie.
+        :return: An offspring of the same specie.
         """
         if self.weight < self.params['zeta'] * (self.params['w_birth'] +
                                                 self.params['sigma_birth']):
             return
-        if random.random() < self.params['gamma'] * self.get_fitness() * (len(species_list) - 1):
+        if random.random() < self.params['gamma'] * self.get_fitness() * (n - 1):
             offspring = self.__class__()
             if self.weight < (self.params['xi'] * offspring.weight):
                 return

@@ -43,7 +43,9 @@ class Landscape:
         """
         Iterates over all animals and check if they eat.
         Herbivores eats in random order.
-        Carnivores eats in order based on fitness
+        Carnivores eats in order based on fitness. In the end,
+        the eaten herbivores are removed, and the survivors
+        are stored in list_herbs.
 
         """
         if not len(self.list_herbs) == 0:
@@ -102,14 +104,14 @@ class Landscape:
         if len(self.list_herbs) > 1:
             offspring_herbs = []
             for herb in self.list_herbs:
-                offspring = herb.mate(self.list_herbs)
+                offspring = herb.mate(len(self.list_herbs))
                 if offspring:
                     offspring_herbs.append(offspring)
             self.list_herbs += offspring_herbs
         if len(self.list_carns) > 1:
             offspring_carns = []
             for carn in self.list_carns:
-                offspring = carn.mate(self.list_carns)
+                offspring = carn.mate(len(self.list_carns))
                 if offspring:
                     offspring_carns.append(offspring)
             self.list_carns += offspring_carns

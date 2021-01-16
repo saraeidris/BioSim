@@ -88,7 +88,8 @@ class RossumIsland:
         return age_herbs, age_carns, weight_herbs, weight_carns, fitness_herbs, fitness_carns
 
     def pyvid(self):
-        return random.randint(1, 25) == 25
+
+        return random.randint(1, 20) == 20
 
     def annual_cycle(self):
         for row in self.island:
@@ -109,8 +110,8 @@ class RossumIsland:
 
     def migration(self):
         if len(self.island) > 3 or len(self.island[0]) > 3:
-            for row in range(1, len(self.island) - 1):
-                for col in range(1, self.island_row_length - 1):
+            for row in range(1, len(self.island) - 1): # må fjerne -1 på versjon 2
+                for col in range(1, self.island_row_length - 1): # må fjerne -1 på versjon 2
                     cell = self.island[row][col]
                     if cell.is_habitable() and cell.is_populated():
                         north = self.island[row - 1][col]
@@ -135,12 +136,8 @@ class RossumIsland:
     #                         finished_cell.list_herbs.extend(self.island[row][col - 1].move_herbs[0])
     #                         finished_cell.list_carns.extend(self.island[row][col - 1].move_carns[0])
     #                     if self.island[row - 1][col].is_habitable():
-    #                         finished_cell.list_herbs.extend(self.island[row][col - 1].move_herbs[3])
-    #                         finished_cell.list_carns.extend(self.island[row][col - 1].move_carns[3])
-    #         for lst in self.island[-2][-2].move_herbs:
-    #             lst.clear()
-    #         for lst in self.island[-2][-2].move_carns:
-    #             lst.clear()
+    #                         finished_cell.list_herbs.extend(self.island[row - 1][col].move_herbs[3])
+    #                         finished_cell.list_carns.extend(self.island[row - 1][col].move_carns[3])
 
             for row in range(1, len(self.island)):
                 for col in range(1, self.island_row_length):

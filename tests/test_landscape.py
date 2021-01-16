@@ -24,13 +24,25 @@ class TestLandscape:
 
     @pytest.fixture
     def create_herbs(self):
-        return [Herbivore() for _ in range(10)]
+        """
+        Creates a list of 100 herbivores for use in multiple test.
+        """
+
+        return [Herbivore() for _ in range(100)]
 
     @pytest.fixture
     def create_carns(self):
-        return [Carnivore() for _ in range(10)]
+        """
+        Creates a list of 100 carnivores for use in multiple test.
+        """
+        return [Carnivore() for _ in range(100)]
 
     def test_aging(self, create_herbs, create_carns, lowland):
+        """
+        Test that aging() increase all herbivores' and carnivores'
+        age with 1 every time it is called.
+        """
+
         herbs = lowland.list_herbs = create_herbs
         carns = lowland.list_carns = create_carns
         lowland.ages()
@@ -41,11 +53,22 @@ class TestLandscape:
         for carn in carns:
             assert carn.age == 3
 
-    def test_set_fodder(self, lowland):
+    def test_set_fodder(self, lowland, highland):
+        """
+        Test that new fodder values can be set for landscape types.
+        """
+
         lowland.set_fodder(700)
+        highland.set_fodder(100)
         assert lowland.fodder == 700
+        assert highland.fodder == 100
 
     def test_fodder_values_all_landscapes(self, desert, water, lowland, highland):
+        """
+        Test that all fodder values are 0, and that fodder values in highland
+        and lowland get updated to 300 and 800 when update_fodder is called.
+        """
+
         w = water
         d = desert
         l = lowland
@@ -60,6 +83,10 @@ class TestLandscape:
         assert h.fodder == 300
 
     def test_set_landscape_params(self, lowland, highland):
+        """
+        Test that new landscape parameters can be set.
+        """
+
         l = lowland
         h = highland
         l.set_params({'f_max': 1000})
@@ -70,6 +97,11 @@ class TestLandscape:
         assert h.fodder == 500
 
     def test_set_landscape_params_errors(self, lowland, highland):
+        """
+        Test that errors are raised when wrong are input are
+        given to set_landscape_params.
+        """
+
         l = lowland
         h = highland
         with pytest.raises(KeyError):

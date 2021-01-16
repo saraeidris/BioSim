@@ -3,6 +3,8 @@ import pytest
 import random
 from scipy.stats import normaltest
 
+random.seed(123456)
+
 
 @pytest.fixture
 def set_params(request):
@@ -14,8 +16,9 @@ def set_params(request):
 @pytest.mark.parametrize('set_params', [{'omega': 0.0}], indirect=True)
 def test_bact_certain_survival(set_params):
     """
-    This test is *deterministic*: We set death probability to 0,
-    thus the bacterium must never die. We call dies() multiple
+    This test is *deterministic*: We set death probability to 0
+    by setting omega to 0,
+    thus the animal must never die. We call dies() multiple
     times to test this.
     """
 
@@ -26,6 +29,12 @@ def test_bact_certain_survival(set_params):
 
 @pytest.mark.parametrize('set_params', [{'omega': 0.4}], indirect=True)
 def test_migration_and_death(mocker, set_params):
+    """
+    test that all animals migrates and dies when random.random is set
+    to 0, and that all animals survive and stay in their cell when
+    random.random is set to 1.
+    """
+
     mocker.patch('random.random', return_value=0)
     for _ in range(10):
         h = Herbivore()
@@ -38,10 +47,27 @@ def test_migration_and_death(mocker, set_params):
         assert c.dies() is False
 
 
+def test_mate_method_and_offspring_weight(mocker):
+    """
+    Test that an offspring is of same class as parent, and that
+    its weight is greater than zero.
+    """
+
+    mocker.patch('random.random', return_value=0)
+    for _ in range(100):
+        h = Herbivore(5, 50)
+        c = Carnivore(5, 50)
+        h_offspring = h.mate(100)
+        c_offspring = c.mate(100)
+        assert type(h_offspring) == Herbivore and h_offspring.weight > 0
+        assert type(c_offspring) == Carnivore and c_offspring.weight > 0
+
+
 def test_animal_age():
     """
     Test that a new animal has age 0.
     """
+
     a = Herbivore()
     assert a.age == 0
 
@@ -84,42 +110,73 @@ def test_herbivore_should_eat_when_fodder_is_available():
 
 
 def test_herbivore_eat_all_remaining_fodder():
+    """
+    Test that a herbivore eats the amount of fodder
+    available when there is less than F amount of fodder
+    left.
+    """
     animal = Herbivore(0, weight=5)
     consumed_fodder = animal.consumed_fodder(7)
 
     assert consumed_fodder == 7
 
 
-def test_weight_loss():
+def test_weight_loss(mocker):
     """
-    Test that weight_loss reduces an instance´s weight.
+    Test that weight_loss reduces an instance´s weight
+    with eta * weight, and 4 * eta * weight if the instance get pyvid.
     """
+
+    mocker.patch('random.random', return_value=0)
     a = Herbivore()
     a.weight = 20
     a.weight_loss()
-    assert a.weight < 20
+    assert a.weight == 20 - (a.params['eta'] * 20)
+    c = Carnivore()
+    c.weight = 20
+    c.weight_loss(True, 200)
+    assert c.weight == 20 - (4 * c.params['eta'] * 20)
 
 
 def test_error_when_negative_weight_given():
+    """
+    Test that a ValueError is raised if the input weight
+    is equal or less than 0.
+    """
+
     with pytest.raises(ValueError):
-        Animal(0, -1)
+        Animal(weight=-1)
+    with pytest.raises(ValueError):
+        Animal(weight=0)
 
 
 def test_age_raise_valueerror():
+    """
+    Test that a ValueError is raised if the input age
+    is less than 0 or not an integer.
+    """
+
     with pytest.raises(ValueError):
-        Animal(1.1, 1)
+        Animal(1.1, 20)
+    with pytest.raises(ValueError):
+        Animal(-1, 20)
 
 
 def test_get_fitness():
     """
-    Test that get_fitness returns a fitness of type float.
+    Test that get_fitness returns a fitness between 0 and 1.
     """
-
-    fitness = Herbivore().get_fitness()
-    assert type(fitness) == float
+    for _ in range(100):
+        fitness = Herbivore().get_fitness()
+        assert 1 >= fitness >= 0
 
 
 def test_weight_normal_distributed():
+    """
+    Test that the weight given as default is normal distributed
+    with an alpha-value of 0.05.
+    """
+
     random.seed(123456)
     alpha = 0.05
     herb_weights = [Herbivore().weight for _ in range(1000)]
@@ -128,10 +185,3 @@ def test_weight_normal_distributed():
     result_carn = normaltest(carn_weights)
     assert alpha < result_herb[1]
     assert alpha < result_carn[1]
-
-
-
-
-
-
-
