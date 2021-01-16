@@ -22,7 +22,7 @@ class Graphics:
 
     def __init__(self,
                  img_base,
-                 img_fmt='png'):
+                 img_fmt='png', hist_specs):
         """
         :param img_dir: directory for image files; no images if None
         :type img_dir: str
@@ -34,6 +34,7 @@ class Graphics:
 
         self._img_base = img_base
         self._img_fmt = img_fmt
+        self._hist_specs = hist_specs
 
         self._img_ctr = 0
         self._img_step = 1
@@ -210,26 +211,31 @@ class Graphics:
     def _update_animal_age(self, get_stats):
         herbivore_stats = get_stats[0]
         carnivore_stats = get_stats[1]
+        num = int(self._hist_specs['age']['max'] / self._hist_specs['age']['delta'])
 
-        self._herb_age_img_axis = self._animal_age.hist(herbivore_stats,
+        self._herb_age_img_axis = self._animal_age.hist(herbivore_stats, bins=num,
                                                         histtype="step", color="b")
-        self._carn_age_img_axis = self._animal_age.hist(carnivore_stats,
+        self._carn_age_img_axis = self._animal_age.hist(carnivore_stats, bins=num,
                                                         histtype="step", color="r")
 
     def _update_animal_weight(self, get_stats):
         herbivore_stats = get_stats[2]
         carnivore_stats = get_stats[3]
-        self._herb_age_img_axis = self._animal_weight.hist(herbivore_stats,
+        num = int(self._hist_specs['weight']['max'] / self._hist_specs['weight']['delta'])
+
+        self._herb_age_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
                                                            histtype="step", color="b")
-        self._carn_age_img_axis = self._animal_weight.hist(carnivore_stats,
+        self._carn_age_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
                                                            histtype="step", color="r")
 
     def _update_animal_fitness(self, get_stats):
         herbivore_stats = get_stats[4]
         carnivore_stats = get_stats[5]
-        self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=30,
+        num = int(self._hist_specs['fitness']['max'] / self._hist_specs['fitness']['delta'])
+
+        self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=num,
                                                                 histtype="step", color="b")
-        self._carn_fitness_img_axis = self._animal_fitness.hist(carnivore_stats,
+        self._carn_fitness_img_axis = self._animal_fitness.hist(carnivore_stats, bins=num,
                                                                 histtype="step", color="r")
 
     def _update_animal_count(self, two_d_array_for_pop):
