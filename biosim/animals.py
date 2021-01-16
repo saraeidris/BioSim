@@ -52,15 +52,16 @@ class Animal:
                             (self.weight - self.params['w_half'])))))
             return fitness
 
-    def weight_loss(self):
+    def weight_loss(self, pyvid, num_animals):
         """
-         Decides how much weight the specie loses
-
-        :return:
-            Species final weight
-
+        Reduces the weight of the animal with eta * its own weight.
+        If the animal get pyvid (Pythonvirus Disease), it loses
+        4 times the normal weight loss.
         """
-        self.weight -= self.params['eta'] * self.weight
+        if pyvid and random.random() < 0.0075 * num_animals:
+            self.weight -= 4 * self.params['eta'] * self.weight
+        else:
+            self.weight -= self.params['eta'] * self.weight
 
     def migrate(self):
         """

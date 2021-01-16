@@ -1,5 +1,6 @@
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Water, Desert, Highland, Lowland, Landscape
+import random
 
 
 class RossumIsland:
@@ -42,6 +43,8 @@ class RossumIsland:
     def set_init_population(self, init_pop):
         for dic in init_pop:
             location = dic['loc']
+            if location[0] or location[1] <= 0:
+                raise ValueError('Location coordinates must be positive')
             try:
                 cell = self.island[location[0] - 1][location[1] - 1]
                 if isinstance(cell, Landscape) and cell.is_habitable():
@@ -83,15 +86,6 @@ class RossumIsland:
                 number_of_carns += len(cell.list_carns)
         return number_of_herbs, number_of_carns, number_of_herbs + number_of_carns
 
-    # def get_fitness_of_animal(self):
-    #     fitness_herbs = []
-    #     fitness_carns = []
-    #     for row in self.island:
-    #         for cell in row:
-    #             fitness_herbs.extend(cell.get_herb_fitness())
-    #             fitness_carns.extend(cell.get_carn_fitness())
-    #     return fitness_herbs, fitness_carns
-
     def get_stats(self):
         age_herbs = []
         age_carns = []
@@ -109,6 +103,9 @@ class RossumIsland:
                 fitness_carns.extend(cell.get_carn_fitness())
         return age_herbs, age_carns, weight_herbs, weight_carns, fitness_herbs, fitness_carns
 
+    def pyvid(self):
+        return random.randint(1, 25) == 25
+
     def annual_cycle(self):
         for row in self.island:
             for cell in row:
@@ -123,7 +120,7 @@ class RossumIsland:
             for cell in row:
                 if cell.is_populated():
                     cell.ages()
-                    cell.lose_weight()
+                    cell.lose_weight(self.pyvid())
                     cell.death()
 
     def migration(self):

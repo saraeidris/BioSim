@@ -70,19 +70,29 @@ class Landscape:
         :param cells_around: cells around the animal, north, south, east and west.
         """
         if len(self.list_herbs) > 0:
+            herbs_stay = []
             for herb in self.list_herbs:
                 if herb.migrate():
                     num = random.randint(0, 3)
                     if cells_around[num].is_habitable():
                         self.move_herbs[num].append(herb)
-                        self.list_herbs.remove(herb)
+                    else:
+                        herbs_stay.append(herb)
+                else:
+                    herbs_stay.append(herb)
+            self.list_herbs = herbs_stay
         if len(self.list_carns) > 0:
+            carns_stay = []
             for carn in self.list_carns:
                 if carn.migrate():
                     num = random.randint(0, 3)
                     if cells_around[num].is_habitable():
                         self.move_carns[num].append(carn)
-                        self.list_carns.remove(carn)
+                    else:
+                        carns_stay.append(carn)
+                else:
+                    carns_stay.append(carn)
+            self.list_carns = carns_stay
 
     def give_birth(self):
         """
@@ -116,12 +126,12 @@ class Landscape:
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
-    def lose_weight(self):
+    def lose_weight(self, pyvid):
         """
         All animal in current cell loses weight.
         """
         for animal in (self.list_herbs + self.list_carns):
-            animal.weight_loss()
+            animal.weight_loss(pyvid, len(self.list_herbs + self.list_carns))
 
     def set_fodder(self, fodder):
         self.fodder = fodder
