@@ -54,8 +54,14 @@ class Graphics:
         self._carn_age = None
         self._animal_count = None
         self._animal_count_img_axis = None
+        self._map = None
+        self._map_img_axis = None
+        self._legends_img_axis = None
+        self._legends = None
+        self._count_years = None
+        self._count_years_img_axis = None
 
-    def update(self, step, get_stats, two_d_darray_for_pop):
+    def update(self, step, get_stats, two_d_darray_for_pop, island_map, num_years):
         """Updates graphics with current data."""
 
         self._update_herb_heatmap(two_d_darray_for_pop)
@@ -64,6 +70,10 @@ class Graphics:
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
         self._update_animal_count(two_d_darray_for_pop)
+        self.update_map(island_map)
+        self.update_legends()
+        self.update_count_years(num_years)
+
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -150,7 +160,25 @@ class Graphics:
         if self._animal_count is None:
             self._animal_count = self._fig.add_axes([0.6, 0.7, 0.3, 0.2])
             self._animal_count_img_axis = None
+            # self._animal_count.set_xlabel('Years')
+            # self._animal_count.set_ylabet('Animal count')
             plt.title('animal count')
+
+        if self._map is None:
+            self._map = self._fig.add_axes([0.06, 0.7, 0.3, 0.2])
+            self._map_img_axis = None
+            self._map.axis('off')
+
+        if self._legends is None:
+            self._legends = self._fig.add_axes([0.03, 0.73, 0.3, 0.2])
+            self._legends_img_axis = None
+
+            self._legends.axis('off')
+        if self._count_years is None:
+            self._count_years = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
+            self._count_years_img_axis = None
+            self._count_years.axis('off')  # turn off coordinate system
+            input('Press ENTER to begin counting')
 
     def _update_herb_heatmap(self, two_d_array_pop):
         """Update the 2D-view of the system."""
@@ -192,14 +220,14 @@ class Graphics:
         herbivore_stats = get_stats[2]
         carnivore_stats = get_stats[3]
         self._herb_age_img_axis = self._animal_weight.hist(herbivore_stats,
-                                                        histtype="step", color="b")
+                                                           histtype="step", color="b")
         self._carn_age_img_axis = self._animal_weight.hist(carnivore_stats,
-                                                        histtype="step", color="r")
+                                                           histtype="step", color="r")
 
     def _update_animal_fitness(self, get_stats):
         herbivore_stats = get_stats[4]
         carnivore_stats = get_stats[5]
-        self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats,
+        self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=30,
                                                                 histtype="step", color="b")
         self._carn_fitness_img_axis = self._animal_fitness.hist(carnivore_stats,
                                                                 histtype="step", color="r")
@@ -209,6 +237,47 @@ class Graphics:
         carnivore_stats = two_d_array_for_pop[3]
         self._herb_number_img_axis = self._animal_count.plot(herbivore_stats)
         self._carn_number_img_axis = self._animal_count.plot(carnivore_stats)
+
+    def update_map(self, island_map):
+
+        #                   R    G    B
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+
+        map_rgb = [[rgb_value[column] for column in row]
+                   for row in island_map.splitlines()]
+        self._map.imshow(map_rgb)
+
+        self._map.set_xticks(range(len(map_rgb[0])))
+        self._map.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        self._map.set_yticks(range(len(map_rgb)))
+        self._map.set_yticklabels(range(1, 1 + len(map_rgb)))
+
+    def update_legends(self):
+        #                   R    G    B
+        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                     'L': (0.0, 0.6, 0.0),  # dark green
+                     'H': (0.5, 1.0, 0.5),  # light green
+                     'D': (1.0, 1.0, 0.5)}  # light yellow
+        for ix, name in enumerate(('Water', 'Lowland',
+                                   'Highland', 'Desert')):
+            self._legends.add_patch(plt.Rectangle((0., ix * 0.2), 0.05, 0.05,
+                                                  edgecolor='none',
+                                                  facecolor=rgb_value[name[0]]))
+            self._legends.text(0.3, ix * 0.2, name, transform=self._legends.transAxes)
+
+    def update_count_years(self, num_years):
+
+        template = 'Count: {:5d}'
+        txt = self._count_years.text(0.5, 0.5, template.format(0),
+                                     horizontalalignment='center',
+                                     verticalalignment='center',
+                                     transform=self._count_years.transAxes)  # relative coordinates
+
+        txt.set_text(template.format(num_years))
+        plt.pause(0.1)
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""

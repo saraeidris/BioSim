@@ -112,46 +112,6 @@ class BioSim:
         :param img_years: years between visualizations saved to files (default: vis_years)
         Image files will be numbered consecutively.
         """
-        #
-        # fig = plt.figure()
-        # ax1 = fig.add_subplot(2, 3, 1)
-        #
-        # # axes for text
-        # # ax1 = fig.add_axes([0.1, 0.1, 0.7, 0.8])  # llx, lly, w, h
-        # ax1.axis('off')  # turn off coordinate system
-        # _map = self.island_map
-        #
-        # #                   R    G    B
-        # rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-        #              'L': (0.0, 0.6, 0.0),  # dark green
-        #              'H': (0.5, 1.0, 0.5),  # light green
-        #              'D': (1.0, 1.0, 0.5)}  # light yellow
-        #
-        # map_rgb = [[rgb_value[column] for column in row]
-        #            for row in _map.splitlines()]
-        #
-        # fig.add_subplot(2, 3, 2)
-        #
-        # ax1.imshow(map_rgb)
-        #
-        # ax1.set_xticks(range(len(map_rgb[0])))
-        # ax1.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        # ax1.set_yticks(range(len(map_rgb)))
-        # ax1.set_yticklabels(range(1, 1 + len(map_rgb)))
-        #
-        # axlg = fig.add_axes([3.85, 1.1, 0.1, 0.8])  # llx, lly, w, h
-        # axlg.axis('off')
-        # for ix, name in enumerate(('Water', 'Lowland',
-        #                            'Highland', 'Desert')):
-        #     axlg.add_patch(plt.Rectangle((0., ix * 0.2), 0.3, 0.1,
-        #                                  edgecolor='none',
-        #                                  facecolor=rgb_value[name[0]]))
-        #     axlg.text(0.35, ix * 0.2, name, transform=axlg.transAxes)
-        #
-        list_with_population_for_all_years = []
-        list_with_years = []
-        for _ in range(num_years):
-            list_with_population_for_all_years.append(self.island.get_number_of_animals())
 
         if img_years is None:
             img_years = vis_years
@@ -166,7 +126,8 @@ class BioSim:
         if self._step == 0:
             self._graphics.update(self._step,
                                   self.island.get_stats(),
-                                  self.island.get_pop_info())
+                                  self.island.get_pop_info(),
+                                  self.island_map, self._step)
 
         while self._step < self._final_step:
             self._step += 1
@@ -174,7 +135,8 @@ class BioSim:
             if self._step % vis_years == 0:
                 self._graphics.update(self._step,
                                       self.island.get_stats(),
-                                      self.island.get_pop_info())
+                                      self.island.get_pop_info(),
+                                      self.island_map, self._step)
             self.island.annual_cycle()
 
     def add_population(self, population):
