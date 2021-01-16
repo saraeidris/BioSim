@@ -43,7 +43,7 @@ class RossumIsland:
     def set_init_population(self, init_pop):
         for dic in init_pop:
             location = dic['loc']
-            if location[0] or location[1] <= 0:
+            if location[0] <= 0 or location[1] <= 0:
                 raise ValueError('Location coordinates must be positive')
             try:
                 cell = self.island[location[0] - 1][location[1] - 1]
@@ -69,15 +69,6 @@ class RossumIsland:
         sum_herb = sum([sum(row) for row in herb_array])
         sum_carn = sum([sum(row) for row in carn_array])
         return herb_array, carn_array, sum_herb, sum_carn
-
-    def get_number_of_animals(self):
-        number_of_herbs = 0
-        number_of_carns = 0
-        for rows in self.island:
-            for cell in rows:
-                number_of_herbs += len(cell.list_herbs)
-                number_of_carns += len(cell.list_carns)
-        return number_of_herbs, number_of_carns, number_of_herbs + number_of_carns
 
     def get_stats(self):
         age_herbs = []

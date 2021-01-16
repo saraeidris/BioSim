@@ -10,7 +10,7 @@ from biosim.landscape import Lowland, Highland
 
 class BioSim:
 
-    DEFAULT_CMAX_ANIMALS = {'Herbivore': 100, 'Carnivore': 40}
+    DEFAULT_CMAX_ANIMALS = {'Herbivore': 200, 'Carnivore': 50}
     DEFAULT_HIST_SPECS = {'weight': {'max': 60, 'delta': 2},
                           'age': {'max': 60, 'delta': 2},
                           'fitness': {'max': 1, 'delta': 0.05}}
@@ -63,7 +63,7 @@ class BioSim:
             new = self.merge_params(self.DEFAULT_HIST_SPECS, self.hist_specs)
             self.hist_specs = new
 
-        self._graphics = Graphics(self.img_base, self.img_fmt, self.hist_specs)
+        self._graphics = Graphics(self.hist_specs, self.cmax_animals, self.img_base, self.img_fmt)
 
     def set_animal_parameters(self, species, params):
         """
@@ -169,8 +169,6 @@ class BioSim:
         """
         num_animal_dict = {'Herbivore': self.island.get_pop_info()[2],
                            'Carnivore': self.island.get_pop_info()[3]}
-        num_animal_dict = {'Herbivore': self.island.get_number_of_animals()[0],
-                           'Carnivore': self.island.get_number_of_animals()[1]}
         return num_animal_dict
 
     def make_movie(self):
