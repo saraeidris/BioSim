@@ -63,13 +63,6 @@ class RossumIsland:
             except IndexError:
                 raise ValueError('Specified location does not exist')
 
-    # def get_animal_population_for_each_cell(self):
-    #     dic = {}
-    #     for y, rows in enumerate(self.island):
-    #         for x, cell in enumerate(rows):
-    #             dic[(x, y)] = cell.get_population()
-    #     return dic
-
     def get_pop_info(self):
         herb_array = [[len(cell.list_herbs) for cell in row] for row in self.island]
         carn_array = [[len(cell.list_carns) for cell in row] for row in self.island]
