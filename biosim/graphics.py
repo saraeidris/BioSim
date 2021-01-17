@@ -164,7 +164,6 @@ class Graphics:
             self._animal_age_img_axis = None
             self._animal_age.set_xticks([0, round(xmax / 4), round(xmax / 2),
                                          round(xmax * 3 / 4), round(xmax / 1)])
-            plt.title('Age')
 
         if self._animal_weight is None:
             xmax = self._hist_specs['weight']['max']
@@ -214,7 +213,6 @@ class Graphics:
                 y_new = np.full(x_new.shape, np.nan)
                 self._carn_line.set_data(np.hstack((x_data, x_new)),
                                          np.hstack((y_data, y_new)))
-
 
         if self._map is None:
             self._map = self._fig.add_axes([0.06, 0.7, 0.2, 0.2])
@@ -268,16 +266,15 @@ class Graphics:
         hist_max = self._hist_specs['age']['max']
         num = int(hist_max / self._hist_specs['age']['delta'])
 
-        if(self._animal_age is not None):
+        if (self._animal_age is not None):
             self._animal_age.cla()
 
-
         self._animal_age_img_axis = self._animal_age.hist(herbivore_stats, bins=num,
-                                                        range=(0, hist_max),
-                                                        histtype="step", color="b")
+                                                          range=(0, hist_max),
+                                                          histtype="step", color="b")
         self._animal_age_img_axis = self._animal_age.hist(carnivore_stats, bins=num,
-                                                        range=(0, hist_max),
-                                                        histtype="step", color="r")
+                                                          range=(0, hist_max),
+                                                          histtype="step", color="r")
 
     def _update_animal_weight(self, get_stats):
         herbivore_stats = get_stats[2]
@@ -289,11 +286,11 @@ class Graphics:
             self._animal_weight.cla()
 
         self._herb_weight_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
-                                                           range=(0, hist_max),
-                                                           histtype="step", color="b")
+                                                              range=(0, hist_max),
+                                                              histtype="step", color="b")
         self._carn_weight_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
-                                                           range=(0, hist_max),
-                                                           histtype="step", color="r")
+                                                              range=(0, hist_max),
+                                                              histtype="step", color="r")
 
     def _update_animal_fitness(self, get_stats):
         herbivore_stats = get_stats[4]
@@ -303,7 +300,6 @@ class Graphics:
 
         if self._animal_fitness is not None:
             self._animal_fitness.cla()
-
 
         self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=num,
                                                                 range=(0, hist_max),
