@@ -12,7 +12,7 @@ _MAGICK_BINARY = 'magick'
 
 # update this to the directory and file-name beginning
 # for the graphics files
-_DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
+_DEFAULT_GRAPHICS_DIR = 'data'
 _DEFAULT_GRAPHICS_NAME = 'dv'
 _DEFAULT_IMG_FORMAT = 'png'
 _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
@@ -35,15 +35,18 @@ class Graphics:
 
         if img_name is None:
             img_name = _DEFAULT_GRAPHICS_NAME
+        if img_dir is None:
+            img_dir = _DEFAULT_GRAPHICS_DIR
 
-        if img_dir is not None:
-            self._img_base = os.path.join(img_dir, img_name)
-        else:
-            self._img_base = None
+        if not os.path.exists(img_dir):
+            os.makedirs(img_dir)
+
+        self._img_base = os.path.join(img_dir, img_name)
+
+
 
         self._img_fmt = img_fmt if img_fmt is not None else _DEFAULT_IMG_FORMAT
 
-        self._img_base = img_base
         self._img_fmt = img_fmt
         self._hist_specs = hist_specs
         self._cmax = cmax
@@ -64,7 +67,6 @@ class Graphics:
         self._carn_heat = None
         self._animal_age = None
         self._animal_fitness = None
-        self._carn_age = None
         self._animal_count = None
         self._animal_count_img_axis = None
         self._map = None
@@ -73,7 +75,8 @@ class Graphics:
         self._legends = None
         self._count_years = None
         self._count_years_img_axis = None
-        self._mean_line = None
+        self._herb_line = None
+        self._carn_line = None
 
     def update(self, step, get_stats, two_d_darray_for_pop, island_map, num_years):
         """Updates graphics with current data."""
@@ -183,27 +186,42 @@ class Graphics:
 
         if self._animal_count is None:
             self._animal_count = self._fig.add_axes([0.63, 0.63, 0.25, 0.3])
-            self._animal_count.set_ylim(0, 20000)
+            self._animal_count.set_ylim(0, 15000)
             plt.title('Animal count')
 
         self._animal_count.set_xlim(0, final_step + 1)
 
-        if self._mean_line is None:
-            mean_plot = self._animal_count.plot(np.arange(0, final_step + 1),
-                                                np.full(final_step + 1, np.nan))
-            self._mean_line = mean_plot[0]
+        if self._herb_line is None:
+            herbivore_plot = self._animal_count.plot(np.arange(0, final_step + 1),
+                                                     np.full(final_step + 1, np.nan), 'b')
+            self._herb_line = herbivore_plot[0]
 
         else:
-            x_data, y_data = self._mean_line.get_data()
+            x_data, y_data = self._herb_line.get_data()
             x_new = np.arange(x_data[-1] + 1, final_step + 1)
             if len(x_new) > 0:
                 y_new = np.full(x_new.shape, np.nan)
-                self._mean_line.set_data(np.hstack((x_data, x_new)),
+                self._herb_line.set_data(np.hstack((x_data, x_new)),
                                          np.hstack((y_data, y_new)))
+
+        if self._carn_line is None:
+            carnivore_plot = self._animal_count.plot(np.arange(0, final_step + 1),
+                                                     np.full(final_step + 1, np.nan), 'r')
+            self._carn_line = carnivore_plot[0]
+
+        else:
+            x_data, y_data = self._carn_line.get_data()
+            x_new = np.arange(x_data[-1] + 1, final_step + 1)
+            if len(x_new) > 0:
+                y_new = np.full(x_new.shape, np.nan)
+                self._carn_line.set_data(np.hstack((x_data, x_new)),
+                                         np.hstack((y_data, y_new)))
+
 
         if self._map is None:
             self._map = self._fig.add_axes([0.06, 0.7, 0.2, 0.2])
             self._map_img_axis = None
+            self._map.set_xticks([1, 6, 11, 16, 21])
             plt.title('Island')
 
         if self._legends is None:
@@ -252,10 +270,14 @@ class Graphics:
         hist_max = self._hist_specs['age']['max']
         num = int(hist_max / self._hist_specs['age']['delta'])
 
-        self._herb_age_img_axis = self._animal_age.hist(herbivore_stats, bins=num,
+        if(self._animal_age is not None):
+            self._animal_age.cla()
+
+
+        self._animal_age_img_axis = self._animal_age.hist(herbivore_stats, bins=num,
                                                         range=(0, hist_max),
                                                         histtype="step", color="b")
-        self._carn_age_img_axis = self._animal_age.hist(carnivore_stats, bins=num,
+        self._animal_age_img_axis = self._animal_age.hist(carnivore_stats, bins=num,
                                                         range=(0, hist_max),
                                                         histtype="step", color="r")
 
@@ -265,10 +287,13 @@ class Graphics:
         hist_max = self._hist_specs['weight']['max']
         num = int(hist_max / self._hist_specs['weight']['delta'])
 
-        self._herb_age_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
+        if self._animal_weight is not None:
+            self._animal_weight.cla()
+
+        self._herb_weight_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
                                                            range=(0, hist_max),
                                                            histtype="step", color="b")
-        self._carn_age_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
+        self._carn_weight_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
                                                            range=(0, hist_max),
                                                            histtype="step", color="r")
 
@@ -277,6 +302,10 @@ class Graphics:
         carnivore_stats = get_stats[5]
         hist_max = self._hist_specs['fitness']['max']
         num = int(hist_max / self._hist_specs['fitness']['delta'])
+
+        if self._animal_fitness is not None:
+            self._animal_fitness.cla()
+
 
         self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=num,
                                                                 range=(0, hist_max),
@@ -288,15 +317,12 @@ class Graphics:
     def _update_animal_count(self, two_d_array_for_pop, num_years):
         herbivore_stats = two_d_array_for_pop[2]
         carnivore_stats = two_d_array_for_pop[3]
-        # self._herb_number_img_axis = self._animal_count.plot(num_years, herbivore_stats, color='r')
-        # self._carn_number_img_axis = self._animal_count.plot(num_years, carnivore_stats, color='b')
-        line = self._animal_count.plot(np.arange(num_years), np.full(num_years, np.nan), 'b')
-        for n in range(num_years):
-            ydata = line.get_pop_info()
-            ydata[n] = herbivore_stats
-            ydata[n] = carnivore_stats
-            line.set_ydata(ydata)
-            plt.pause(1e-6)
+        herb_data = self._herb_line.get_ydata()
+        carn_data = self._carn_line.get_ydata()
+        herb_data[num_years] = herbivore_stats
+        carn_data[num_years] = carnivore_stats
+        self._herb_line.set_ydata(herb_data)
+        self._carn_line.set_ydata(carn_data)
 
     def update_map(self, island_map):
 
@@ -329,7 +355,8 @@ class Graphics:
             self._legends.text(0.3, ix * 0.2, name, transform=self._legends.transAxes)
 
     def update_count_years(self, num_years):
-
+        self._count_years.cla()
+        plt.axis('off')
         template = 'Years: {:5d}'
         txt = self._count_years.text(0.5, 0.5, template.format(0),
                                      horizontalalignment='center',
@@ -337,7 +364,6 @@ class Graphics:
                                      transform=self._count_years.transAxes)  # relative coordinates
 
         txt.set_text(template.format(num_years))
-        plt.pause(0.1)
 
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""
