@@ -43,8 +43,6 @@ class Graphics:
 
         self._img_base = os.path.join(img_dir, img_name)
 
-
-
         self._img_fmt = img_fmt if img_fmt is not None else _DEFAULT_IMG_FORMAT
 
         self._img_fmt = img_fmt

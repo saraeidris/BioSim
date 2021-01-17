@@ -63,18 +63,21 @@ class TestLandscape:
         assert lowland.fodder == 700
         assert highland.fodder == 100
 
-    def test_fodder_values_all_landscapes(self, desert, water, lowland, highland):
-        """
-        Test that all fodder values are 0, and that fodder values in highland
-        and lowland get updated to 300 and 800 when update_fodder is called.
-        """
-
+    def test_no_fodder_water_desert(self, water, desert):
         w = water
         d = desert
-        l = lowland
-        h = highland
         assert w.fodder == 0
         assert d.fodder == 0
+
+    def test_fodder_values_highland_lowland(self, lowland, highland):
+        """
+        Test that fodder values in highland and lowland are 0,
+        and that fodder values get updated to 300 and 800 when
+        update_fodder is called.
+        """
+
+        l = lowland
+        h = highland
         assert l.fodder == 0
         assert h.fodder == 0
         l.update_fodder()
@@ -110,6 +113,14 @@ class TestLandscape:
             h.set_params({'f_max': -5})
         with pytest.raises(ValueError):
             h.set_params({'f_max': 'five'})
+
+    def test_no_migration_to_water(self, water, lowland, create_herbs):
+        lowland.list_herbs = create_herbs
+        list_herbs2 = lowland.list_herbs.copy()
+        cells_around = (water, water, water, water)
+        lowland.migrate_all(cells_around)
+        assert lowland.list_herbs == list_herbs2
+
 
 
 

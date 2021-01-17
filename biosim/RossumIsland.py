@@ -32,14 +32,6 @@ class RossumIsland:
 
         return [island_dict[land]() for land in line]
 
-    def num_animals(self):
-        number = 0
-        for row in self.island:
-            for cell in row:
-                if not isinstance(cell, Water):
-                    number += len(cell.list_animals())
-        return number
-
     def insert_population(self, pop):
         """
         Inserts population of either herbivores or carnivores
@@ -101,14 +93,17 @@ class RossumIsland:
 
     def pyvid(self):
         """
-        checks if pyvid happens or not
-        :return: integer
+        checks if pyvid (Pythonvirus disease) occurs or not.
+
+        :return:
+        bool
+            True if pyvid occurs in current year.
         """
         return random.randint(1, 20) == 20
 
     def annual_cycle(self):
         """
-        the annual cycle on Rossumøye.
+        the annual cycle on Rossumøya.
         """
         for row in self.island:
             for cell in row:
