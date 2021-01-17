@@ -40,8 +40,13 @@ class RossumIsland:
                     number += len(cell.list_animals())
         return number
 
-    def set_init_population(self, init_pop):
-        for dic in init_pop:
+    def insert_population(self, pop):
+        """
+        Inserts population of either herbivores or carnivores
+        :param pop: list with dictionary that contains either
+                    herbivore or carnivore, and a wanted location.
+        """
+        for dic in pop:
             location = dic['loc']
             if location[0] <= 0 or location[1] <= 0:
                 raise ValueError('Location coordinates must be positive')
@@ -64,6 +69,9 @@ class RossumIsland:
                 raise ValueError('Specified location does not exist')
 
     def get_pop_info(self):
+        """
+        :return: the total amount of herbivores and carnivores on the island.
+        """
         herb_array = [[len(cell.list_herbs) for cell in row] for row in self.island]
         carn_array = [[len(cell.list_carns) for cell in row] for row in self.island]
         sum_herb = sum([sum(row) for row in herb_array])
@@ -71,6 +79,10 @@ class RossumIsland:
         return herb_array, carn_array, sum_herb, sum_carn
 
     def get_stats(self):
+        """
+
+        :return: list with different attributes for both herbivores and carnivores
+        """
         age_herbs = []
         age_carns = []
         weight_herbs = []
@@ -88,10 +100,16 @@ class RossumIsland:
         return age_herbs, age_carns, weight_herbs, weight_carns, fitness_herbs, fitness_carns
 
     def pyvid(self):
-
+        """
+        checks if pyvid happens or not
+        :return: integer
+        """
         return random.randint(1, 20) == 20
 
     def annual_cycle(self):
+        """
+        the annual cycle on Rossumøye.
+        """
         for row in self.island:
             for cell in row:
                 if cell.is_habitable():
@@ -109,6 +127,9 @@ class RossumIsland:
                     cell.death()
 
     def migration(self):
+        """
+        Checks if the cell the animal wants to migrate to is habitable
+        """
         if not (len(self.island) < 3 or len(self.island[0]) < 3):
             for row in range(1, len(self.island)): # må fjerne -1 på versjon 2
                 for col in range(1, self.island_row_length): # må fjerne -1 på versjon 2
