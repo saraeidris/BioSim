@@ -71,6 +71,7 @@ class Animal:
         bool
             True if specie migrate
         """
+
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
@@ -81,6 +82,7 @@ class Animal:
          bool
             True if specie dies
         """
+
         return (self.weight <= 0) or (random.random() <
                                       self.params['omega'] * (1 - self.get_fitness()))
 

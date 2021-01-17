@@ -14,6 +14,7 @@ _MAGICK_BINARY = 'magick'
 # for the graphics files
 _DEFAULT_GRAPHICS_DIR = os.path.join('..', 'data')
 _DEFAULT_GRAPHICS_NAME = 'dv'
+_DEFAULT_IMG_FORMAT = 'png'
 _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
 
 
@@ -21,7 +22,7 @@ class Graphics:
     """Provides graphics support for RandVis."""
 
     def __init__(self,
-                 hist_specs, cmax, img_base,
+                 hist_specs, cmax, img_dir=None, img_name=None, img_base=None,
                  img_fmt='png'):
         """
         :param img_dir: directory for image files; no images if None
@@ -31,6 +32,16 @@ class Graphics:
         :param img_fmt: image file format suffix, default 'png'
         :type img_fmt: str
         """
+
+        if img_name is None:
+            img_name = _DEFAULT_GRAPHICS_NAME
+
+        if img_dir is not None:
+            self._img_base = os.path.join(img_dir, img_name)
+        else:
+            self._img_base = None
+
+        self._img_fmt = img_fmt if img_fmt is not None else _DEFAULT_IMG_FORMAT
 
         self._img_base = img_base
         self._img_fmt = img_fmt
@@ -62,6 +73,7 @@ class Graphics:
         self._legends = None
         self._count_years = None
         self._count_years_img_axis = None
+        self._mean_line = None
 
     def update(self, step, get_stats, two_d_darray_for_pop, island_map, num_years):
         """Updates graphics with current data."""
@@ -71,11 +83,10 @@ class Graphics:
         self._update_animal_age(get_stats)
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
-        self._update_animal_count(two_d_darray_for_pop)
+        self._update_animal_count(two_d_darray_for_pop, num_years)
         self.update_map(island_map)
         self.update_legends()
         self.update_count_years(num_years)
-
         self._fig.canvas.flush_events()  # ensure every thing is drawn
         plt.pause(1e-6)  # pause required to pass control to GUI
 
@@ -135,47 +146,71 @@ class Graphics:
         # We cannot create the actual ImageAxis object before we know
         # the size of the image, so we delay its creation.
         if self._herb_heat is None:
-            self._herb_heat = self._fig.add_axes([0.06, 0.35, 0.3, 0.2])  # llx, lly, w, h
+            self._herb_heat = self._fig.add_axes([0.06, 0.25, 0.35, 0.35])  # llx, lly, w, h
             self._herbivore_img_axis = None
+            self._herb_heat.set_xticks([1, 6, 11, 16, 21])
             plt.title('Herbivore distribution')
 
         if self._carn_heat is None:
-            self._carn_heat = self._fig.add_axes([0.6, 0.35, 0.3, 0.2])
+            self._carn_heat = self._fig.add_axes([0.6, 0.25, 0.35, 0.35])
             self._carn_img_axis = None
+            self._carn_heat.set_xticks([1, 6, 11, 16, 21])
             plt.title('Carnivore distribution')
 
         if self._animal_age is None:
-            self._animal_age = self._fig.add_axes([0.10, 0.1, 0.2, 0.15])
+            xmax = self._hist_specs['age']['max']
+            self._animal_age = self._fig.add_axes([0.06, 0.07, 0.25, 0.12])
             self._animal_age_img_axis = None
-            plt.title('animal age')
+            self._animal_age.set_xticks([0, round(xmax / 4), round(xmax / 2),
+                                         round(xmax * 3 / 4), round(xmax / 1)])
+            plt.title('Age')
 
         if self._animal_weight is None:
-            self._animal_weight = self._fig.add_axes([0.40, 0.1, 0.2, 0.15])
+            xmax = self._hist_specs['weight']['max']
+            self._animal_weight = self._fig.add_axes([0.37, 0.07, 0.25, 0.12])
             self._animal_weight_img_axis = None
-            plt.title('animal weight')
+            self._animal_weight.set_xticks([0, round(xmax / 4), round(xmax / 2),
+                                            round(xmax * 3 / 4), round(xmax / 1)])
+            plt.title('Weight')
 
         if self._animal_fitness is None:
-            self._animal_fitness = self._fig.add_axes([0.70, 0.1, 0.2, 0.15])
+            xmax = self._hist_specs['fitness']['max']
+            self._animal_fitness = self._fig.add_axes([0.68, 0.07, 0.25, 0.12])
             self._animal_fitness_img_axis = None
-            plt.title('animal fitness')
+            self._animal_fitness.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+                                             round(xmax * 3 / 4, 2), round(xmax / 1)])
+            plt.title('Fitness')
 
         if self._animal_count is None:
-            self._animal_count = self._fig.add_axes([0.6, 0.7, 0.3, 0.2])
-            self._animal_count_img_axis = None
-            # self._animal_count.set_xlabel('Years')
-            # self._animal_count.set_ylabet('Animal count')
-            plt.title('animal count')
+            self._animal_count = self._fig.add_axes([0.63, 0.63, 0.25, 0.3])
+            self._animal_count.set_ylim(0, 20000)
+            plt.title('Animal count')
+
+        self._animal_count.set_xlim(0, final_step + 1)
+
+        if self._mean_line is None:
+            mean_plot = self._animal_count.plot(np.arange(0, final_step + 1),
+                                                np.full(final_step + 1, np.nan))
+            self._mean_line = mean_plot[0]
+
+        else:
+            x_data, y_data = self._mean_line.get_data()
+            x_new = np.arange(x_data[-1] + 1, final_step + 1)
+            if len(x_new) > 0:
+                y_new = np.full(x_new.shape, np.nan)
+                self._mean_line.set_data(np.hstack((x_data, x_new)),
+                                         np.hstack((y_data, y_new)))
 
         if self._map is None:
-            self._map = self._fig.add_axes([0.06, 0.7, 0.3, 0.2])
+            self._map = self._fig.add_axes([0.06, 0.7, 0.2, 0.2])
             self._map_img_axis = None
-            self._map.axis('off')
+            plt.title('Island')
 
         if self._legends is None:
             self._legends = self._fig.add_axes([0.03, 0.73, 0.3, 0.2])
             self._legends_img_axis = None
-
             self._legends.axis('off')
+
         if self._count_years is None:
             self._count_years = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self._count_years_img_axis = None
@@ -250,11 +285,18 @@ class Graphics:
                                                                 range=(0, hist_max),
                                                                 histtype="step", color="r")
 
-    def _update_animal_count(self, two_d_array_for_pop):
+    def _update_animal_count(self, two_d_array_for_pop, num_years):
         herbivore_stats = two_d_array_for_pop[2]
         carnivore_stats = two_d_array_for_pop[3]
-        self._herb_number_img_axis = self._animal_count.plot(herbivore_stats)
-        self._carn_number_img_axis = self._animal_count.plot(carnivore_stats)
+        # self._herb_number_img_axis = self._animal_count.plot(num_years, herbivore_stats, color='r')
+        # self._carn_number_img_axis = self._animal_count.plot(num_years, carnivore_stats, color='b')
+        line = self._animal_count.plot(np.arange(num_years), np.full(num_years, np.nan), 'b')
+        for n in range(num_years):
+            ydata = line.get_pop_info()
+            ydata[n] = herbivore_stats
+            ydata[n] = carnivore_stats
+            line.set_ydata(ydata)
+            plt.pause(1e-6)
 
     def update_map(self, island_map):
 

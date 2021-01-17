@@ -139,12 +139,21 @@ class Landscape:
         self.fodder = fodder
 
     def get_population(self):
+        """
+        :return: number of herbivores and carnivores separated
+        """
         return len(self.list_herbs), len(self.list_carns)
 
     def get_animals(self):
+        """
+        :return: list with all herbivores, carnivores and both together
+        """
         return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
 
     def is_populated(self):
+        """
+        :return: number of total animals
+        """
         return len(self.list_herbs + self.list_carns) > 0
 
     def get_herb_fitness(self):
