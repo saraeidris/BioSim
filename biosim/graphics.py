@@ -89,7 +89,7 @@ class Graphics:
         self.update_legends()
         self.update_count_years(num_years)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
-        plt.pause(1e-6)  # pause required to pass control to GUI
+        plt.pause(0.5)  # pause required to pass control to GUI
 
         self._save_graphics(step)
 

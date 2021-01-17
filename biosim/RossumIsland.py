@@ -32,14 +32,6 @@ class RossumIsland:
 
         return [island_dict[land]() for land in line]
 
-    def num_animals(self):
-        number = 0
-        for row in self.island:
-            for cell in row:
-                if not isinstance(cell, Water):
-                    number += len(cell.list_animals())
-        return number
-
     def insert_population(self, pop):
         """
         Inserts population of either herbivores or carnivores
@@ -101,14 +93,17 @@ class RossumIsland:
 
     def pyvid(self):
         """
-        checks if pyvid happens or not
-        :return: integer
+        checks if pyvid (Pythonvirus disease) occurs or not.
+
+        :return:
+        bool
+            True if pyvid occurs in current year.
         """
         return random.randint(1, 20) == 20
 
     def annual_cycle(self):
         """
-        the annual cycle on Rossumøye.
+        the annual cycle on Rossumøya.
         """
         for row in self.island:
             for cell in row:
@@ -146,18 +141,12 @@ class RossumIsland:
                         # west = self.island[row][col - 1] # V1
                             cells_around = (north, south, east, west)
                             cell.migrate_all(cells_around) # Her slutter versjon 1
-                            if north.is_habitable() or west.is_habitable():
-                                cell.list_herbs.extend(north.move_herbs[1] + west.move_herbs[2])
-                                cell.list_carns.extend(north.move_carns[1] + west.move_carns[2])
+                            self.move_immigrants_to_cell(cell, north, west)
                     finished_cell = self.island[row - 1][col - 1]
                     if finished_cell.is_habitable():
                         for lst in finished_cell.move_herbs + finished_cell.move_carns:
                             lst.clear()
-                        if north.is_habitable() or west.is_habitable():
-                            finished_cell.list_herbs.extend(west.move_herbs[0] +
-                                                            north.move_herbs[3])
-                            finished_cell.list_carns.extend(west.move_carns[0] +
-                                                            north.move_carns[3])
+                        self.move_immigrants_to_finished_cell(finished_cell, north, west)
 
             # for row in range(1, len(self.island)):
             #     for col in range(1, self.island_row_length):
@@ -176,3 +165,14 @@ class RossumIsland:
             #                 lst.clear()
             #             for lst in self.island[row - 1][col - 1].move_carns:
             #                 lst.clear()
+    @staticmethod
+    def move_immigrants_to_cell(cell, north, west):
+        if north.is_habitable() or west.is_habitable():
+            cell.list_herbs.extend(north.move_herbs[1] + west.move_herbs[2])
+            cell.list_carns.extend(north.move_carns[1] + west.move_carns[2])
+
+    @staticmethod
+    def move_immigrants_to_finished_cell(cell, north, west):
+        if north.is_habitable() or west.is_habitable():
+            cell.list_herbs.extend(north.move_herbs[3] + west.move_herbs[0])
+            cell.list_carns.extend(north.move_carns[3] + west.move_carns[0])
