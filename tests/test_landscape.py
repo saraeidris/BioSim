@@ -2,6 +2,7 @@ from biosim.landscape import Water, Lowland, Highland, Desert
 from biosim.animals import Carnivore, Herbivore
 
 import pytest
+from scipy.stats import chisquare
 
 
 class TestLandscape:
@@ -121,7 +122,25 @@ class TestLandscape:
         lowland.migrate_all(cells_around)
         assert lowland.list_herbs == list_herbs2
 
+    def test_migration_with_chi_squared(self, lowland, highland, desert, mocker):
+        mocker.patch('random.random', return_value=0)
+        c1 = lowland
+        c2 = highland
+        c3 = highland
+        c4 = lowland
+        desert.list_herbs = [Herbivore() for _ in range(1000)]
+        cells_around = (c1, c2, c3, c4)
+        desert.migrate_all(cells_around)
 
+        assert len(desert.list_herbs) == 0
+
+        move_herbs = desert.move_herbs
+        expected = [250, 250, 250, 250]
+        observed = [len(move_herbs[0]), len(move_herbs[1]),
+                    len(move_herbs[2]), len(move_herbs[3])]
+        _, p = chisquare(expected, observed)
+
+        assert p > 0.01
 
 
 

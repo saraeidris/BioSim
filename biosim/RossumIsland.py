@@ -99,12 +99,14 @@ class RossumIsland:
         bool
             True if pyvid occurs in current year.
         """
-        return random.randint(1, 20) == 20
+        return random.randint(1, 30) == 1
 
     def annual_cycle(self):
         """
         the annual cycle on Rossumøya.
         """
+        pyvid = self.pyvid()
+
         for row in self.island:
             for cell in row:
                 if cell.is_habitable():
@@ -118,7 +120,7 @@ class RossumIsland:
             for cell in row:
                 if cell.is_populated():
                     cell.ages()
-                    cell.lose_weight(self.pyvid())
+                    cell.lose_weight(pyvid)
                     cell.death()
 
     def migration(self):

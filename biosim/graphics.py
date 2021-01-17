@@ -22,7 +22,7 @@ class Graphics:
     """Provides graphics support for RandVis."""
 
     def __init__(self,
-                 hist_specs, cmax, img_dir=None, img_name=None, img_base=None,
+                 hist_specs, cmax, img_dir=None, img_name=None,
                  img_fmt='png'):
         """
         :param img_dir: directory for image files; no images if None
@@ -76,7 +76,7 @@ class Graphics:
         self._herb_line = None
         self._carn_line = None
 
-    def update(self, step, get_stats, two_d_darray_for_pop, island_map, num_years):
+    def update(self, year, get_stats, two_d_darray_for_pop, island_map):
         """Updates graphics with current data."""
 
         self._update_herb_heatmap(two_d_darray_for_pop)
@@ -84,14 +84,14 @@ class Graphics:
         self._update_animal_age(get_stats)
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
-        self._update_animal_count(two_d_darray_for_pop, num_years)
+        self._update_animal_count(two_d_darray_for_pop, year)
         self.update_map(island_map)
         self.update_legends()
-        self.update_count_years(num_years)
+        self.update_count_years(year)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
-        plt.pause(0.5)  # pause required to pass control to GUI
+        plt.pause(1e-6)  # pause required to pass control to GUI
 
-        self._save_graphics(step)
+        self._save_graphics(year)
 
     def make_movie(self, movie_fmt=None):
         """
@@ -231,7 +231,7 @@ class Graphics:
             self._count_years = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self._count_years_img_axis = None
             self._count_years.axis('off')  # turn off coordinate system
-            input('Press ENTER to begin counting')
+            # input('Press ENTER to begin counting')
 
     def _update_herb_heatmap(self, two_d_array_pop):
         """Update the 2D-view of the system."""
@@ -363,10 +363,10 @@ class Graphics:
 
         txt.set_text(template.format(num_years))
 
-    def _save_graphics(self, step):
+    def _save_graphics(self, year):
         """Saves graphics to file if file name given."""
 
-        if self._img_base is None or step % self._img_step != 0:
+        if (self._img_base is None) or (year % self._img_step != 0):
             return
 
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,
