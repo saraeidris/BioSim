@@ -2,6 +2,9 @@ import random
 
 
 class Landscape:
+    """
+    class landscape
+    """
     d_landscape = None
 
     @classmethod
