@@ -4,7 +4,10 @@ from math import exp
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
 
+
 class Animal:
+    """Baseclass for animals on the island."""
+
     params = None
 
     @classmethod
@@ -12,17 +15,22 @@ class Animal:
         """
         Overrides animal params.
 
-        :param new_params: new input params
+        :param new_params: new input parameters
         """
+
         cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
         """
-        :raises ValueError if weight or age is negative, and if age is not an integer.
+        :param age:  age of animal, must be 0 or greater; age 0 if None.
+        :type age: int
+        :param weight:  weight of animal, must be greater than 0;
+                        randomly distributed weight if None
+        :type weight: float
 
-        :param age: age of animal (default 0)
-        :param weight: weight of animal (default None)
+        :raises ValueError: if age is 0 or weight is less than or equal to 0
         """
+
         self.age = age
         self.weight = weight
 
@@ -41,13 +49,14 @@ class Animal:
         """
         Updates the age with 1 for each year.
         """
+
         self.age += 1
 
     def get_fitness(self):
         """
         Calculate fitness for specie.
 
-        :return: Current fitness for specie
+        Returns Current fitness for specie
         """
         if self.weight <= 0:
             return 0
@@ -63,8 +72,8 @@ class Animal:
         Reduces the weight of the animal with eta * its own weight,
         and half its weight if it gets infected with pyvid (Pythonvirus Disease).
 
-        :param pyvid: True if pyvid occurs this year (default False)
-        :param num_animals: number of animals in cell (default None)
+        :param pyvid: True if pyvid occurs this year; default False
+        :param num_animals: number of animals in cell; default None
         """
 
         if pyvid and random.random() < 0.02 * num_animals:
@@ -74,19 +83,18 @@ class Animal:
 
     def migrate(self):
         """
-        Decides whether a specie migrates or stay in the same cell
+        Decides whether a specie migrates or stay in the same cell.
 
-        :return: bool
-            True if specie migrate
+        Returns True if specie migrate
         """
 
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
         """
-        Decide whether the specie dies or not
+        Decide whether the specie dies or not.
 
-        :returns: True if specie dies
+        Returns True if specie dies
         """
 
         return (self.weight <= 0) or (random.random() <
@@ -96,9 +104,10 @@ class Animal:
         """
         Decide whether a specie gets an offspring or not.
 
-        :param n: number of animals of the same specie.
-        :return: An offspring of the same specie.
+        :param n: number of animals of the same specie
+        returns an offspring of the same specie if instance gave birth
         """
+
         if self.weight < self.params['zeta'] * (self.params['w_birth'] +
                                                 self.params['sigma_birth']):
             return
@@ -111,9 +120,8 @@ class Animal:
 
 
 class Herbivore(Animal):
-    """
-    Subclass for Animal, contains parameters for herbivores
-    """
+    """Subclass for Animal, contains parameters for herbivores."""
+
     params = {'w_birth': 8.0, 'sigma_birth': 1.5, 'beta': 0.9, 'eta': 0.05,
               'a_half': 40.0, 'phi_age': 0.6, 'w_half': 10.0,
               'phi_weight': 0.1, 'mu': 0.25, 'gamma': 0.2, 'zeta': 3.5, 'xi': 1.2,
@@ -121,11 +129,12 @@ class Herbivore(Animal):
 
     def consumed_fodder(self, available_fodder):
         """
-        Decide how much fodder a herbivore eats
+        Decide how much fodder a herbivore eats and adds the gained weight.
 
-        :param available_fodder: Amount of available fodder in current cell
-        :return: Fodder left in current cell
+        :param available_fodder: Amount of available fodder left in current cell
+        Returns fodder left in current cell
         """
+
         if available_fodder >= 0:
             if available_fodder < self.params['F']:
                 self.weight += (available_fodder * self.params['beta'])
@@ -136,9 +145,8 @@ class Herbivore(Animal):
 
 
 class Carnivore(Animal):
-    """
-    Subclass for Animal, contains parameters for carnivores.
-    """
+    """Subclass for Animal, contains parameters for carnivores."""
+
     params = {'w_birth': 6.0, 'sigma_birth': 1.0, 'beta': 0.75, 'eta': 0.125,
               'a_half': 40.0, 'phi_age': 0.3, 'w_half': 4.0,
               'phi_weight': 0.4, 'mu': 0.4, 'gamma': 0.8, 'zeta': 3.5, 'xi': 1.1,
@@ -146,11 +154,12 @@ class Carnivore(Animal):
 
     def consumed_herbs(self, herb_sorted):
         """
-        Decides whether a carnivore kills and eat a herbivore
+        Decides whether a carnivore kills and eat a herbivore.
 
         :param herb_sorted: Herbivores sorted by fitness from low to high
-        :return: Amount of killed herbs
+        Returns list of killed herbs
         """
+
         wanted_food = self.params['F']
         killed_herbs = []
         if len(herb_sorted) == 0:
