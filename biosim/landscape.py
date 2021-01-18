@@ -1,5 +1,7 @@
 import random
 
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
 
 class Landscape:
     """
@@ -25,6 +27,10 @@ class Landscape:
         cls.d_landscape.update(new_params)
 
     def __init__(self):
+        """
+        list_herbs: list with all herbivores in the cell.
+        list_herbs: list with all herbivores in the cell.
+        """
         self.list_herbs = []
         self.list_carns = []
         self.fodder = 0
@@ -38,10 +44,6 @@ class Landscape:
     def is_habitable():
         return True
 
-    @staticmethod
-    def get_fodder():
-        return 0
-
     def eat_all(self):
         """
         Iterates over all animals and check if they eat.
@@ -50,13 +52,13 @@ class Landscape:
         Carnivores eats in order based on fitness. In the end,
         the eaten herbivores are removed, and the survivors
         are stored in list_herbs.
-
         """
+
         if not len(self.list_herbs) == 0:
             random.shuffle(self.list_herbs)
             for herb in self.list_herbs:
-                if self.get_fodder() > 0:
-                    self.set_fodder(self.get_fodder() - herb.consumed_fodder(self.get_fodder()))
+                if self.fodder > 0:
+                    self.set_fodder(self.fodder - herb.consumed_fodder(self.fodder))
                 else:
                     break
         if not len(self.list_carns) == 0:
@@ -122,13 +124,13 @@ class Landscape:
 
     def ages(self):
         """Species ages by one year each year"""
+
         for animal in (self.list_herbs + self.list_carns):
             animal.aging()
 
     def death(self):
-        """
-        Keeps animal if it don't die in method dies().
-        """
+        """Keeps animal if it don't die in method dies()."""
+
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
@@ -138,6 +140,7 @@ class Landscape:
 
         :param pyvid: True if this is a year with pyvid (Pythonvirus disease).
         """
+
         for animal in (self.list_herbs + self.list_carns):
             animal.weight_loss(pyvid, len(self.list_herbs + self.list_carns))
 
@@ -146,8 +149,9 @@ class Landscape:
 
     def get_population(self):
         """
-        :return: number of herbivores and carnivores separated
+        :return: number of herbivores and carnivores as a tuple.
         """
+
         return len(self.list_herbs), len(self.list_carns)
 
     def get_animals(self):
@@ -191,13 +195,13 @@ class Landscape:
 
     def get_carn_weight(self):
         """
-        :return: Weight for all carnivores
+        :return: Weight for all carnivores as a list.
         """
         return [carn.weight for carn in self.list_carns]
 
 
 class Water(Landscape):
-    """ Water is not habitable for animals"""
+    """ Water is not habitable for animals."""
     pass
 
     @staticmethod
@@ -206,12 +210,13 @@ class Water(Landscape):
 
 
 class Desert(Landscape):
-    """Habitable for animals, but contains no fodder"""
+    """Habitable for animals, but contains no fodder."""
     pass
 
 
 class Highland(Landscape):
-    """Habitable for animals, and contains a fixed amount of fodder """
+    """Habitable for animals, and contains a fixed amount of fodder."""
+
     d_landscape = {'f_max': 300}
 
     def __init__(self):
@@ -222,14 +227,8 @@ class Highland(Landscape):
         Updates fodder, used to update fodder each year. Overrides method in Landscape.
         :return:
         """
+
         self.fodder = self.d_landscape['f_max']
-
-    def get_fodder(self):
-        """
-        :return: Amount of fodder in current cell.
-        """
-        return self.fodder
-
 
 class Lowland(Landscape):
     """Habitable for animals, and contains a fixed amount of fodder """
@@ -243,9 +242,3 @@ class Lowland(Landscape):
         Updates fodder, used to update fodder each year. Overrides method in Landscape.
         """
         self.fodder = self.d_landscape['f_max']
-
-    def get_fodder(self):
-        """
-        :return: Amount of fodder in current cell.
-        """
-        return self.fodder

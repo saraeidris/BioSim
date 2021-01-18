@@ -4,6 +4,9 @@ import subprocess
 import matplotlib.patches as mpatches
 from matplotlib.widgets import Button
 
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
+
 
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in

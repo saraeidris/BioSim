@@ -1,8 +1,15 @@
 from biosim.landscape import Water, Lowland, Highland, Desert
 from biosim.animals import Carnivore, Herbivore
 
-import pytest
+import pytest, random
 from scipy.stats import chisquare
+
+random.seed(123456)
+
+"""Various tests made for the Landscape Class."""
+
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
 
 
 class TestLandscape:
@@ -31,15 +38,18 @@ class TestLandscape:
     @pytest.fixture
     def create_herbs(self):
         """Creates a list of 100 herbivores for use in multiple test."""
-        return [Herbivore() for _ in range(100)]
+        return [Herbivore(5, 50) for _ in range(100)]
 
     @pytest.fixture
     def create_carns(self):
         """Creates a list of 100 carnivores for use in multiple test."""
-        return [Carnivore() for _ in range(100)]
+        return [Carnivore(5, 50) for _ in range(100)]
 
-    def test_aging(self, create_herbs, create_carns, lowland):
-        """Test that aging() increase all ages with 1 every time it is called."""
+    def test_water_not_habitable(self, water):
+        assert not water.is_habitable()
+
+    def test_ages(self, create_herbs, create_carns, lowland):
+        """Test that ages() increase all ages with 1 every time it is called."""
 
         herbs = lowland.list_herbs = create_herbs
         carns = lowland.list_carns = create_carns
@@ -47,9 +57,27 @@ class TestLandscape:
         lowland.ages()
         lowland.ages()
         for herb in herbs:
-            assert herb.age == 3
+            assert herb.age == 8
         for carn in carns:
-            assert carn.age == 3
+            assert carn.age == 8
+
+    def test_give_birth(self, create_herbs, create_carns, lowland, mocker):
+        """
+        test that all animals give birth when chance of giving birth is
+        set to 100% with weight = 50 and use of mocker. This is done
+        by checking that the population after birth is doubled.
+        """
+
+        mocker.patch('random.random', return_value=0)
+        cell = lowland
+        cell.list_herbs = create_herbs
+        cell.list_carns = create_carns
+        before = len(cell.list_herbs + cell.list_carns)
+
+        cell.give_birth()
+        after = len(cell.list_herbs + cell.list_carns)
+        print(after)
+        assert (2 * before) == after
 
     def test_set_fodder(self, lowland, highland):
         """Test that new fodder values can be set for landscape types."""
@@ -68,8 +96,10 @@ class TestLandscape:
         assert d.fodder == 0
 
     def test_fodder_values_highland_lowland(self, lowland, highland):
-        """Test that fodder values in highland and lowland are 0, and that
-        fodder values get updated to 300 and 800 when update_fodder is called."""
+        """
+        Test that fodder values in highland and lowland are 0, and that
+        fodder values get updated to 300 and 800 when update_fodder is called.
+        """
 
         l = lowland
         h = highland
@@ -106,6 +136,7 @@ class TestLandscape:
 
     def test_no_migration_to_water(self, water, lowland, create_herbs, create_carns):
         """Test that no animals migrate to cells of class water."""
+
         lowland.list_herbs = create_herbs
         lowland.list_carns = create_carns
         list_herbs2 = lowland.list_herbs.copy()
@@ -116,6 +147,11 @@ class TestLandscape:
         assert lowland.list_carns == list_carns2
 
     def test_migration_with_chi_squared(self, lowland, highland, desert, mocker):
+        """
+        Statistical test to check that animals choose to migrate to each
+        neighbour cell with the same probability (25% each if cells are not water).
+        """
+
         mocker.patch('random.random', return_value=0)
         c1 = lowland
         c2 = highland

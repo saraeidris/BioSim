@@ -1,10 +1,12 @@
 import random
-
 from .graphics import Graphics
 from matplotlib.widgets import Button
 from biosim.RossumIsland import RossumIsland
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
+
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
 
 
 class BioSim:

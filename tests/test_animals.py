@@ -5,6 +5,11 @@ from scipy.stats import normaltest
 
 random.seed(123456)
 
+"""Various tests made for the Animal Class."""
+
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
+
 
 @pytest.fixture
 def set_params(request):
@@ -74,7 +79,7 @@ def test_animal_age():
 
 def test_animal_aging():
     """
-    This test is *determinstic*: for each call to aging(),
+    This test is deterministic: for each call to aging(),
     the age must increase by one year.
     """
 
@@ -103,7 +108,7 @@ def test_herbivore_should_eat_when_fodder_is_available():
     F when more than F is available.
     """
 
-    animal = Herbivore(0, weight=5)
+    animal = Herbivore()
     consumed_fodder = animal.consumed_fodder(100)
 
     assert consumed_fodder == 10
@@ -115,7 +120,8 @@ def test_herbivore_eat_all_remaining_fodder():
     available when there is less than F amount of fodder
     left.
     """
-    animal = Herbivore(0, weight=5)
+
+    animal = Herbivore()
     consumed_fodder = animal.consumed_fodder(7)
 
     assert consumed_fodder == 7
@@ -134,8 +140,8 @@ def test_weight_loss(mocker):
     assert a.weight == 20 - (a.params['eta'] * 20)
     c = Carnivore()
     c.weight = 20
-    c.weight_loss(True, 200)
-    assert c.weight == 20 - (4 * c.params['eta'] * 20)
+    c.weight_loss(True, 100)
+    assert c.weight == 10
 
 
 def test_error_when_negative_weight_given():
@@ -166,18 +172,18 @@ def test_get_fitness():
     """
     Test that get_fitness returns a fitness between 0 and 1.
     """
+
     for _ in range(100):
-        fitness = Herbivore().get_fitness
+        fitness = Herbivore().get_fitness()
         assert 1 >= fitness >= 0
 
 
 def test_weight_normal_distributed():
     """
     Test that the weight given as default is normal distributed
-    with an alpha-value of 0.05.
+    and passes the test with an alpha-value of 0.05.
     """
 
-    random.seed(123456)
     alpha = 0.05
     herb_weights = [Herbivore().weight for _ in range(1000)]
     carn_weights = [Carnivore().weight for _ in range(1000)]

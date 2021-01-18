@@ -2,15 +2,17 @@ import pytest
 import textwrap
 from biosim.RossumIsland import RossumIsland
 
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
+
 
 class TestRossumIsland:
-    """
-    Tests for the RossumIsland class.
-    """
+    """Test class for the RossumIsland class."""
 
     @pytest.fixture
     def example_island(self):
         """Create an island for use in later tests."""
+
         geogr = """\
                    WWWWWWWWWWW
                    WLLLLLLLLLW
@@ -29,6 +31,7 @@ class TestRossumIsland:
 
     def test_wrong_location_error(self, example_island):
         """Test that illegal coordinates raises ValueError."""
+
         ini_herbs = [{'loc': (100, 100),
                       'pop': [{'species': 'Herbivore',
                                'age': 5,
@@ -45,8 +48,20 @@ class TestRossumIsland:
         with pytest.raises(ValueError):
             example_island.insert_population(ini_carns)
 
+    def test_insert_population_in_water(self, example_island):
+        """Test that ValueError is raised if population is placed in water."""
+
+        ini_herbs = [{'loc': (1, 1),
+                      'pop': [{'species': 'Herbivore',
+                               'age': 5,
+                               'weight': 20}
+                              for _ in range(150)]}]
+        with pytest.raises(ValueError):
+            example_island.insert_population(ini_herbs)
+
     def test_no_map_given(self):
         """Test that no map given results in ValueError"""
+
         with pytest.raises(ValueError):
             RossumIsland('')
 
@@ -57,6 +72,7 @@ class TestRossumIsland:
         are between 20 and 30 because they all have eaten 10 and lost less
         than 10.
         """
+
         mocker.patch('random.randint', return_value=0)
         mocker.patch('random.random', return_value=1)
         ini_herbs = [{'loc': (6, 6),

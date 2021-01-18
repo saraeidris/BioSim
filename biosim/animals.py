@@ -41,7 +41,7 @@ class Animal:
 
     def get_fitness(self):
         """
-        Calculate fitness for specie
+        Calculate fitness for specie.
 
         :return: Current fitness for specie
         """
@@ -55,6 +55,13 @@ class Animal:
             return fitness
 
     def weight_loss(self, pyvid=False, num_animals=None):
+        """
+        Reduces the weight of the animal with eta * its own weight.
+
+        :param pyvid:
+        :param min_steps: never move fewer than this number forward
+        """
+
         """
         Reduces the weight of the animal with eta * its own weight.
 
@@ -80,8 +87,7 @@ class Animal:
         """
         Decide whether the specie dies or not
 
-         :return bool
-            True if specie dies
+        :returns: True if specie dies
         """
 
         return (self.weight <= 0) or (random.random() <
