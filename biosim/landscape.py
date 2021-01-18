@@ -3,19 +3,36 @@ import random
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
 
+
 class Landscape:
     """
-    Different types of landscape that may contain herbivore or carnivore
+    Different types of landscape that may contain herbivore or carnivore.
     """
+
+    """
+           :param sys_size:  system size, e.g. (5, 10)
+           :type sys_size: (int, int)
+           :param noise: noise level
+           :type noise: float
+           :param seed: random generator seed
+           :type seed: int
+           :param img_dir: directory for image files; no images if None
+           :type img_dir: str
+           :param img_name: beginning of name for image files
+           :type img_name: str
+           :param img_fmt: image file format suffix
+           :type img_fmt: str
+
+           .. note:: For default values for img_* parameters, see :mod:`randvis.graphics`.
+           """
     d_landscape = None
 
     @classmethod
     def set_params(cls, new_params):
         """
-        Overrides default params
+        Overrides default params.
 
-        :param new_params: input of wanted params
-        :return: new dictionary with updated params
+        :param new_params: new input params
         """
         for key in new_params:
             if key not in cls.d_landscape:
@@ -29,7 +46,7 @@ class Landscape:
     def __init__(self):
         """
         list_herbs: list with all herbivores in the cell.
-        list_herbs: list with all herbivores in the cell.
+        list_carns: list with all carnivores in the cell.
         """
         self.list_herbs = []
         self.list_carns = []
@@ -74,7 +91,7 @@ class Landscape:
 
     def migrate_all(self, cells_around):
         """
-        migrate each animal if picked cell is habitable
+
 
         :param cells_around: cells around the animal, north, south, east and west.
         """
