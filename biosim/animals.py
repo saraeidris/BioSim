@@ -1,6 +1,8 @@
 import random
 from math import exp
 
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
 
 class Animal:
     params = None
@@ -11,13 +13,15 @@ class Animal:
         Overrides animal params.
 
         :param new_params: new input params
-        :return: updated dictionary of params
         """
         cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
         """
         :raises ValueError if weight or age is negative, and if age is not an integer.
+
+        :param age: age of animal (default 0)
+        :param weight: weight of animal (default None)
         """
         self.age = age
         self.weight = weight
@@ -56,18 +60,13 @@ class Animal:
 
     def weight_loss(self, pyvid=False, num_animals=None):
         """
-        Reduces the weight of the animal with eta * its own weight.
+        Reduces the weight of the animal with eta * its own weight,
+        and half its weight if it gets infected with pyvid (Pythonvirus Disease).
 
-        :param pyvid:
-        :param min_steps: never move fewer than this number forward
+        :param pyvid: True if pyvid occurs this year (default False)
+        :param num_animals: number of animals in cell (default None)
         """
 
-        """
-        Reduces the weight of the animal with eta * its own weight.
-
-        If the animal get pyvid (Pythonvirus Disease), it loses half
-        its weight.
-        """
         if pyvid and random.random() < 0.02 * num_animals:
             self.weight -= 0.5 * self.weight
         else:
