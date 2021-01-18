@@ -138,9 +138,9 @@ class TestLandscape:
         expected = [250, 250, 250, 250]
         observed = [len(move_herbs[0]), len(move_herbs[1]),
                     len(move_herbs[2]), len(move_herbs[3])]
-        _, p = chisquare(expected, observed)
+        _, p_value = chisquare(expected, observed)
 
-        assert p > 0.01
+        assert p_value > 0.01
 
 
 

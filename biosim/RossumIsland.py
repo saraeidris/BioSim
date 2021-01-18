@@ -4,7 +4,10 @@ import random
 
 
 class RossumIsland:
-    def __init__(self, island_map):
+    def __init__(self, island_map, disease=False):
+
+        self.disease = disease
+
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
         if len(island_map) == 0:
             raise ValueError('No island map was given')
@@ -105,7 +108,9 @@ class RossumIsland:
         """
         the annual cycle on Rossumøya.
         """
-        pyvid = self.pyvid()
+        pyvid = False
+        if self.disease:
+            pyvid = self.pyvid()
 
         for row in self.island:
             for cell in row:

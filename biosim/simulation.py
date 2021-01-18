@@ -1,6 +1,5 @@
 import random
 
-import matplotlib.pyplot as plt
 from .graphics import Graphics
 
 from biosim.RossumIsland import RossumIsland
@@ -17,7 +16,7 @@ class BioSim:
 
     def __init__(self, island_map, ini_pop, seed,
                  ymax_animals=None, cmax_animals=None, hist_specs=None,
-                 img_base=None, img_fmt='png'):
+                 img_base=None, img_fmt='png', disease=False):
         """
         :param island_map: Multi-line string specifying island geography
         :param ini_pop: List of dictionaries specifying initial population
@@ -35,11 +34,12 @@ class BioSim:
         self.img_base = img_base
         self.img_fmt = img_fmt
         self.ini_pop = ini_pop
-        self.island = RossumIsland(island_map)
+        self.island = RossumIsland(island_map, disease)
         self.island.insert_population(self.ini_pop)
         self.island_map = island_map
         self.animal = 0
         self._step = 0
+        self._final_step = None
 
         if self.cmax_animals is None:
             self.cmax_animals = self.DEFAULT_CMAX_ANIMALS
