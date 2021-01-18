@@ -167,7 +167,7 @@ def test_get_fitness():
     Test that get_fitness returns a fitness between 0 and 1.
     """
     for _ in range(100):
-        fitness = Herbivore().get_fitness()
+        fitness = Herbivore().get_fitness
         assert 1 >= fitness >= 0
 
 

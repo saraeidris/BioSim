@@ -46,9 +46,6 @@ class BioSim:
         if self.cmax_animals is None:
             self.cmax_animals = self.DEFAULT_CMAX_ANIMALS
 
-        if self.ymax_animals:
-            self.ymax_animals = ymax_animals
-
         if self.hist_specs is None:
             self.hist_specs = self.DEFAULT_HIST_SPECS
         if len(self.hist_specs) < 3:
@@ -127,7 +124,7 @@ class BioSim:
             self._graphics.update(self._step,
                                   self.island.get_stats(),
                                   self.island.get_pop_info(),
-                                  self.island_map)
+                                  self.island_map, self._final_step)
             self.island.annual_cycle()
         while self._step < self._final_step:
             self._step += 1
@@ -136,7 +133,7 @@ class BioSim:
                 self._graphics.update(self._step,
                                       self.island.get_stats(),
                                       self.island.get_pop_info(),
-                                      self.island_map)
+                                      self.island_map, self._final_step)
             self.island.annual_cycle()
 
     def add_population(self, population):

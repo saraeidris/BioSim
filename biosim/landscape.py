@@ -111,14 +111,14 @@ class Landscape:
                 offspring = herb.mate(len(self.list_herbs))
                 if offspring:
                     offspring_herbs.append(offspring)
-            self.list_herbs += offspring_herbs
+            self.list_herbs.extend(offspring_herbs)
         if len(self.list_carns) > 1:
             offspring_carns = []
             for carn in self.list_carns:
                 offspring = carn.mate(len(self.list_carns))
                 if offspring:
                     offspring_carns.append(offspring)
-            self.list_carns += offspring_carns
+            self.list_carns.extend(offspring_carns)
 
     def ages(self):
         """Species ages by one year each year"""

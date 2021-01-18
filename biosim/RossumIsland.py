@@ -11,7 +11,9 @@ class RossumIsland:
         island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
         if len(island_map) == 0:
             raise ValueError('No island map was given')
+
         self.island_row_length = len(island_map.splitlines()[0])
+        self. island_col_length = len(island_map.splitlines())
 
         self.island = []
         for lines in island_map.splitlines():

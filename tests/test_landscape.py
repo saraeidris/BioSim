@@ -6,43 +6,40 @@ from scipy.stats import chisquare
 
 
 class TestLandscape:
+    """Test class for the landscape class."""
 
     @pytest.fixture
     def water(self):
+        """Creates an instance of the water class."""
         return Water()
 
     @pytest.fixture
     def highland(self):
+        """Creates an instance of the highland class."""
         return Highland()
 
     @pytest.fixture
     def lowland(self):
+        """Creates an instance of the lowland class."""
         return Lowland()
 
     @pytest.fixture
     def desert(self):
+        """Creates an instance of the desert class."""
         return Desert()
 
     @pytest.fixture
     def create_herbs(self):
-        """
-        Creates a list of 100 herbivores for use in multiple test.
-        """
-
+        """Creates a list of 100 herbivores for use in multiple test."""
         return [Herbivore() for _ in range(100)]
 
     @pytest.fixture
     def create_carns(self):
-        """
-        Creates a list of 100 carnivores for use in multiple test.
-        """
+        """Creates a list of 100 carnivores for use in multiple test."""
         return [Carnivore() for _ in range(100)]
 
     def test_aging(self, create_herbs, create_carns, lowland):
-        """
-        Test that aging() increase all herbivores' and carnivores'
-        age with 1 every time it is called.
-        """
+        """Test that aging() increase all ages with 1 every time it is called."""
 
         herbs = lowland.list_herbs = create_herbs
         carns = lowland.list_carns = create_carns
@@ -55,9 +52,7 @@ class TestLandscape:
             assert carn.age == 3
 
     def test_set_fodder(self, lowland, highland):
-        """
-        Test that new fodder values can be set for landscape types.
-        """
+        """Test that new fodder values can be set for landscape types."""
 
         lowland.set_fodder(700)
         highland.set_fodder(100)
@@ -65,17 +60,16 @@ class TestLandscape:
         assert highland.fodder == 100
 
     def test_no_fodder_water_desert(self, water, desert):
+        """Test that fodder values in water and desert cells are 0."""
+
         w = water
         d = desert
         assert w.fodder == 0
         assert d.fodder == 0
 
     def test_fodder_values_highland_lowland(self, lowland, highland):
-        """
-        Test that fodder values in highland and lowland are 0,
-        and that fodder values get updated to 300 and 800 when
-        update_fodder is called.
-        """
+        """Test that fodder values in highland and lowland are 0, and that
+        fodder values get updated to 300 and 800 when update_fodder is called."""
 
         l = lowland
         h = highland
@@ -87,9 +81,7 @@ class TestLandscape:
         assert h.fodder == 300
 
     def test_set_landscape_params(self, lowland, highland):
-        """
-        Test that new landscape parameters can be set.
-        """
+        """Test that new landscape parameters can be set."""
 
         l = lowland
         h = highland
@@ -101,10 +93,7 @@ class TestLandscape:
         assert h.fodder == 500
 
     def test_set_landscape_params_errors(self, lowland, highland):
-        """
-        Test that errors are raised when wrong are input are
-        given to set_landscape_params.
-        """
+        """Test that wrong inputs to set_landscape_params raises errors."""
 
         l = lowland
         h = highland
@@ -115,12 +104,16 @@ class TestLandscape:
         with pytest.raises(ValueError):
             h.set_params({'f_max': 'five'})
 
-    def test_no_migration_to_water(self, water, lowland, create_herbs):
+    def test_no_migration_to_water(self, water, lowland, create_herbs, create_carns):
+        """Test that no animals migrate to cells of class water."""
         lowland.list_herbs = create_herbs
+        lowland.list_carns = create_carns
         list_herbs2 = lowland.list_herbs.copy()
+        list_carns2 = lowland.list_carns.copy()
         cells_around = (water, water, water, water)
         lowland.migrate_all(cells_around)
         assert lowland.list_herbs == list_herbs2
+        assert lowland.list_carns == list_carns2
 
     def test_migration_with_chi_squared(self, lowland, highland, desert, mocker):
         mocker.patch('random.random', return_value=0)
