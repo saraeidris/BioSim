@@ -32,7 +32,7 @@ class BioSim:
         self.ymax_animals = ymax_animals
         self.cmax_animals = cmax_animals
         self.hist_specs = hist_specs
-        self.img_base = img_base
+        self.img_name = img_base
         self.img_fmt = img_fmt
         self.ini_pop = ini_pop
         self.island = RossumIsland(island_map, disease)
@@ -53,7 +53,7 @@ class BioSim:
             self.hist_specs = new
 
         self._graphics = Graphics(self.hist_specs, self.cmax_animals,
-                                  self.ymax_animals, self.img_fmt)
+                                  self.ymax_animals, self.img_name, self.img_fmt)
 
     def set_animal_parameters(self, species, params):
         """

@@ -15,19 +15,16 @@ _MAGICK_BINARY = 'magick'
 # update this to the directory and file-name beginning
 # for the graphics files
 _DEFAULT_GRAPHICS_DIR = 'data'
-_DEFAULT_GRAPHICS_NAME = 'dv'
+_DEFAULT_GRAPHICS_NAME = 'bs'
 _DEFAULT_IMG_FORMAT = 'png'
 _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
 
 
 class Graphics:
-    """Provides graphics support for RandVis."""
+    """Provides graphics support for BioSim."""
 
-    def __init__(self, hist_specs, cmax, ymax_animals, img_name=None,
-                 img_fmt='png'):
+    def __init__(self, hist_specs, cmax, ymax_animals, img_name=None, img_fmt='png'):
         """
-        :param img_dir: directory for image files; no images if None
-        :type img_dir: str
         :param img_name: beginning of name for image files
         :type img_name: str
         :param img_fmt: image file format suffix, default 'png'
@@ -90,7 +87,7 @@ class Graphics:
         # while self._paused:
         #     plt.pause(0.05)
         # plt.pause(1e-8)
-        # self._save_graphics(year)
+        self._save_graphics(year)
 
     def make_movie(self, movie_fmt=None):
         """
