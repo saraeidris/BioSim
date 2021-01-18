@@ -22,7 +22,7 @@ class Graphics:
     """Provides graphics support for RandVis."""
 
     def __init__(self,
-                 hist_specs, cmax, img_dir=None, img_name=None, img_base=None,
+                 hist_specs, cmax, img_dir=None, img_name=None,
                  img_fmt='png'):
         """
         :param img_dir: directory for image files; no images if None
@@ -50,23 +50,21 @@ class Graphics:
         self._cmax = cmax
 
         self._img_ctr = 0
-        self._img_step = 1
+        self._img_years = 1
 
         # the following will be initialized by _setup_graphics
         self._fig = None
         self._herb_heat = None
+        self._carn_heat = None
         self._herbivore_img_axis = None
         self._carn_img_axis = None
         self._animal_age_img_axis = None
         self._animal_weight_img_axis = None
         self._animal_fitness_img_axis = None
         self._animal_weight = None
-        self._carn_weight = None
-        self._carn_heat = None
         self._animal_age = None
         self._animal_fitness = None
         self._animal_count = None
-        self._animal_count_img_axis = None
         self._map = None
         self._map_img_axis = None
         self._legends_img_axis = None
@@ -134,10 +132,10 @@ class Graphics:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
 
-    def setup(self, final_step, img_step):
+    def setup(self, final_step, img_years):
         """Prepare graphics."""
 
-        self._img_step = img_step
+        self._img_years = img_years
 
         # create new figure window
         if self._fig is None:
@@ -218,10 +216,11 @@ class Graphics:
             self._map = self._fig.add_axes([0.06, 0.7, 0.2, 0.2])
             self._map_img_axis = None
             self._map.set_xticks([1, 6, 11, 16, 21])
+            self._map.axis('off')
             plt.title('Island')
 
         if self._legends is None:
-            self._legends = self._fig.add_axes([0.03, 0.73, 0.3, 0.2])
+            self._legends = self._fig.add_axes([0.3, 0.73, 0.3, 0.2])
             self._legends_img_axis = None
             self._legends.axis('off')
 
@@ -229,10 +228,9 @@ class Graphics:
             self._count_years = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self._count_years_img_axis = None
             self._count_years.axis('off')  # turn off coordinate system
-            input('Press ENTER to begin counting')
 
     def _update_herb_heatmap(self, two_d_array_pop):
-        """Update the 2D-view of the system."""
+        """Update the herbivore heatmap every year"""
         herbivore_stats = two_d_array_pop[0]
         vmax = self._cmax['Herbivore']
 
@@ -247,6 +245,7 @@ class Graphics:
                          orientation='vertical')
 
     def _update_carn_heatmap(self, two_d_array_pop):
+        """Update the carnivore heatmap every year"""
         carnivore_stats = two_d_array_pop[1]
         vmax = self._cmax['Carnivore']
 
@@ -261,12 +260,13 @@ class Graphics:
                          orientation='vertical')
 
     def _update_animal_age(self, get_stats):
+        """Update the age histogram every year"""
         herbivore_stats = get_stats[0]
         carnivore_stats = get_stats[1]
         hist_max = self._hist_specs['age']['max']
         num = int(hist_max / self._hist_specs['age']['delta'])
 
-        if (self._animal_age is not None):
+        if self._animal_age is not None:
             self._animal_age.cla()
 
         self._animal_age_img_axis = self._animal_age.hist(herbivore_stats, bins=num,
@@ -277,6 +277,7 @@ class Graphics:
                                                           histtype="step", color="r")
 
     def _update_animal_weight(self, get_stats):
+        """Update the weight histogram every year"""
         herbivore_stats = get_stats[2]
         carnivore_stats = get_stats[3]
         hist_max = self._hist_specs['weight']['max']
@@ -285,14 +286,15 @@ class Graphics:
         if self._animal_weight is not None:
             self._animal_weight.cla()
 
-        self._herb_weight_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
-                                                              range=(0, hist_max),
-                                                              histtype="step", color="b")
-        self._carn_weight_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
-                                                              range=(0, hist_max),
-                                                              histtype="step", color="r")
+        self._animal_weight_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
+                                                                range=(0, hist_max),
+                                                                histtype="step", color="b")
+        self._animal_weight_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
+                                                                range=(0, hist_max),
+                                                                histtype="step", color="r")
 
     def _update_animal_fitness(self, get_stats):
+        """Update the fitness histogram every year"""
         herbivore_stats = get_stats[4]
         carnivore_stats = get_stats[5]
         hist_max = self._hist_specs['fitness']['max']
@@ -301,14 +303,15 @@ class Graphics:
         if self._animal_fitness is not None:
             self._animal_fitness.cla()
 
-        self._herb_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=num,
-                                                                range=(0, hist_max),
-                                                                histtype="step", color="b")
-        self._carn_fitness_img_axis = self._animal_fitness.hist(carnivore_stats, bins=num,
-                                                                range=(0, hist_max),
-                                                                histtype="step", color="r")
+        self._animal_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=num,
+                                                                  range=(0, hist_max),
+                                                                  histtype="step", color="b")
+        self._animal_fitness_img_axis = self._animal_fitness.hist(carnivore_stats, bins=num,
+                                                                  range=(0, hist_max),
+                                                                  histtype="step", color="r")
 
     def _update_animal_count(self, two_d_array_for_pop, num_years):
+        """Update the animal count plot every year"""
         herbivore_stats = two_d_array_for_pop[2]
         carnivore_stats = two_d_array_for_pop[3]
         herb_data = self._herb_line.get_ydata()
@@ -343,12 +346,13 @@ class Graphics:
                      'D': (1.0, 1.0, 0.5)}  # light yellow
         for ix, name in enumerate(('Water', 'Lowland',
                                    'Highland', 'Desert')):
-            self._legends.add_patch(plt.Rectangle((0., ix * 0.2), 0.05, 0.05,
+            self._legends.add_patch(plt.Rectangle((0.01, ix * 0.2), 0.05, 0.05,
                                                   edgecolor='none',
                                                   facecolor=rgb_value[name[0]]))
             self._legends.text(0.3, ix * 0.2, name, transform=self._legends.transAxes)
 
     def update_count_years(self, num_years):
+        """Counts every year wanted"""
         self._count_years.cla()
         plt.axis('off')
         template = 'Years: {:5d}'
@@ -362,7 +366,7 @@ class Graphics:
     def _save_graphics(self, step):
         """Saves graphics to file if file name given."""
 
-        if self._img_base is None or step % self._img_step != 0:
+        if self._img_base is None or step % self._img_years != 0:
             return
 
         plt.savefig('{base}_{num:05d}.{type}'.format(base=self._img_base,

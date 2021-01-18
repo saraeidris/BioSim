@@ -1,6 +1,4 @@
 import random
-
-import matplotlib.pyplot as plt
 from .graphics import Graphics
 
 from biosim.RossumIsland import RossumIsland
@@ -9,6 +7,7 @@ from biosim.landscape import Lowland, Highland
 
 
 class BioSim:
+    """ A simulation class for the ecosystem on the island"""
 
     DEFAULT_CMAX_ANIMALS = {'Herbivore': 200, 'Carnivore': 50}
     DEFAULT_HIST_SPECS = {'weight': {'max': 60, 'delta': 2},
@@ -40,6 +39,7 @@ class BioSim:
         self.island_map = island_map
         self.animal = 0
         self._step = 0
+        self._final_step = None
 
         if self.cmax_animals is None:
             self.cmax_animals = self.DEFAULT_CMAX_ANIMALS
@@ -142,6 +142,7 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
+        print(self._step)
         return self._step
 
     @property
