@@ -8,6 +8,7 @@ from biosim.landscape import Lowland, Highland
 
 
 class BioSim:
+    """ A simulation class for the ecosystem on the island"""
 
     DEFAULT_CMAX_ANIMALS = {'Herbivore': 200, 'Carnivore': 50}
     DEFAULT_HIST_SPECS = {'weight': {'max': 60, 'delta': 2},

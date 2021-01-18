@@ -3,7 +3,7 @@ import random
 
 class Landscape:
     """
-    class landscape
+    Different types of landscape that may contain herbivore or carnivore
     """
     d_landscape = None
 
@@ -11,9 +11,9 @@ class Landscape:
     def set_params(cls, new_params):
         """
         Overrides default params
+
         :param new_params: input of wanted params
-        :return:
-            new dictionary with updated params
+        :return: new dictionary with updated params
         """
         for key in new_params:
             if key not in cls.d_landscape:
@@ -45,6 +45,7 @@ class Landscape:
     def eat_all(self):
         """
         Iterates over all animals and check if they eat.
+
         Herbivores eats in random order.
         Carnivores eats in order based on fitness. In the end,
         the eaten herbivores are removed, and the survivors
@@ -72,6 +73,7 @@ class Landscape:
     def migrate_all(self, cells_around):
         """
         migrate each animal if picked cell is habitable
+
         :param cells_around: cells around the animal, north, south, east and west.
         """
         if len(self.list_herbs) > 0:
@@ -101,8 +103,7 @@ class Landscape:
 
     def give_birth(self):
         """
-        Animals give birth to an offspring
-         of the same specie if mate method is fulfilled.
+        Animals give birth to an offspring of the same specie if mate method is fulfilled.
         """
         if len(self.list_herbs) > 1:
             offspring_herbs = []
@@ -126,14 +127,15 @@ class Landscape:
 
     def death(self):
         """
-        Keep animal if it don't die in method dies().
+        Keeps animal if it don't die in method dies().
         """
         self.list_herbs = [animal for animal in self.list_herbs if not animal.dies()]
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
     def lose_weight(self, pyvid=False):
         """
-        calls the weight_loss method on all animals in the cell.
+        Calls the weight_loss method on all animals in the cell.
+
         :param pyvid: True if this is a year with pyvid (Pythonvirus disease).
         """
         for animal in (self.list_herbs + self.list_carns):
@@ -195,6 +197,7 @@ class Landscape:
 
 
 class Water(Landscape):
+    """ Water is not habitable for animals"""
     pass
 
     @staticmethod
@@ -203,10 +206,12 @@ class Water(Landscape):
 
 
 class Desert(Landscape):
+    """Habitable for animals, but contains no fodder"""
     pass
 
 
 class Highland(Landscape):
+    """Habitable for animals, and contains a fixed amount of fodder """
     d_landscape = {'f_max': 300}
 
     def __init__(self):
@@ -227,6 +232,7 @@ class Highland(Landscape):
 
 
 class Lowland(Landscape):
+    """Habitable for animals, and contains a fixed amount of fodder """
     d_landscape = {'f_max': 800}
 
     def __init__(self):
@@ -235,7 +241,6 @@ class Lowland(Landscape):
     def update_fodder(self):
         """
         Updates fodder, used to update fodder each year. Overrides method in Landscape.
-        :return:
         """
         self.fodder = self.d_landscape['f_max']
 
