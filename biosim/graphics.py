@@ -21,8 +21,7 @@ _DEFAULT_MOVIE_FORMAT = 'mp4'  # alternatives: mp4, gif
 class Graphics:
     """Provides graphics support for RandVis."""
 
-    def __init__(self,
-                 hist_specs, cmax, img_name=None,
+    def __init__(self, hist_specs, cmax, ymax_animals, img_name=None,
                  img_fmt='png'):
         """
         :param img_dir: directory for image files; no images if None
@@ -32,7 +31,6 @@ class Graphics:
         :param img_fmt: image file format suffix, default 'png'
         :type img_fmt: str
         """
-
         if img_name is None:
             img_name = _DEFAULT_GRAPHICS_NAME
 
@@ -43,6 +41,7 @@ class Graphics:
         self._img_fmt = img_fmt
         self._hist_specs = hist_specs
         self._cmax = cmax
+        self._ymax_animals = ymax_animals
 
         self._img_ctr = 0
         self._img_years = 1
@@ -175,8 +174,9 @@ class Graphics:
             plt.title('Fitness')
 
         if self._animal_count is None:
+            ymax = self._ymax_animals
             self._animal_count = self._fig.add_axes([0.63, 0.63, 0.25, 0.3])
-            self._animal_count.set_ylim(0, 15000)
+            self._animal_count.set_ylim(0, ymax)
             plt.title('Animal count')
 
         self._animal_count.set_xlim(0, final_step + 1)

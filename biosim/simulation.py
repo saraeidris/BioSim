@@ -41,9 +41,13 @@ class BioSim:
         self.animal = 0
         self._step = 0
         self._final_step = None
+        self.ymax_animals = ymax_animals
 
         if self.cmax_animals is None:
             self.cmax_animals = self.DEFAULT_CMAX_ANIMALS
+
+        if self.ymax_animals:
+            self.ymax_animals = ymax_animals
 
         if self.hist_specs is None:
             self.hist_specs = self.DEFAULT_HIST_SPECS
@@ -51,7 +55,8 @@ class BioSim:
             new = self.merge_params(self.DEFAULT_HIST_SPECS, self.hist_specs)
             self.hist_specs = new
 
-        self._graphics = Graphics(self.hist_specs, self.cmax_animals, self.img_base, self.img_fmt)
+        self._graphics = Graphics(self.hist_specs, self.cmax_animals,
+                                  self.ymax_animals, self.img_fmt)
 
     def set_animal_parameters(self, species, params):
         """

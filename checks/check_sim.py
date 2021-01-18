@@ -2,7 +2,6 @@
 
 import textwrap
 import matplotlib.pyplot as plt
-
 from biosim.simulation import BioSim
 
 """
@@ -48,8 +47,8 @@ if __name__ == '__main__':
                            'weight': 20}
                           for _ in range(40)]}]
 
-    sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
-                 seed=123456,
+    sim = BioSim(island_map=geogr, ini_pop=ini_herbs, ymax_animals=2000,
+                 seed=12892,
                  hist_specs={'fitness': {'max': 1.0, 'delta': 0.05},
                              'age': {'max': 60.0, 'delta': 2},
                              'weight': {'max': 60, 'delta': 2}})
@@ -64,4 +63,5 @@ if __name__ == '__main__':
     sim.add_population(population=ini_carns)
     sim.simulate(num_years=100, vis_years=1)
 
+    plt.savefig('check_sim_12892.pdf')
     # sim.make_movie()
