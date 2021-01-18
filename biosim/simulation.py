@@ -1,7 +1,7 @@
 import random
 
 from .graphics import Graphics
-
+from matplotlib.widgets import Button
 from biosim.RossumIsland import RossumIsland
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
@@ -39,8 +39,8 @@ class BioSim:
         self.island.insert_population(self.ini_pop)
         self.island_map = island_map
         self.animal = 0
-        self._step = 0
-        self._final_step = None
+        self._year = 0
+        self._final_year = None
         self.ymax_animals = None
 
         if self.cmax_animals is None:
@@ -116,24 +116,24 @@ class BioSim:
         if img_years % vis_years != 0:
             raise ValueError('img_steps must be multiple of vis_steps')
 
-        self._final_step = self._step + num_years
-        self._graphics.setup(self._final_step, img_years)
+        self._final_year = self._year + num_years
+        self._graphics.setup(self._final_year, img_years)
 
         # plot initial status if at very beginning of simulation
-        if self._step == 0:
-            self._graphics.update(self._step,
+        if self._year == 0:
+            self._graphics.update(self._year,
                                   self.island.get_stats(),
                                   self.island.get_pop_info(),
-                                  self.island_map, self._final_step)
+                                  self.island_map, self._final_year)
             self.island.annual_cycle()
-        while self._step < self._final_step:
-            self._step += 1
+        while self._year < self._final_year:
+            self._year += 1
 
-            if self._step % vis_years == 0:
-                self._graphics.update(self._step,
+            if self._year % vis_years == 0:
+                self._graphics.update(self._year,
                                       self.island.get_stats(),
                                       self.island.get_pop_info(),
-                                      self.island_map, self._final_step)
+                                      self.island_map, self._final_year)
             self.island.annual_cycle()
 
     def add_population(self, population):
@@ -145,7 +145,7 @@ class BioSim:
     @property
     def year(self):
         """Last year simulated."""
-        return self._step
+        return self._year
 
     @property
     def num_animals(self):
