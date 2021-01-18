@@ -22,7 +22,7 @@ class Graphics:
     """Provides graphics support for RandVis."""
 
     def __init__(self,
-                 hist_specs, cmax, img_dir=None, img_name=None,
+                 hist_specs, cmax, img_name=None,
                  img_fmt='png'):
         """
         :param img_dir: directory for image files; no images if None
@@ -35,13 +35,8 @@ class Graphics:
 
         if img_name is None:
             img_name = _DEFAULT_GRAPHICS_NAME
-        if img_dir is None:
-            img_dir = _DEFAULT_GRAPHICS_DIR
 
-        if not os.path.exists(img_dir):
-            os.makedirs(img_dir)
-
-        self._img_base = os.path.join(img_dir, img_name)
+        self._img_base = img_name
 
         self._img_fmt = img_fmt if img_fmt is not None else _DEFAULT_IMG_FORMAT
 

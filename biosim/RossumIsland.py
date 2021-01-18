@@ -4,7 +4,7 @@ import random
 
 
 class RossumIsland:
-    def __init__(self, island_map, disease=False):
+    def __init__(self, island_map, disease):
 
         self.disease = disease
 
