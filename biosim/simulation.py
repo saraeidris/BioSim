@@ -41,7 +41,7 @@ class BioSim:
         self.animal = 0
         self._step = 0
         self._final_step = None
-        self.ymax_animals = ymax_animals
+        self.ymax_animals = None
 
         if self.cmax_animals is None:
             self.cmax_animals = self.DEFAULT_CMAX_ANIMALS

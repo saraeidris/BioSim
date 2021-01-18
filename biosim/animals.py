@@ -155,8 +155,8 @@ class Carnivore(Animal):
                 break
             if self.get_fitness() <= herb.get_fitness():
                 break
-            elif self.get_fitness() - herb.get_fitness() < self.params['DeltaPhiMax']:
-                p = (self.get_fitness() - herb.get_fitness()) / self.params['DeltaPhiMax']
+            elif (self.get_fitness() - herb.get_fitness()) < self.params['DeltaPhiMax']:
+                p = ((self.get_fitness() - herb.get_fitness()) / self.params['DeltaPhiMax'])
             else:
                 p = 1
             if random.random() <= p:

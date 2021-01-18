@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
-import os
+import matplotlib.patches as mpatches
+
 
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in
@@ -78,10 +79,9 @@ class Graphics:
         self._update_animal_fitness(get_stats)
         self._update_animal_count(two_d_darray_for_pop, year)
         self.update_map(island_map)
-        self.update_legends()
         self.update_count_years(year)
         self._fig.canvas.flush_events()  # ensure every thing is drawn
-        plt.pause(1e-6)  # pause required to pass control to GUI
+        plt.pause(1e-8)  # pause required to pass control to GUI
 
         self._save_graphics(year)
 
@@ -163,7 +163,7 @@ class Graphics:
             self._animal_weight_img_axis = None
             self._animal_weight.set_xticks([0, round(xmax / 4), round(xmax / 2),
                                             round(xmax * 3 / 4), round(xmax / 1)])
-            plt.title('Weight')
+            self._animal_weight.set_title('Weight')
 
         if self._animal_fitness is None:
             xmax = self._hist_specs['fitness']['max']
@@ -183,7 +183,7 @@ class Graphics:
 
         if self._herb_line is None:
             herbivore_plot = self._animal_count.plot(np.arange(0, final_step + 1),
-                                                     np.full(final_step + 1, np.nan), 'b')
+                                                     np.full(final_step + 1, np.nan), 'b', lw=2)
             self._herb_line = herbivore_plot[0]
 
         else:
@@ -196,7 +196,7 @@ class Graphics:
 
         if self._carn_line is None:
             carnivore_plot = self._animal_count.plot(np.arange(0, final_step + 1),
-                                                     np.full(final_step + 1, np.nan), 'r')
+                                                     np.full(final_step + 1, np.nan), 'r', lw=2)
             self._carn_line = carnivore_plot[0]
 
         else:
@@ -214,10 +214,6 @@ class Graphics:
             self._map.axis('off')
             plt.title('Island')
 
-        if self._legends is None:
-            self._legends = self._fig.add_axes([0.3, 0.73, 0.3, 0.2])
-            self._legends_img_axis = None
-            self._legends.axis('off')
 
         if self._count_years is None:
             self._count_years = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
@@ -262,14 +258,15 @@ class Graphics:
         num = int(hist_max / self._hist_specs['age']['delta'])
 
         if self._animal_age is not None:
-            self._animal_age.cla()
+            self._animal_age.clear()
+            self._animal_age.set_title('Age')
 
         self._animal_age_img_axis = self._animal_age.hist(herbivore_stats, bins=num,
                                                           range=(0, hist_max),
-                                                          histtype="step", color="b")
+                                                          histtype="step", color="b", lw=2)
         self._animal_age_img_axis = self._animal_age.hist(carnivore_stats, bins=num,
                                                           range=(0, hist_max),
-                                                          histtype="step", color="r")
+                                                          histtype="step", color="r", lw=2)
 
     def _update_animal_weight(self, get_stats):
         """Update the weight histogram every year"""
@@ -280,13 +277,14 @@ class Graphics:
 
         if self._animal_weight is not None:
             self._animal_weight.cla()
+            self._animal_weight.set_title('weight')
 
         self._animal_weight_img_axis = self._animal_weight.hist(herbivore_stats, bins=num,
                                                                 range=(0, hist_max),
-                                                                histtype="step", color="b")
+                                                                histtype="step", color="b", lw=2)
         self._animal_weight_img_axis = self._animal_weight.hist(carnivore_stats, bins=num,
                                                                 range=(0, hist_max),
-                                                                histtype="step", color="r")
+                                                                histtype="step", color="r", lw=2)
 
     def _update_animal_fitness(self, get_stats):
         """Update the fitness histogram every year"""
@@ -297,13 +295,14 @@ class Graphics:
 
         if self._animal_fitness is not None:
             self._animal_fitness.cla()
+            self._animal_fitness.set_title('Fitness')
 
         self._animal_fitness_img_axis = self._animal_fitness.hist(herbivore_stats, bins=num,
                                                                   range=(0, hist_max),
-                                                                  histtype="step", color="b")
+                                                                  histtype="step", color="b", lw=2)
         self._animal_fitness_img_axis = self._animal_fitness.hist(carnivore_stats, bins=num,
                                                                   range=(0, hist_max),
-                                                                  histtype="step", color="r")
+                                                                  histtype="step", color="r", lw=2)
 
     def _update_animal_count(self, two_d_array_for_pop, num_years):
         """Update the animal count plot every year"""
@@ -333,18 +332,14 @@ class Graphics:
         self._map.set_yticks(range(len(map_rgb)))
         self._map.set_yticklabels(range(1, 1 + len(map_rgb)))
 
-    def update_legends(self):
-        #                   R    G    B
-        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                     'L': (0.0, 0.6, 0.0),  # dark green
-                     'H': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-        for ix, name in enumerate(('Water', 'Lowland',
-                                   'Highland', 'Desert')):
-            self._legends.add_patch(plt.Rectangle((0.01, ix * 0.2), 0.05, 0.05,
-                                                  edgecolor='none',
-                                                  facecolor=rgb_value[name[0]]))
-            self._legends.text(0.3, ix * 0.2, name, transform=self._legends.transAxes)
+        patches = []
+        for name in ("Water", "Lowland", "Highland", "Desert"):
+            patches.append(
+                mpatches.Patch(edgecolor="none", label=name, facecolor=rgb_value[name[0]])
+            )
+        self._map.legend(
+            handles=patches, loc="best", bbox_to_anchor=(0.8, 0.8, 0.9, 0.3), prop={"size":7}
+        )
 
     def update_count_years(self, num_years):
         """Counts every year wanted"""
