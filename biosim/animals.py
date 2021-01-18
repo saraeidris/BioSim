@@ -58,11 +58,11 @@ class Animal:
         """
         Reduces the weight of the animal with eta * its own weight.
 
-        If the animal get pyvid (Pythonvirus Disease), it loses
-        4 times the normal weight loss.
+        If the animal get pyvid (Pythonvirus Disease), it loses half
+        its weight.
         """
-        if pyvid and random.random() < 0.005 * num_animals:
-            self.weight -= 4 * self.params['eta'] * self.weight
+        if pyvid and random.random() < 0.02 * num_animals:
+            self.weight -= 0.5 * self.weight
         else:
             self.weight -= self.params['eta'] * self.weight
 

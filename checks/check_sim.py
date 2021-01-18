@@ -15,7 +15,9 @@ the INF200 project January 2021.
 __author__ = "Hans Ekkehard Plesser, NMBU"
 __email__ = "hans.ekkehard.plesser@nmbu.no"
 
+
 if __name__ == '__main__':
+
     geogr = """\
                WWWWWWWWWWWWWWWWWWWWW
                WWWWWWWWHWWWWLLLLLLLW
@@ -58,9 +60,9 @@ if __name__ == '__main__':
                                             'DeltaPhiMax': .9})
     sim.set_landscape_parameters('L', {'f_max': 700})
 
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    input('Press Enter: ')
+    sim.simulate(num_years=100, vis_years=1)
     sim.add_population(population=ini_carns)
-    sim.simulate(num_years=100, vis_years=1, img_years=2000)
+    sim.simulate(num_years=100, vis_years=1)
 
-    sim.make_movie()
-# plt.show()
+    # sim.make_movie()
