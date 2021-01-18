@@ -91,7 +91,7 @@ class Landscape:
 
     def migrate_all(self, cells_around):
         """
-
+        Calls :meth: `migrate()` and checks if animal migrate, puts animal in wright list
 
         :param cells_around: cells around the animal, north, south, east and west.
         """
@@ -122,6 +122,8 @@ class Landscape:
 
     def give_birth(self):
         """
+        Calls :meth: `mate()` and checks if animal gets offspring, puts offspring into new list
+
         Animals give birth to an offspring of the same specie if mate method is fulfilled.
         """
         if len(self.list_herbs) > 1:
@@ -162,36 +164,37 @@ class Landscape:
             animal.weight_loss(pyvid, len(self.list_herbs + self.list_carns))
 
     def set_fodder(self, fodder):
+        """ Sets fodder """
         self.fodder = fodder
 
     def get_population(self):
         """
-        :return: number of herbivores and carnivores as a tuple.
+        Returns of herbivores and carnivores as a tuple.
         """
 
         return len(self.list_herbs), len(self.list_carns)
 
     def get_animals(self):
         """
-        :return: list with all herbivores, carnivores and both together
+        Returns list with all herbivores, carnivores and both together
         """
         return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
 
     def is_populated(self):
         """
-        :return: number of total animals
+        Returns number of total animals
         """
         return len(self.list_herbs + self.list_carns) > 0
 
     def get_herb_fitness(self):
         """
-        :return: fitness for all herbivores
+        Returns fitness for all herbivores
         """
         return [herb.get_fitness() for herb in self.list_herbs]
 
     def get_carn_fitness(self):
         """
-        :return: fitness for all carnivores
+        Returns fitness for all carnivores
         """
         return [carn.get_fitness() for carn in self.list_carns]
 
@@ -200,25 +203,25 @@ class Landscape:
 
     def get_carn_age(self):
         """
-        :return: age for all carnivores
+        Returns age for all carnivores
         """
         return [carn.age for carn in self.list_carns]
 
     def get_herb_weight(self):
         """
-        :return: Weight for all herbivores
+        Returns weight for all herbivores
         """
         return [herb.weight for herb in self.list_herbs]
 
     def get_carn_weight(self):
         """
-        :return: Weight for all carnivores as a list.
+        Returns weight for all carnivores as a list.
         """
         return [carn.weight for carn in self.list_carns]
 
 
 class Water(Landscape):
-    """ Water is not habitable for animals."""
+    """Subclass for Landscape, water is not habitable for animals."""
     pass
 
     @staticmethod
@@ -227,12 +230,12 @@ class Water(Landscape):
 
 
 class Desert(Landscape):
-    """Habitable for animals, but contains no fodder."""
+    """Subclass for Landscape, habitable for animals, but contains no fodder."""
     pass
 
 
 class Highland(Landscape):
-    """Habitable for animals, and contains a fixed amount of fodder."""
+    """Subclass for Landscape, habitable for animals, and contains a fixed amount of fodder."""
 
     d_landscape = {'f_max': 300}
 
@@ -242,10 +245,10 @@ class Highland(Landscape):
     def update_fodder(self):
         """
         Updates fodder, used to update fodder each year. Overrides method in Landscape.
-        :return:
         """
 
         self.fodder = self.d_landscape['f_max']
+
 
 class Lowland(Landscape):
     """Habitable for animals, and contains a fixed amount of fodder """
