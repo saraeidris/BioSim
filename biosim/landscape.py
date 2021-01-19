@@ -6,7 +6,7 @@ __email__ = "said@nmbu.no & thon@nmbu.no"
 
 class Landscape:
     """
-    Different types of landscape that may contain herbivore or carnivore.
+    Baseclass for landscape types that may contain herbivore or carnivore.
     """
 
     """
@@ -34,6 +34,10 @@ class Landscape:
         :raises ValueError: if key not an integer, invalid parameter
                             name or fodder value is negative
         :param new_params: new input params
+
+        :raises ValueError: if key not an original key in landscape parameters,
+                            new value not an integer or float or if fodder
+                            value is negative.
         """
         for key in new_params:
             if key not in cls.d_landscape:
@@ -45,10 +49,7 @@ class Landscape:
         cls.d_landscape.update(new_params)
 
     def __init__(self):
-        """
-        list_herbs: list with all herbivores in the cell.
-        list_carns: list with all carnivores in the cell.
-        """
+
         self.list_herbs = []
         self.list_carns = []
         self.fodder = 0
@@ -92,9 +93,9 @@ class Landscape:
 
     def migrate_all(self, cells_around):
         """
-        Calls :meth: `migrate()` and checks if animal migrate, puts animal in wright list
+        Calls :meth: 'migrate()' and checks if animal migrate, puts animal in right list
 
-        :param cells_around: cells around the animal, north, south, east and west.
+        :param cells_around: the cell north, south, east and west of the current cell
         """
         if len(self.list_herbs) > 0:
             herbs_stay = []
@@ -108,6 +109,7 @@ class Landscape:
                 else:
                     herbs_stay.append(herb)
             self.list_herbs = herbs_stay
+
         if len(self.list_carns) > 0:
             carns_stay = []
             for carn in self.list_carns:
@@ -123,7 +125,7 @@ class Landscape:
 
     def give_birth(self):
         """
-        Calls :meth: `mate()` and checks if animal gets offspring, puts offspring into new list
+        Calls :meth: 'mate()' and checks if animal gets offspring, puts offspring into new list
 
         Animals give birth to an offspring of the same specie if mate method is fulfilled.
         """

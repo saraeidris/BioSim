@@ -15,9 +15,13 @@ __author__ = "Hans Ekkehard Plesser, NMBU"
 __email__ = "hans.ekkehard.plesser@nmbu.no"
 
 """
-Modified by: Thorbjørn L Onsaker & Sara Idris
+Modified by: "Thorbjørn L Onsaker & Sara Idris, NMBU"
+
 Modifications: disease input is set to True in BioSim to run 
-simulations with pyvid (Pythonvirus disease).
+simulations with pyvid (Pythonvirus disease). Pyvid randomly occurs
+some years (on average every 30 years), and will reduce half the animal's weight
+instead of the regular yearly weight loss. The chance of being
+infected with pyvid increases with the number of animals in the cell.
 """
 
 if __name__ == '__main__':

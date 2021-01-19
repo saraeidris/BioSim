@@ -1,6 +1,14 @@
 import textwrap
 from biosim.simulation import BioSim
 
+"""
+Simple island with one lowland cell surrounded by water
+to simulate the development of both species in same cell.
+"""
+
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
+
 
 if __name__ == '__main__':
 
@@ -30,4 +38,4 @@ if __name__ == '__main__':
 
     sim.simulate(num_years=50, vis_years=1)
     sim.add_population(ini_carns)
-    sim.simulate(num_years=100, vis_years=1)
+    sim.simulate(num_years=200, vis_years=1)

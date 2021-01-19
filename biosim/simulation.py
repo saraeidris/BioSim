@@ -10,7 +10,7 @@ __email__ = "said@nmbu.no & thon@nmbu.no"
 
 
 class BioSim:
-    """ A simulation class for the ecosystem on the island"""
+    """ A simulation class for the ecosystem on the island."""
 
     DEFAULT_CMAX_ANIMALS = {'Herbivore': 200, 'Carnivore': 50}
     DEFAULT_HIST_SPECS = {'weight': {'max': 60, 'delta': 2},
@@ -126,7 +126,7 @@ class BioSim:
             self._graphics.update(self._year,
                                   self.island.get_stats(),
                                   self.island.get_pop_info(),
-                                  self.island_map, self._final_year)
+                                  self.island_map)
             self.island.annual_cycle()
         while self._year < self._final_year:
             self._year += 1
@@ -135,7 +135,7 @@ class BioSim:
                 self._graphics.update(self._year,
                                       self.island.get_stats(),
                                       self.island.get_pop_info(),
-                                      self.island_map, self._final_year)
+                                      self.island_map)
             self.island.annual_cycle()
 
     def add_population(self, population):
