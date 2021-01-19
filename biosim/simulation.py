@@ -119,7 +119,7 @@ class BioSim:
             raise ValueError('img_steps must be multiple of vis_steps')
 
         self._final_year = self._year + num_years
-        self._graphics.setup(self._final_year, img_years)
+        self._graphics.setup(self._final_year, img_years, self.island_map)
 
         # plot initial status if at very beginning of simulation
         if self._year == 0:
