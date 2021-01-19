@@ -7,7 +7,6 @@ from matplotlib.widgets import Button
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
 
-
 # Update these variables to point to your ffmpeg and convert binaries
 # If you installed ffmpeg using conda or installed both softwares in
 # standard ways on your computer, no changes should be required.
@@ -344,6 +343,18 @@ class Graphics:
         self._herb_line.set_ydata(herb_data)
         self._carn_line.set_ydata(carn_data)
         self._animal_count.set_ylim(0, (herb_data[year] + carn_data[year] + 5) * 1.05)
+
+        color = {'H': (0.0, 0.0, 1.0),
+                 'C': (1.0, 0.0, 0.0)}
+
+        patches = []
+        for name in ("Herbivores", "Carnivores"):
+            patches.append(
+                mpatches.Patch(edgecolor="none", label=name, facecolor=color[name[0]])
+            )
+        self._animal_count.legend(
+            handles=patches, loc="upper left", prop={"size": 5}
+        )
 
     def update_map(self, island_map):
 
