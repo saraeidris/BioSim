@@ -1,6 +1,5 @@
 import random
 from .graphics import Graphics
-from matplotlib.widgets import Button
 from biosim.Island import RossumIsland
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
@@ -134,8 +133,7 @@ class BioSim:
         if self._year == 0:
             self._graphics.update(self._year,
                                   self.island.get_stats(),
-                                  self.island.get_pop_info(),
-                                  self.island_map)
+                                  self.island.get_pop_info())
             self.island.annual_cycle()
         while self._year < self._final_year:
             self._year += 1
@@ -143,8 +141,7 @@ class BioSim:
             if self._year % vis_years == 0:
                 self._graphics.update(self._year,
                                       self.island.get_stats(),
-                                      self.island.get_pop_info(),
-                                      self.island_map)
+                                      self.island.get_pop_info())
             self.island.annual_cycle()
 
     def add_population(self, population):

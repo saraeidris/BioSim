@@ -613,6 +613,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
-images
-
 # End of https://www.toptal.com/developers/gitignore/api/python,jupyternotebooks,pycharm,latex,macos,windows,linux

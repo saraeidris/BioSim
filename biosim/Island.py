@@ -17,11 +17,11 @@ class RossumIsland:
         :raises ValueError: if no island map is given, rows in island are not
         of the same length or if island is not surrounded by water.
     """
+    island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
 
     def __init__(self, island_map, disease=False):
 
         self.disease = disease
-        island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
 
         if len(island_map) == 0:
             raise ValueError('No island map was given')
@@ -31,7 +31,7 @@ class RossumIsland:
 
         self.island = []
         for lines in island_map.splitlines():
-            self.island.append(self.splits(lines, island_dict))
+            self.island.append(self.splits(lines, self.island_dict))
 
         for land_type in self.island[0] + self.island[-1]:
             if not isinstance(land_type, Water):

@@ -54,7 +54,7 @@ class Animal:
 
     def get_fitness(self):
         """Calculate fitness for specie.
-
+        ..math:: a = (3^3 + 3^4)/2
         Returns Current fitness for specie
         """
         if self.weight <= 0:
