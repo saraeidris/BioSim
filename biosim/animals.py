@@ -12,8 +12,7 @@ class Animal:
 
     @classmethod
     def set_params(cls, new_params):
-        """
-        Overrides animal params.
+        """Overrides animal parameters.
 
         :param new_params: new input parameters
         """
@@ -22,13 +21,13 @@ class Animal:
 
     def __init__(self, age=0, weight=None):
         """
-        :param age:  age of animal, must be 0 or greater; age 0 if None.
-        :type age: int
-        :param weight:  weight of animal, must be greater than 0;
-                        randomly distributed weight if None
-        :type weight: float
+        Attributes:
+            :param age:  age of animal; age 0 if None.
+            :type age: int
+            :param weight:  weight of animal; randomly normal distributed weight if None
+            :type weight: float
 
-        :raises ValueError: if age is 0 or not of type int,
+            :raises ValueError: if age is 0 or not of type int,
                             or weight is less than or equal to 0
         """
 
@@ -54,8 +53,7 @@ class Animal:
         self.age += 1
 
     def get_fitness(self):
-        """
-        Calculate fitness for specie.
+        """Calculate fitness for specie.
 
         Returns Current fitness for specie
         """
