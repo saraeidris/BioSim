@@ -342,7 +342,10 @@ class Graphics:
         carn_data[year] = carnivore_stats
         self._herb_line.set_ydata(herb_data)
         self._carn_line.set_ydata(carn_data)
-        self._animal_count.set_ylim(0, (herb_data[year] + carn_data[year] + 5) * 1.05)
+
+        ymax = self._ymax_animals
+        if not ymax:
+            self._animal_count.set_ylim(0, (max(herb_data) + carn_data[year]) + 500)
 
         color = {'H': (0.0, 0.0, 1.0),
                  'C': (1.0, 0.0, 0.0)}
