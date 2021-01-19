@@ -87,7 +87,6 @@ class Graphics:
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
         self._update_animal_count(two_d_darray_for_pop, year)
-        self.update_map(island_map)
         self.update_count_years(year)
         # self._pause_button_click()
         self._fig.canvas.flush_events()  # ensure every thing is drawn
@@ -139,7 +138,7 @@ class Graphics:
         else:
             raise ValueError('Unknown movie format: ' + movie_fmt)
 
-    def setup(self, final_step, img_years):
+    def setup(self, final_step, img_years, island_map):
         """Prepare graphics."""
 
         self._img_years = img_years
@@ -227,6 +226,30 @@ class Graphics:
             self._map_ax.set_xticks([1, 6, 11, 16, 21])
             self._map_ax.set_title('Island')
             self._map_ax.axis('off')
+
+            #                   R    G    B
+            rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
+                         'L': (0.0, 0.6, 0.0),  # dark green
+                         'H': (0.5, 1.0, 0.5),  # light green
+                         'D': (1.0, 1.0, 0.5)}  # light yellow
+
+            map_rgb = [[rgb_value[column] for column in row]
+                       for row in island_map.splitlines()]
+            self._map_ax.imshow(map_rgb)
+
+            self._map_ax.set_xticks(range(len(map_rgb[0])))
+            self._map_ax.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+            self._map_ax.set_yticks(range(len(map_rgb)))
+            self._map_ax.set_yticklabels(range(1, 1 + len(map_rgb)))
+
+            patches = []
+            for name in ("Water", "Lowland", "Highland", "Desert"):
+                patches.append(
+                    mpatches.Patch(edgecolor="none", label=name, facecolor=rgb_value[name[0]])
+                )
+            self._map_ax.legend(
+                handles=patches, bbox_to_anchor=(0.8, 0.8, 0.9, 0.3), prop={"size": 7}
+            )
 
         if self._count_years_ax is None:
             self._count_years_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
@@ -353,33 +376,7 @@ class Graphics:
                 mpatches.Patch(edgecolor="none", label=name, facecolor=color[name[0]])
             )
         self._animal_count.legend(
-            handles=patches, loc="upper left", prop={"size": 5}
-        )
-
-    def update_map(self, island_map):
-
-        #                   R    G    B
-        rgb_value = {'W': (0.0, 0.0, 1.0),  # blue
-                     'L': (0.0, 0.6, 0.0),  # dark green
-                     'H': (0.5, 1.0, 0.5),  # light green
-                     'D': (1.0, 1.0, 0.5)}  # light yellow
-
-        map_rgb = [[rgb_value[column] for column in row]
-                   for row in island_map.splitlines()]
-        self._map_ax.imshow(map_rgb)
-
-        self._map_ax.set_xticks(range(len(map_rgb[0])))
-        self._map_ax.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        self._map_ax.set_yticks(range(len(map_rgb)))
-        self._map_ax.set_yticklabels(range(1, 1 + len(map_rgb)))
-
-        patches = []
-        for name in ("Water", "Lowland", "Highland", "Desert"):
-            patches.append(
-                mpatches.Patch(edgecolor="none", label=name, facecolor=rgb_value[name[0]])
-            )
-        self._map_ax.legend(
-            handles=patches, loc="best", bbox_to_anchor=(0.8, 0.8, 0.9, 0.3), prop={"size": 7}
+            handles=patches, loc="upper left", prop={"size": 7}
         )
 
     def update_count_years(self, year):
