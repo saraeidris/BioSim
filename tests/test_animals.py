@@ -5,7 +5,7 @@ from scipy.stats import normaltest
 
 random.seed(123456)
 
-"""Various tests made for the Animal Class."""
+"""Various tests made for the Animal class."""
 
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
@@ -34,29 +34,27 @@ def test_bact_certain_survival(set_params):
 
 @pytest.mark.parametrize('set_params', [{'omega': 0.4}], indirect=True)
 def test_migration_and_death(mocker, set_params):
-    """
-    test that all animals migrates and dies when random.random is set
+    """Test for migration and death.
+
+    Test that all animals migrates and dies when random.random is set
     to 0, and that all animals survive and stay in their cell when
     random.random is set to 1.
     """
 
     mocker.patch('random.random', return_value=0)
-    for _ in range(10):
+    for _ in range(100):
         h = Herbivore()
         assert h.migrate() is True
         assert h.dies() is True
     mocker.patch('random.random', return_value=1)
-    for _ in range(10):
+    for _ in range(100):
         c = Carnivore()
         assert c.migrate() is False
         assert c.dies() is False
 
 
 def test_mate_method_and_offspring_weight(mocker):
-    """
-    Test that an offspring is of same class as parent, and that
-    its weight is greater than zero.
-    """
+    """Test that an offspring is of same class as parent and weight greater than 0."""
 
     mocker.patch('random.random', return_value=0)
     for _ in range(100):
@@ -69,9 +67,7 @@ def test_mate_method_and_offspring_weight(mocker):
 
 
 def test_animal_age():
-    """
-    Test that a new animal has age 0.
-    """
+    """Test that a new animal has age 0."""
 
     a = Herbivore()
     assert a.age == 0
@@ -80,7 +76,7 @@ def test_animal_age():
 def test_animal_aging():
     """
     This test is deterministic: for each call to aging(),
-    the age must increase by one year.
+    the age must increase by 1.
     """
 
     a = Herbivore()
@@ -90,9 +86,7 @@ def test_animal_aging():
 
 
 def test_animal_certain_death():
-    """
-    Test that animal die if weight is equal or less than 0.
-    """
+    """Test that animal die if weight is equal or less than 0."""
 
     c = Carnivore()
     h = Herbivore()
@@ -103,10 +97,7 @@ def test_animal_certain_death():
 
 
 def test_herbivore_should_eat_when_fodder_is_available():
-    """
-    Test that a herbivore eats an amount of
-    F when more than F is available.
-    """
+    """Test that a herbivore eats an amount of F when more than F is available."""
 
     animal = Herbivore()
     consumed_fodder = animal.consumed_fodder(100)
@@ -129,8 +120,9 @@ def test_herbivore_eat_all_remaining_fodder():
 
 def test_weight_loss(mocker):
     """
-    Test that weight_loss reduces an instance´s weight
-    with eta * weight, and 4 * eta * weight if the instance get pyvid.
+    Test that weight_loss reduces an instance´s weight with eta * weight.
+
+    If an instance get pyvid, the weight shall be half of the original weight.
     """
 
     mocker.patch('random.random', return_value=0)
@@ -157,10 +149,7 @@ def test_error_when_negative_weight_given():
 
 
 def test_age_raise_valueerror():
-    """
-    Test that a ValueError is raised if the input age
-    is less than 0 or not an integer.
-    """
+    """Test that ValueError is raised if input age is less than 0 or not int."""
 
     with pytest.raises(ValueError):
         Animal(1.1, 20)
@@ -169,9 +158,7 @@ def test_age_raise_valueerror():
 
 
 def test_get_fitness():
-    """
-    Test that get_fitness returns a fitness between 0 and 1.
-    """
+    """Test that get_fitness returns a fitness between 0 and 1."""
 
     for _ in range(100):
         fitness = Herbivore().get_fitness()
@@ -191,3 +178,10 @@ def test_weight_normal_distributed():
     result_carn = normaltest(carn_weights)
     assert alpha < result_herb[1]
     assert alpha < result_carn[1]
+
+
+@pytest.mark.parametrize('set_params', [{'F': 100}], indirect=True)
+def test_consumed_herbs(set_params):
+    herbs = [Herbivore(weight=10) for _ in range(10)]
+
+    killed

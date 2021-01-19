@@ -60,26 +60,27 @@ class Graphics:
         self._carn_heat_ax = None
         self._herbivore_img_axis = None
         self._carn_img_axis = None
-        self._animal_age_img_axis = None
-        self._animal_weight_img_axis = None
-        self._animal_fitness_img_axis = None
         self._animal_weight_ax = None
         self._animal_age_ax = None
         self._animal_fitness_ax = None
         self._animal_count = None
         self._map_ax = None
         self._map_img_axis = None
-        self._legends_img_axis = None
-        self._legends = None
         self._count_years_ax = None
         self._count_years_img_axis = None
         self._herb_line = None
         self._carn_line = None
         self._pause_ax = None
         self._pause_button = None
+        self.herb_w_hist = None
+        self.carn_w_hist = None
+        self.herb_a_hist = None
+        self.carn_a_hist = None
+        self.herb_f_hist = None
+        self.carn_f_hist = None
         self._paused = False
 
-    def update(self, year, get_stats, two_d_darray_for_pop, island_map):
+    def update(self, year, get_stats, two_d_darray_for_pop):
         """Updates graphics with current data."""
 
         self._update_herb_heatmap(two_d_darray_for_pop)
@@ -177,7 +178,8 @@ class Graphics:
             bin_lims = np.arange(0.0, self._hist_specs['weight']['max'],
                                  self._hist_specs['weight']['delta'])
             self._animal_age_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
-                                               round(xmax * 3 / 4, 2), round(xmax)])
+                                            round(xmax * 3 / 4, 2), round(xmax)])
+
             self.herb_a_hist, self.carn_a_hist = self._animal_age_ax.step(bin_lims,
                                                                              np.zeros_like(
                                                                                  bin_lims), 'b-',
@@ -199,13 +201,10 @@ class Graphics:
             self._animal_weight_ax = self._fig.add_axes([0.37, 0.07, 0.25, 0.12])
             self._animal_weight_ax.margins(x=0)
             self._animal_weight_ax.set_title('Weight')
-            bin_lims = np.arange(0, self._hist_specs['weight']['max'],
-                                 self._hist_specs['weight']['delta'])
+            bin_lims = np.arange(0, xmax, self._hist_specs['weight']['delta'])
             self._animal_weight_ax.set_xticks([0, round(xmax / 4), round(xmax / 2),
                                                round(xmax * 3 / 4), round(xmax / 1)])
 
-            self._animal_weight_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
-                                               round(xmax * 3 / 4, 2), round(xmax / 1)])
             self.herb_w_hist, self.carn_w_hist = self._animal_weight_ax.step(bin_lims,
                                                                              np.zeros_like(
                                                                                  bin_lims), 'b-',
@@ -245,8 +244,6 @@ class Graphics:
             self._animal_count.set_title('Animal count')
             if ymax:
                 self._animal_count.set_ylim(0, ymax)
-            # else:
-            #     self._animal_count.set_ylim(0, 15500)
 
         self._animal_count.set_xlim(0, final_step + 1)
 
@@ -341,7 +338,8 @@ class Graphics:
                          orientation='vertical')
 
     def _update_carn_heatmap(self, two_d_array_pop):
-        """Update the carnivore heatmap every year"""
+        """Update the carnivore heatmap every year."""
+
         carnivore_stats = two_d_array_pop[1]
         vmax = self._cmax['Carnivore']
 
@@ -356,21 +354,21 @@ class Graphics:
                          orientation='vertical')
 
     def _update_animal_age(self, get_stats):
-        """Update the age histogram every year"""
+        """Update the age histogram every year."""
+
         herbivore_stats = get_stats[0]
         carnivore_stats = get_stats[1]
         hist_max = self._hist_specs['age']['max']
         num = int(hist_max / self._hist_specs['age']['delta'])
 
-        self.herb_a_hist.set_ydata(np.histogram(herbivore_stats,
-                                                int(self._hist_specs['age']['max'] /
-                                                    self._hist_specs['age']['delta']),
-                                                (0, self._hist_specs['age']['max']))[0])
-        self.carn_a_hist.set_ydata(np.histogram(carnivore_stats,
-                                                int(self._hist_specs['age']['max'] /
-                                                    self._hist_specs['age']['delta']),
-                                                (0, self._hist_specs['age']['max']))[0])
-        self._animal_age_ax.set_ylim(0, 1000)
+        self.herb_a_hist.set_ydata(np.histogram(herbivore_stats, num, (0, hist_max))[0])
+        self.carn_a_hist.set_ydata(np.histogram(carnivore_stats, num, (0, hist_max))[0])
+        h_max = max(np.histogram(herbivore_stats, num, (0, hist_max))[0])
+        c_max = max(np.histogram(carnivore_stats, num, (0, hist_max))[0])
+        if h_max >= c_max:
+            self._animal_age_ax.set_ylim(0, h_max * 1.15)
+        else:
+            self._animal_age_ax.set_ylim(0, c_max * 1.15)
         #     self._animal_age_ax.cla()
         #     self._animal_age_ax.set_title('Age')
         #
@@ -382,21 +380,21 @@ class Graphics:
         #                                                      histtype="step", color="r", lw=2)
 
     def _update_animal_weight(self, get_stats):
-        """Update the weight histogram every year"""
+        """Update the weight histogram every year."""
+
         herbivore_stats = get_stats[2]
         carnivore_stats = get_stats[3]
         hist_max = self._hist_specs['weight']['max']
         num = int(hist_max / self._hist_specs['weight']['delta'])
 
-        self.herb_w_hist.set_ydata(np.histogram(herbivore_stats,
-                                                int(self._hist_specs['weight']['max'] /
-                                                    self._hist_specs['weight']['delta']),
-                                                (0, self._hist_specs['weight']['max']))[0])
-        self.carn_w_hist.set_ydata(np.histogram(carnivore_stats,
-                                                int(self._hist_specs['weight']['max'] /
-                                                    self._hist_specs['weight']['delta']),
-                                                (0, self._hist_specs['weight']['max']))[0])
-        self._animal_weight_ax.set_ylim(0, 1000)
+        self.herb_w_hist.set_ydata(np.histogram(herbivore_stats, num, (0, hist_max))[0])
+        self.carn_w_hist.set_ydata(np.histogram(carnivore_stats, num, (0, hist_max))[0])
+        h_max = max(np.histogram(herbivore_stats, num, (0, hist_max))[0])
+        c_max = max(np.histogram(carnivore_stats, num, (0, hist_max))[0])
+        if h_max >= c_max:
+            self._animal_weight_ax.set_ylim(0, h_max * 1.15)
+        else:
+            self._animal_weight_ax.set_ylim(0, c_max * 1.15)
 
         #     self._animal_weight_ax.cla()
         #     self._animal_weight_ax.set_title('weight')
@@ -409,11 +407,12 @@ class Graphics:
         #                                                            histtype="step", color="r", lw=2)
 
     def _update_animal_fitness(self, get_stats):
-        """Update the fitness histogram every year"""
+        """Update the fitness histogram every year."""
+
         herbivore_stats = get_stats[4]
         carnivore_stats = get_stats[5]
-        # hist_max = self._hist_specs['fitness']['max']
-        # num = int(hist_max / self._hist_specs['fitness']['delta'])
+        hist_max = self._hist_specs['fitness']['max']
+        num = int(hist_max / self._hist_specs['fitness']['delta'])
         #     self._animal_fitness_ax.cla()
         #     self._animal_fitness_ax.set_title('Fitness')
         #
@@ -425,18 +424,19 @@ class Graphics:
         #                                                              range=(0, hist_max),
         #                                                              histtype="step",
         #                                                              color="r", lw=2)
-        self.herb_f_hist.set_ydata(np.histogram(herbivore_stats,
-                                                int(self._hist_specs['fitness']['max'] /
-                                                    self._hist_specs['fitness']['delta']),
-                                                (0, self._hist_specs['fitness']['max']))[0])
-        self.carn_f_hist.set_ydata(np.histogram(carnivore_stats,
-                                                int(self._hist_specs['fitness']['max'] /
-                                                    self._hist_specs['fitness']['delta']),
-                                                (0, self._hist_specs['fitness']['max']))[0])
-        self._animal_fitness_ax.set_ylim(0, 1000)
+        self.herb_f_hist.set_ydata(np.histogram(herbivore_stats, num, (0, hist_max))[0])
+        self.carn_f_hist.set_ydata(np.histogram(carnivore_stats, num, (0, hist_max))[0])
+        h_max = max(np.histogram(herbivore_stats, num, (0, hist_max))[0])
+        c_max = max(np.histogram(carnivore_stats, num, (0, hist_max))[0])
+
+        if h_max >= c_max:
+            self._animal_fitness_ax.set_ylim(0, h_max * 1.15)
+        else:
+            self._animal_fitness_ax.set_ylim(0, c_max * 1.15)
 
     def _update_animal_count(self, two_d_array_for_pop, year):
-        """Update the animal count plot every year"""
+        """Update the animal count plot every year."""
+
         herbivore_stats = two_d_array_for_pop[2]
         carnivore_stats = two_d_array_for_pop[3]
         herb_data = self._herb_line.get_ydata()
@@ -463,14 +463,15 @@ class Graphics:
         )
 
     def update_count_years(self, year):
-        """Counts every year wanted"""
+        """Counts every year wanted."""
+
         self._count_years_ax.cla()
-        self._count_years_ax.axis('off')  # turn off coordinate system
+        self._count_years_ax.axis('off')
         template = 'Years: {:5d}'
         txt = self._count_years_ax.text(0.5, 0.5, template.format(0),
                                         horizontalalignment='center',
                                         verticalalignment='center',
-                                        transform=self._count_years_ax.transAxes)  # relative coordinates
+                                        transform=self._count_years_ax.transAxes)
 
         txt.set_text(template.format(year))
 

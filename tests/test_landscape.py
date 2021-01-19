@@ -46,6 +46,8 @@ class TestLandscape:
         return [Carnivore(5, 50) for _ in range(100)]
 
     def test_water_not_habitable(self, water):
+        """Test that water is not habitable for animals."""
+
         assert not water.is_habitable()
 
     def test_ages(self, create_herbs, create_carns, lowland):
