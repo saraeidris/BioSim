@@ -31,12 +31,13 @@ class Landscape:
     def set_params(cls, new_params):
         """
         Overrides default params.
-
+        :raises ValueError: if key not an integer, invalid parameter
+                            name or fodder value is negative
         :param new_params: new input params
         """
         for key in new_params:
             if key not in cls.d_landscape:
-                raise KeyError('Invalid parameter name:' + key)
+                raise ValueError('Invalid parameter name:' + key)
             if not (isinstance(new_params[key], int) or isinstance(new_params[key], float)):
                 raise ValueError(key + ' must be of type integer or float')
             if new_params[key] < 0:
