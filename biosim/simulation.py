@@ -58,11 +58,16 @@ class BioSim:
                                   self.ymax_animals, self.img_name, self.img_fmt)
 
     def set_animal_parameters(self, species, params):
-        """
-        Set parameters for animal species.
+        """Set parameters for animal species.
+
         :param species: String, name of animal species
         :param params: Dict with valid parameter specification for species
+
+        :raises ValueError: if key is invalid, new values are less than 0,
+                            DeltaPhiMax not positive, eta not between 0 and 1
+                            or if species is not Herbivore or Carnivore.
         """
+
         for key in params:
             if key not in Carnivore.params:
                 raise KeyError('Invalid parameter name: ' + key)
@@ -82,19 +87,23 @@ class BioSim:
 
     @staticmethod
     def merge_params(params1, params2):
-        """
-        merges default parameters with wanted parameters
+        """merges default parameters with wanted parameters.
+
         :param params1: default parameters
         :param params2: wanted parameters
-        :return:
+
+        Returns dictionary with the new parameters merged in.
         """
+
         return {**params1, **params2}
 
     def set_landscape_parameters(self, landscape, params):
-        """
-        Set parameters for landscape type.
+        """Set parameters for landscape type.
+
         :param landscape: String, code letter for landscape
         :param params: Dict with valid parameter specification for landscape
+
+        :raises ValueError: if character not a legal landscape type
         """
         if landscape == 'L':
             Lowland().set_params(self.merge_params(Lowland().d_landscape, params))
@@ -104,8 +113,8 @@ class BioSim:
             raise ValueError(landscape + ' is not a legal landscape type')
 
     def simulate(self, num_years, vis_years=1, img_years=None):
-        """
-        Run simulation while visualizing the result.
+        """Run simulation while visualizing the result.
+
         :param num_years: number of years to simulate
         :param vis_years: years between visualization updates
         :param img_years: years between visualizations saved to files (default: vis_years)
@@ -139,9 +148,10 @@ class BioSim:
             self.island.annual_cycle()
 
     def add_population(self, population):
+        """Add a population to the island.
+
+        :param population: List of dictionaries specifying the population
         """
-        Add a population to the island
-        :param population: List of """
         self.island.insert_population(population)
 
     @property
@@ -151,26 +161,18 @@ class BioSim:
 
     @property
     def num_animals(self):
-        """
-        Total number of animals
-        dictionaries specifying population
-        on island.
-        """
+        """Total number of animals on the island."""
         total_num = (self.island.get_pop_info()[2] +
                      self.island.get_pop_info()[3])
         return total_num
 
     @property
     def num_animals_per_species(self):
-        """
-        Number of animals per species in island, as dictionary.
-        """
+        """Number of animals per species in island, as dictionary."""
         num_animal_dict = {'Herbivore': self.island.get_pop_info()[2],
                            'Carnivore': self.island.get_pop_info()[3]}
         return num_animal_dict
 
     def make_movie(self):
-        """
-        Create MPEG4 movie from visualization images saved.
-        """
+        """Create MPEG4 movie from visualization images saved."""
         return self._graphics.make_movie("mp4")

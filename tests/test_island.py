@@ -65,27 +65,5 @@ class TestRossumIsland:
         with pytest.raises(ValueError):
             RossumIsland('')
 
-    def test_annual_cycle(self, example_island, mocker):
-        """
-        Test that annual cycle works by checking that all animals'
-        age have increased by one after one cycle, and that their weights
-        are between 20 and 30 because they all have eaten 10 and lost less
-        than 10.
-        """
-
-        mocker.patch('random.randint', return_value=0)
-        mocker.patch('random.random', return_value=1)
-        ini_herbs = [{'loc': (6, 6),
-                      'pop': [{'species': 'Herbivore',
-                               'age': 5,
-                               'weight': 20}
-                              for _ in range(40)]}]
-        example_island.insert_population(ini_herbs)
-        example_island.annual_cycle()
-        for row in example_island.island:
-            for cell in row:
-                for herb in cell.list_herbs:
-                    assert herb.age == 6
-                    assert 30 > herb.weight > 20
 
 

@@ -118,6 +118,36 @@ def test_herbivore_eat_all_remaining_fodder():
     assert consumed_fodder == 7
 
 
+def test_consumed_herbs(mocker):
+    """
+    Test that a carnivore will eat all possible herbivores if their
+    total weight is equal or less than F. the carnivore's fitness is
+    set higher than all of the herbivores' through weight, and the chance
+    of eating is set to 100%.
+    """
+
+    mocker.patch('random.random', return_value=0)
+    herbs = [Herbivore(weight=10) for _ in range(5)]
+    c = Carnivore(5, 50)
+    killed_herbs = c.consumed_herbs(herbs)
+    assert len(killed_herbs) == 5
+
+
+def test_consumed_F_amount_of_herbs(mocker):
+    """
+    Test that a carnivore will eat all possible herbivores until the
+    carnivore has eaten an amount of F. the carnivore's fitness is
+    set higher than all of the herbivores' through weight, and the chance
+    of eating is set to 100%.
+    """
+
+    mocker.patch('random.random', return_value=0)
+    herbs = [Herbivore(weight=10) for _ in range(20)]
+    c = Carnivore(5, 50)
+    killed_herbs = c.consumed_herbs(herbs)
+    assert len(killed_herbs) == 5
+
+
 def test_weight_loss(mocker):
     """
     Test that weight_loss reduces an instance´s weight with eta * weight.
@@ -149,12 +179,12 @@ def test_error_when_negative_weight_given():
 
 
 def test_age_raise_valueerror():
-    """Test that ValueError is raised if input age is less than 0 or not int."""
+    """Test that ValueError is raised if input age is less than 0."""
 
     with pytest.raises(ValueError):
-        Animal(1.1, 20)
+        Herbivore(-1, 20)
     with pytest.raises(ValueError):
-        Animal(-1, 20)
+        Carnivore(-10, 20)
 
 
 def test_get_fitness():
@@ -178,10 +208,3 @@ def test_weight_normal_distributed():
     result_carn = normaltest(carn_weights)
     assert alpha < result_herb[1]
     assert alpha < result_carn[1]
-
-
-@pytest.mark.parametrize('set_params', [{'F': 100}], indirect=True)
-def test_consumed_herbs(set_params):
-    herbs = [Herbivore(weight=10) for _ in range(10)]
-
-    killed
