@@ -77,6 +77,7 @@ class Graphics:
         self._carn_line = None
         self._pause_ax = None
         self._pause_button = None
+        self._paused = False
 
     def update(self, year, get_stats, two_d_darray_for_pop, island_map):
         """Updates graphics with current data."""
@@ -88,14 +89,14 @@ class Graphics:
         self._update_animal_fitness(get_stats)
         self._update_animal_count(two_d_darray_for_pop, year)
         self.update_count_years(year)
-        # self._pause_button_click()
         self._fig.canvas.flush_events()  # ensure every thing is drawn
+        self._save_graphics(year)
         plt.pause(1e-20)
         # pause required to pass control to GUI
-        # while self._paused:
-        #     plt.pause(0.05)
+        while self._paused:
+            plt.pause(0.05)
         # plt.pause(1e-8)
-        self._save_graphics(year)
+
 
     def make_movie(self, movie_fmt=None):
         """
@@ -145,7 +146,7 @@ class Graphics:
 
         # create new figure window
         if self._fig is None:
-            self._fig = plt.figure()
+            self._fig = plt.figure(figsize=(10, 7))
 
         # Add left subplot for images created with imshow().
         # We cannot create the actual ImageAxis object before we know
@@ -162,31 +163,86 @@ class Graphics:
             self._carn_heat_ax.set_xticks([1, 6, 11, 16, 21])
             self._carn_heat_ax.set_title('Carnivore distribution')
 
+        # if self._animal_age_ax is None:
+        #     xmax = self._hist_specs['age']['max']
+        #     self._animal_age_ax = self._fig.add_axes([0.06, 0.07, 0.25, 0.12])
+        #     self._animal_age_img_axis = None
+        #     self._animal_age_ax.set_xticks([0, round(xmax / 4), round(xmax / 2),
+        #                                     round(xmax * 3 / 4), round(xmax / 1)])
         if self._animal_age_ax is None:
-            xmax = self._hist_specs['age']['max']
+            xmax = self._hist_specs['weight']['max']
             self._animal_age_ax = self._fig.add_axes([0.06, 0.07, 0.25, 0.12])
-            self._animal_age_img_axis = None
-            self._animal_age_ax.set_xticks([0, round(xmax / 4), round(xmax / 2),
-                                            round(xmax * 3 / 4), round(xmax / 1)])
+            self._animal_age_ax.margins(x=0)
+            self._animal_age_ax.set_title('Age')
+            bin_lims = np.arange(0.0, self._hist_specs['weight']['max'],
+                                 self._hist_specs['weight']['delta'])
+            self._animal_age_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+                                               round(xmax * 3 / 4, 2), round(xmax)])
+            self.herb_a_hist, self.carn_a_hist = self._animal_age_ax.step(bin_lims,
+                                                                             np.zeros_like(
+                                                                                 bin_lims), 'b-',
+
+                                                                             bin_lims,
+                                                                             np.zeros_like(
+                                                                                 bin_lims), 'r-')
+
+        # if self._animal_weight_ax is None:
+        #     xmax = self._hist_specs['weight']['max']
+        #     self._animal_weight_ax = self._fig.add_axes([0.37, 0.07, 0.25, 0.12])
+        #     self._animal_weight_img_axis = None
+        #     self._animal_weight_ax.set_xticks([0, round(xmax / 4), round(xmax / 2),
+        #                                        round(xmax * 3 / 4), round(xmax / 1)])
+        #     self._animal_weight_ax.set_title('Weight')
 
         if self._animal_weight_ax is None:
             xmax = self._hist_specs['weight']['max']
             self._animal_weight_ax = self._fig.add_axes([0.37, 0.07, 0.25, 0.12])
-            self._animal_weight_img_axis = None
+            self._animal_weight_ax.margins(x=0)
+            self._animal_weight_ax.set_title('Weight')
+            bin_lims = np.arange(0, self._hist_specs['weight']['max'],
+                                 self._hist_specs['weight']['delta'])
             self._animal_weight_ax.set_xticks([0, round(xmax / 4), round(xmax / 2),
                                                round(xmax * 3 / 4), round(xmax / 1)])
-            self._animal_weight_ax.set_title('Weight')
 
+            self._animal_weight_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+                                               round(xmax * 3 / 4, 2), round(xmax / 1)])
+            self.herb_w_hist, self.carn_w_hist = self._animal_weight_ax.step(bin_lims,
+                                                                             np.zeros_like(
+                                                                                 bin_lims), 'b-',
+
+                                                                             bin_lims,
+                                                                             np.zeros_like(
+                                                                                 bin_lims), 'r-',
+                                                                             where='mid')
+
+        # if self._animal_fitness_ax is None:
+        #     xmax = self._hist_specs['fitness']['max']
+        #     self._animal_fitness_ax = self._fig.add_axes([0.68, 0.07, 0.25, 0.12])
+        #     self._animal_fitness_img_axis = None
+        #     self._animal_fitness_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+        #                                         round(xmax * 3 / 4, 2), round(xmax / 1)])
         if self._animal_fitness_ax is None:
             xmax = self._hist_specs['fitness']['max']
             self._animal_fitness_ax = self._fig.add_axes([0.68, 0.07, 0.25, 0.12])
-            self._animal_fitness_img_axis = None
+            self._animal_fitness_ax.margins(x=0)
+            self._animal_fitness_ax.set_title('Fitness')
+            bin_lims = np.arange(0, self._hist_specs['fitness']['max'],
+                                 self._hist_specs['fitness']['delta'])
             self._animal_fitness_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
-                                                round(xmax * 3 / 4, 2), round(xmax / 1)])
+                                                round(xmax * 3 / 4, 2), round(xmax)])
+            self.herb_f_hist, self.carn_f_hist = self._animal_fitness_ax.step(bin_lims,
+                                                                              np.zeros_like(
+                                                                                  bin_lims), 'b-',
+
+                                                                              bin_lims,
+                                                                              np.zeros_like(
+                                                                                  bin_lims), 'r-',
+                                                                              where='mid')
 
         if self._animal_count is None:
             ymax = self._ymax_animals
-            self._animal_count = self._fig.add_axes([0.63, 0.63, 0.25, 0.3])
+            self._animal_count = self._fig.add_axes([0.63, 0.66, 0.25, 0.3])
+            self._animal_count.set_title('Animal count')
             if ymax:
                 self._animal_count.set_ylim(0, ymax)
             # else:
@@ -221,7 +277,7 @@ class Graphics:
                                          np.hstack((y_data, y_new)))
 
         if self._map_ax is None:
-            self._map_ax = self._fig.add_axes([0.06, 0.7, 0.2, 0.2])
+            self._map_ax = self._fig.add_axes([0.06, 0.7, 0.27, 0.25])
             self._map_img_axis = None
             self._map_ax.set_xticks([1, 6, 11, 16, 21])
             self._map_ax.set_title('Island')
@@ -248,26 +304,26 @@ class Graphics:
                     mpatches.Patch(edgecolor="none", label=name, facecolor=rgb_value[name[0]])
                 )
             self._map_ax.legend(
-                handles=patches, bbox_to_anchor=(0.8, 0.8, 0.9, 0.3), prop={"size": 7}
+                handles=patches, bbox_to_anchor=(0.8, 0.8, 0.57, 0.24), prop={"size": 7}
             )
 
         if self._count_years_ax is None:
             self._count_years_ax = self._fig.add_axes([0.4, 0.8, 0.2, 0.2])
             self._count_years_img_axis = None
-            self._count_years_ax.set_title('Animal count')
             self._count_years_ax.axis('off')  # turn off coordinate system
-        #
-        # if self._pause_ax is None:
-        #     self._paused = False
-        #     self._pause_ax = self._fig.add_axes([0.6, 0.10, 0.3, 0.15])
-        #     self._pause_button = Button(self._pause_ax, "Pause/Run", hovercolor="0.5")
-        #     self._pause_button.on_clicked(self._pause_button_click)
 
-    # def _pause_button_click(self, event):
-    #     if self._paused:
-    #         self._paused = False
-    #     else:
-    #         self._paused = True
+        if self._pause_ax is None:
+            self._paused = False
+            self._pause_ax = self._fig.add_axes([0.45, 0.7, 0.1, 0.1])
+            self._pause_button = Button(self._pause_ax, "Pause/Run", color="gray")
+            self._pause_button.on_clicked(self._pause_button_click)
+
+    def _pause_button_click(self, event):
+        print(event)
+        if self._paused:
+            self._paused = False
+        else:
+            self._paused = True
 
     def _update_herb_heatmap(self, two_d_array_pop):
         """Update the herbivore heatmap every year"""
@@ -306,16 +362,24 @@ class Graphics:
         hist_max = self._hist_specs['age']['max']
         num = int(hist_max / self._hist_specs['age']['delta'])
 
-        if self._animal_age_ax is not None:
-            self._animal_age_ax.clear()
-            self._animal_age_ax.set_title('Age')
-
-        self._animal_age_img_axis = self._animal_age_ax.hist(herbivore_stats, bins=num,
-                                                             range=(0, hist_max),
-                                                             histtype="step", color="b", lw=2)
-        self._animal_age_img_axis = self._animal_age_ax.hist(carnivore_stats, bins=num,
-                                                             range=(0, hist_max),
-                                                             histtype="step", color="r", lw=2)
+        self.herb_a_hist.set_ydata(np.histogram(herbivore_stats,
+                                                int(self._hist_specs['age']['max'] /
+                                                    self._hist_specs['age']['delta']),
+                                                (0, self._hist_specs['age']['max']))[0])
+        self.carn_a_hist.set_ydata(np.histogram(carnivore_stats,
+                                                int(self._hist_specs['age']['max'] /
+                                                    self._hist_specs['age']['delta']),
+                                                (0, self._hist_specs['age']['max']))[0])
+        self._animal_age_ax.set_ylim(0, 1000)
+        #     self._animal_age_ax.cla()
+        #     self._animal_age_ax.set_title('Age')
+        #
+        # self._animal_age_img_axis = self._animal_age_ax.hist(herbivore_stats, bins=num,
+        #                                                      range=(0, hist_max),
+        #                                                      histtype="step", color="b", lw=2)
+        # self._animal_age_img_axis = self._animal_age_ax.hist(carnivore_stats, bins=num,
+        #                                                      range=(0, hist_max),
+        #                                                      histtype="step", color="r", lw=2)
 
     def _update_animal_weight(self, get_stats):
         """Update the weight histogram every year"""
@@ -324,36 +388,52 @@ class Graphics:
         hist_max = self._hist_specs['weight']['max']
         num = int(hist_max / self._hist_specs['weight']['delta'])
 
-        if self._animal_weight_ax is not None:
-            self._animal_weight_ax.cla()
-            self._animal_weight_ax.set_title('weight')
+        self.herb_w_hist.set_ydata(np.histogram(herbivore_stats,
+                                                int(self._hist_specs['weight']['max'] /
+                                                    self._hist_specs['weight']['delta']),
+                                                (0, self._hist_specs['weight']['max']))[0])
+        self.carn_w_hist.set_ydata(np.histogram(carnivore_stats,
+                                                int(self._hist_specs['weight']['max'] /
+                                                    self._hist_specs['weight']['delta']),
+                                                (0, self._hist_specs['weight']['max']))[0])
+        self._animal_weight_ax.set_ylim(0, 1000)
 
-        self._animal_weight_img_axis = self._animal_weight_ax.hist(herbivore_stats, bins=num,
-                                                                   range=(0, hist_max),
-                                                                   histtype="step", color="b", lw=2)
-        self._animal_weight_img_axis = self._animal_weight_ax.hist(carnivore_stats, bins=num,
-                                                                   range=(0, hist_max),
-                                                                   histtype="step", color="r", lw=2)
+        #     self._animal_weight_ax.cla()
+        #     self._animal_weight_ax.set_title('weight')
+        #
+        # self._animal_weight_img_axis = self._animal_weight_ax.hist(herbivore_stats, bins=num,
+        #                                                            range=(0, hist_max),
+        #                                                            histtype="step", color="b", lw=2)
+        # self._animal_weight_img_axis = self._animal_weight_ax.hist(carnivore_stats, bins=num,
+        #                                                            range=(0, hist_max),
+        #                                                            histtype="step", color="r", lw=2)
 
     def _update_animal_fitness(self, get_stats):
         """Update the fitness histogram every year"""
         herbivore_stats = get_stats[4]
         carnivore_stats = get_stats[5]
-        hist_max = self._hist_specs['fitness']['max']
-        num = int(hist_max / self._hist_specs['fitness']['delta'])
-
-        if self._animal_fitness_ax is not None:
-            self._animal_fitness_ax.cla()
-            self._animal_fitness_ax.set_title('Fitness')
-
-        self._animal_fitness_img_axis = self._animal_fitness_ax.hist(herbivore_stats, bins=num,
-                                                                     range=(0, hist_max),
-                                                                     histtype="step",
-                                                                     color="b", lw=2)
-        self._animal_fitness_img_axis = self._animal_fitness_ax.hist(carnivore_stats, bins=num,
-                                                                     range=(0, hist_max),
-                                                                     histtype="step",
-                                                                     color="r", lw=2)
+        # hist_max = self._hist_specs['fitness']['max']
+        # num = int(hist_max / self._hist_specs['fitness']['delta'])
+        #     self._animal_fitness_ax.cla()
+        #     self._animal_fitness_ax.set_title('Fitness')
+        #
+        # self._animal_fitness_img_axis = self._animal_fitness_ax.hist(herbivore_stats, bins=num,
+        #                                                              range=(0, hist_max),
+        #                                                              histtype="step",
+        #                                                              color="b", lw=2)
+        # self._animal_fitness_img_axis = self._animal_fitness_ax.hist(carnivore_stats, bins=num,
+        #                                                              range=(0, hist_max),
+        #                                                              histtype="step",
+        #                                                              color="r", lw=2)
+        self.herb_f_hist.set_ydata(np.histogram(herbivore_stats,
+                                                int(self._hist_specs['fitness']['max'] /
+                                                    self._hist_specs['fitness']['delta']),
+                                                (0, self._hist_specs['fitness']['max']))[0])
+        self.carn_f_hist.set_ydata(np.histogram(carnivore_stats,
+                                                int(self._hist_specs['fitness']['max'] /
+                                                    self._hist_specs['fitness']['delta']),
+                                                (0, self._hist_specs['fitness']['max']))[0])
+        self._animal_fitness_ax.set_ylim(0, 1000)
 
     def _update_animal_count(self, two_d_array_for_pop, year):
         """Update the animal count plot every year"""
@@ -385,7 +465,7 @@ class Graphics:
     def update_count_years(self, year):
         """Counts every year wanted"""
         self._count_years_ax.cla()
-        plt.axis('off')
+        self._count_years_ax.axis('off')  # turn off coordinate system
         template = 'Years: {:5d}'
         txt = self._count_years_ax.text(0.5, 0.5, template.format(0),
                                         horizontalalignment='center',

@@ -62,10 +62,48 @@ def test_inconsistent_length():
         BioSim(island_map="WWW\nWLLW\nWWW", ini_pop=[], seed=1)
 
 
+@pytest.fixture
+def reset_animal_defaults():
+    # no setup
+    yield
+    BioSim(island_map="W", ini_pop=[], seed=1).set_animal_parameters('Herbivore',
+                                                                     {'w_birth': 8.,
+                                                                      'sigma_birth': 1.5,
+                                                                      'beta': 0.9,
+                                                                      'eta': 0.05,
+                                                                      'a_half': 40.,
+                                                                      'phi_age': 0.6,
+                                                                      'w_half': 10.,
+                                                                      'phi_weight': 0.1,
+                                                                      'mu': 0.25,
+                                                                      'gamma': 0.2,
+                                                                      'zeta': 3.5,
+                                                                      'xi': 1.2,
+                                                                      'omega': 0.4,
+                                                                      'F': 10.}
+                                                                     )
+    BioSim(island_map="W", ini_pop=[], seed=1).set_animal_parameters('Carnivore',
+                                                                     {'w_birth': 6.,
+                                                                      'sigma_birth': 1.0,
+                                                                      'beta': 0.75,
+                                                                      'eta': 0.125,
+                                                                      'a_half': 40.,
+                                                                      'phi_age': 0.3,
+                                                                      'w_half': 4.,
+                                                                      'phi_weight': 0.4,
+                                                                      'mu': 0.4,
+                                                                      'gamma': 0.8,
+                                                                      'zeta': 3.5,
+                                                                      'xi': 1.1,
+                                                                      'omega': 0.8,
+                                                                      'F': 50.,
+                                                                      'DeltaPhiMax': 10.})
+
+
 @pytest.mark.parametrize('species, extra',
                          [('Herbivore', {}),
                           ('Carnivore', {'DeltaPhiMax': 0.5})])
-def test_set_param_animals(species, extra):
+def test_set_param_animals(reset_animal_defaults, species, extra):
     """Parameters can be set on animal classes"""
 
     params = {'w_birth': 8.,
@@ -87,10 +125,17 @@ def test_set_param_animals(species, extra):
     BioSim(island_map="W", ini_pop=[], seed=1).set_animal_parameters(species, params)
 
 
+@pytest.fixture
+def reset_landscape_defaults():
+    # no setup
+    yield
+    BioSim(island_map="W", ini_pop=[], seed=1).set_landscape_parameters('L', {'f_max': 800.0})
+    BioSim(island_map="W", ini_pop=[], seed=1).set_landscape_parameters('H', {'f_max': 300.0})
+
 @pytest.mark.parametrize('lscape, params',
                          [('L', {'f_max': 100.}),
                           ('H', {'f_max': 200.})])
-def test_set_param_landscape(lscape, params):
+def test_set_param_landscape(reset_landscape_defaults, lscape, params):
     """Parameters can be set on landscape classes"""
 
     BioSim(island_map="W", ini_pop=[], seed=1).set_landscape_parameters(lscape, params)
@@ -144,9 +189,9 @@ def test_multi_simulate(plain_sim):
 def test_get_years(plain_sim):
     """Test that number of years simulated is available"""
 
-    plain_sim.simulate(num_years=2, vis_years=100 , img_years=100)
+    plain_sim.simulate(num_years=2, vis_years=100, img_years=100)
     assert plain_sim.year == 2
-    plain_sim.simulate(num_years=3, vis_years=100 , img_years=100)
+    plain_sim.simulate(num_years=3, vis_years=100, img_years=100)
     assert plain_sim.year == 5
 
 
