@@ -28,7 +28,7 @@ class Animal:
             :type weight: float
 
             :raises ValueError: if age is 0 or not of type int,
-                            or weight is less than or equal to 0
+                                or weight is less than or equal to 0
         """
 
         self.age = age

@@ -167,8 +167,7 @@ class Graphics:
         if self._animal_fitness_ax is None:
             self.setup_hist_fitness()
 
-        if self._animal_count_ax is None:
-            self.setup_animal_count(final_year)
+        self.setup_animal_count(final_year)
 
         if self._map_ax is None:
             self.setup_map(island_map)
@@ -218,12 +217,14 @@ class Graphics:
         )
 
     def setup_animal_count(self, final_year):
-        self._animal_count_ax = self._fig.add_axes([0.63, 0.66, 0.25, 0.3])
-        self._animal_count_ax.set_title('Animal count')
-        self._animal_count_ax.set_xlim(0, final_year + 1)
+        if self._animal_count_ax is None:
+            ymax = self._ymax_animals
+            self._animal_count_ax = self._fig.add_axes([0.63, 0.66, 0.25, 0.3])
+            self._animal_count_ax.set_title('Animal count')
+            if ymax:
+                self._animal_count_ax.set_ylim(0, ymax)
 
-        if self._ymax_animals:
-            self._animal_count_ax.set_ylim(0, self._ymax_animals)
+        self._animal_count_ax.set_xlim(0, final_year + 1)
 
         if self._herb_line is None:
             herbivore_plot = self._animal_count_ax.plot(np.arange(0, final_year + 1),
@@ -237,6 +238,7 @@ class Graphics:
                 y_new = np.full(x_new.shape, np.nan)
                 self._herb_line.set_data(np.hstack((x_data, x_new)),
                                          np.hstack((y_data, y_new)))
+
         if self._carn_line is None:
             carnivore_plot = self._animal_count_ax.plot(np.arange(0, final_year + 1),
                                                         np.full(final_year + 1, np.nan), 'r', lw=2)
@@ -257,8 +259,6 @@ class Graphics:
         self._animal_fitness_ax.set_title('Fitness')
         bin_lims = np.arange(0, self._hist_specs['fitness']['max'],
                              self._hist_specs['fitness']['delta'])
-        self._animal_fitness_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
-                                            round(xmax * 3 / 4, 2), round(xmax)])
         self.herb_f_hist, self.carn_f_hist = self._animal_fitness_ax.step(bin_lims,
                                                                           np.zeros_like(
                                                                               bin_lims), 'b-',
@@ -267,6 +267,8 @@ class Graphics:
                                                                           np.zeros_like(
                                                                               bin_lims), 'r-',
                                                                           where='mid')
+        self._animal_fitness_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+                                            round(xmax * 3 / 4, 2), xmax])
 
     def setup_hist_weight(self):
         xmax = self._hist_specs['weight']['max']
@@ -274,8 +276,6 @@ class Graphics:
         self._animal_weight_ax.margins(x=0)
         self._animal_weight_ax.set_title('Weight')
         bin_lims = np.arange(0, xmax, self._hist_specs['weight']['delta'])
-        self._animal_weight_ax.set_xticks([0, round(xmax / 4), round(xmax / 2),
-                                           round(xmax * 3 / 4), round(xmax / 1)])
         self.herb_w_hist, self.carn_w_hist = self._animal_weight_ax.step(bin_lims,
                                                                          np.zeros_like(
                                                                              bin_lims), 'b-',
@@ -284,6 +284,9 @@ class Graphics:
                                                                          np.zeros_like(
                                                                              bin_lims), 'r-',
                                                                          where='mid')
+        #xticks needs to be called after step so the x axis has the right values
+        self._animal_weight_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+                                           round(xmax * 3 / 4, 2), xmax])
 
     def setup_hist_age(self):
         xmax = self._hist_specs['weight']['max']
@@ -292,8 +295,6 @@ class Graphics:
         self._animal_age_ax.set_title('Age')
         bin_lims = np.arange(0.0, self._hist_specs['weight']['max'],
                              self._hist_specs['weight']['delta'])
-        self._animal_age_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
-                                        round(xmax * 3 / 4, 2), round(xmax)])
         self.herb_a_hist, self.carn_a_hist = self._animal_age_ax.step(bin_lims,
                                                                       np.zeros_like(
                                                                           bin_lims), 'b-',
@@ -301,6 +302,8 @@ class Graphics:
                                                                       bin_lims,
                                                                       np.zeros_like(
                                                                           bin_lims), 'r-')
+        self._animal_age_ax.set_xticks([0, round(xmax / 4, 2), round(xmax / 2, 2),
+                                        round(xmax * 3 / 4, 2), xmax])
 
     def setup_carn_heatmap(self):
         self._carn_heat_ax = self._fig.add_axes([0.6, 0.25, 0.35, 0.35])
