@@ -1,7 +1,7 @@
 import random
 from .graphics import Graphics
 from matplotlib.widgets import Button
-from biosim.RossumIsland import RossumIsland
+from biosim.Island import RossumIsland
 from biosim.animals import Herbivore, Carnivore
 from biosim.landscape import Lowland, Highland
 

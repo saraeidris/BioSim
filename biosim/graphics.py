@@ -87,7 +87,7 @@ class Graphics:
         self._update_animal_age(get_stats)
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
-        self._update_animal_count(two_d_darray_for_pop, year, final_step)
+        self._update_animal_count(two_d_darray_for_pop, year)
         self.update_map(island_map)
         self.update_count_years(year)
         # self._pause_button_click()
@@ -187,40 +187,13 @@ class Graphics:
                                                 round(xmax * 3 / 4, 2), round(xmax / 1)])
 
         if self._animal_count is None:
-            ymax = self._ymax_animals
+
             self._animal_count = self._fig.add_axes([0.63, 0.63, 0.25, 0.3])
-            if ymax:
-                self._animal_count.set_ylim(0, ymax)
-            else:
-                self._animal_count.set_ylim(0, 15500)
+
 
         self._animal_count.set_xlim(0, final_step + 1)
 
-        if self._herb_line is None:
-            herbivore_plot = self._animal_count.plot(np.arange(0, final_step + 1),
-                                                     np.full(final_step + 1, np.nan), 'b', lw=2)
-            self._herb_line = herbivore_plot[0]
 
-        else:
-            x_data, y_data = self._herb_line.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_step + 1)
-            if len(x_new) > 0:
-                y_new = np.full(x_new.shape, np.nan)
-                self._herb_line.set_data(np.hstack((x_data, x_new)),
-                                         np.hstack((y_data, y_new)))
-
-        if self._carn_line is None:
-            carnivore_plot = self._animal_count.plot(np.arange(0, final_step + 1),
-                                                     np.full(final_step + 1, np.nan), 'r', lw=2)
-            self._carn_line = carnivore_plot[0]
-
-        else:
-            x_data, y_data = self._carn_line.get_data()
-            x_new = np.arange(x_data[-1] + 1, final_step + 1)
-            if len(x_new) > 0:
-                y_new = np.full(x_new.shape, np.nan)
-                self._carn_line.set_data(np.hstack((x_data, x_new)),
-                                         np.hstack((y_data, y_new)))
 
         if self._map_ax is None:
             self._map_ax = self._fig.add_axes([0.06, 0.7, 0.2, 0.2])
@@ -331,8 +304,9 @@ class Graphics:
                                                                      range=(0, hist_max),
                                                                      histtype="step", color="r", lw=2)
 
-    def _update_animal_count(self, two_d_array_for_pop, year, final_step):
+    def _update_animal_count(self, two_d_array_for_pop, year):
         """Update the animal count plot every year"""
+        ymax = self._ymax_animals
         herbivore_stats = two_d_array_for_pop[2]
         carnivore_stats = two_d_array_for_pop[3]
         herb_data = self._herb_line.get_ydata()
@@ -341,6 +315,11 @@ class Graphics:
         carn_data[year] = carnivore_stats
         self._herb_line.set_ydata(herb_data)
         self._carn_line.set_ydata(carn_data)
+        if ymax:
+            self._animal_count.set_ylim(0, ymax)
+        else:
+            self._animal_count.set_ylim(0, herb_data)
+
 
     def update_map(self, island_map):
 

@@ -1,6 +1,6 @@
 import pytest
 import textwrap
-from biosim.RossumIsland import RossumIsland
+from biosim.Island import RossumIsland
 
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
