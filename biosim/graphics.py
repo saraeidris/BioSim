@@ -96,8 +96,6 @@ class Graphics:
         # pause required to pass control to GUI
         while self._paused:
             plt.pause(0.05)
-        # plt.pause(1e-8)
-
 
     def make_movie(self, movie_fmt=None):
         """
@@ -182,7 +180,7 @@ class Graphics:
     def setup_pause_button(self):
         self._paused = False
         self._pause_ax = self._fig.add_axes([0.45, 0.7, 0.1, 0.1])
-        self._pause_button = Button(self._pause_ax, "Pause/Run", color="gray")
+        self._pause_button = Button(self._pause_ax, "Pause", color="red", hovercolor="pink")
         self._pause_button.on_clicked(self._pause_button_click)
 
     def setup_count_years(self):
@@ -227,7 +225,7 @@ class Graphics:
 
         if self._herb_line is None:
             herbivore_plot = self._animal_count_ax.plot(np.arange(0, final_year + 1),
-                                                        np.full(final_year + 1, np.nan), 'b', lw=2)
+                                                        np.full(final_year + 1, np.nan), 'b.', lw=2)
             self._herb_line = herbivore_plot[0]
 
         else:
@@ -239,7 +237,7 @@ class Graphics:
                                          np.hstack((y_data, y_new)))
         if self._carn_line is None:
             carnivore_plot = self._animal_count_ax.plot(np.arange(0, final_year + 1),
-                                                        np.full(final_year + 1, np.nan), 'r', lw=2)
+                                                        np.full(final_year + 1, np.nan), 'r.', lw=2)
             self._carn_line = carnivore_plot[0]
 
         else:
@@ -318,8 +316,14 @@ class Graphics:
         print(event)
         if self._paused:
             self._paused = False
+            self._pause_button.label.set_text("Pause")
+            self._pause_button.color = 'red'
+            self._pause_button.hovercolor = 'pink'
         else:
             self._paused = True
+            self._pause_button.label.set_text("Run")
+            self._pause_button.color = 'green'
+            self._pause_button.hovercolor = 'lightgreen'
 
     def _update_herb_heatmap(self, two_d_array_pop):
         """Update the herbivore heatmap every year"""
