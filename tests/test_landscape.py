@@ -6,7 +6,7 @@ from scipy.stats import chisquare
 
 random.seed(123456)
 
-"""Various tests made for the Landscape Class."""
+"""Various tests made for the Landscape class."""
 
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
@@ -96,7 +96,8 @@ class TestLandscape:
         assert d.fodder == 0
 
     def test_fodder_values_highland_lowland(self, lowland, highland):
-        """
+        """Test fodder values in Lowland and Highland.
+
         Test that fodder values in highland and lowland are 0, and that
         fodder values get updated to 300 and 800 when update_fodder is called.
         """
@@ -127,7 +128,7 @@ class TestLandscape:
 
         l = lowland
         h = highland
-        with pytest.raises(KeyError):
+        with pytest.raises(ValueError):
             l.set_params({'f_min': 1000})
         with pytest.raises(ValueError):
             h.set_params({'f_max': -5})
@@ -147,7 +148,8 @@ class TestLandscape:
         assert lowland.list_carns == list_carns2
 
     def test_migration_with_chi_squared(self, lowland, highland, desert, mocker):
-        """
+        """Test that migration is randomly to the 4 neighbour cells.
+
         Statistical test to check that animals choose to migrate to each
         neighbour cell with the same probability (25% each if cells are not water).
         """
@@ -160,8 +162,6 @@ class TestLandscape:
         desert.list_herbs = [Herbivore() for _ in range(1000)]
         cells_around = (c1, c2, c3, c4)
         desert.migrate_all(cells_around)
-
-        assert len(desert.list_herbs) == 0
 
         move_herbs = desert.move_herbs
         expected = [250, 250, 250, 250]

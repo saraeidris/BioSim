@@ -5,40 +5,36 @@ __email__ = "said@nmbu.no & thon@nmbu.no"
 
 
 class Landscape:
-    """
-    Baseclass for landscape types that may contain herbivore or carnivore.
+    """Baseclass for landscape types that may contain herbivore or carnivore.
+
+    Attributes:
+        list_herbs: list
+            List of all herbivores in the cell
+        list_carns: list
+            List of all carnivores in the cell
+        fodder: int
+            Initial amount of fodder in the landscape type.
+        move_herbs: list
+            List with 4 list to store herbivores going to the north, south,
+            east and west neighbour cell respectively.
+        move_carns: list
+            List with 4 list to store carnivores going to the north, south,
+            east and west neighbour cell respectively.
     """
 
-    """
-           :param sys_size:  system size, e.g. (5, 10)
-           :type sys_size: (int, int)
-           :param noise: noise level
-           :type noise: float
-           :param seed: random generator seed
-           :type seed: int
-           :param img_dir: directory for image files; no images if None
-           :type img_dir: str
-           :param img_name: beginning of name for image files
-           :type img_name: str
-           :param img_fmt: image file format suffix
-           :type img_fmt: str
-
-           .. note:: For default values for img_* parameters, see :mod:`randvis.graphics`.
-           """
     d_landscape = None
 
     @classmethod
     def set_params(cls, new_params):
-        """
-        Overrides default params.
-        :raises ValueError: if key not an integer, invalid parameter
-                            name or fodder value is negative
-        :param new_params: new input params
+        """Overrides default parameters.
+
+        :param new_params: new input parameters
 
         :raises ValueError: if key not an original key in landscape parameters,
                             new value not an integer or float or if fodder
                             value is negative.
         """
+
         for key in new_params:
             if key not in cls.d_landscape:
                 raise ValueError('Invalid parameter name:' + key)
@@ -56,16 +52,20 @@ class Landscape:
         self.move_herbs = [[], [], [], []]
         self.move_carns = [[], [], [], []]
 
-    def update_fodder(self):
-        pass
-
     @staticmethod
     def is_habitable():
         return True
 
-    def eat_all(self):
+    def update_fodder(self):
+        """Updates fodder value each year.
+
+        Is overridden in landscape type Lowland and Highland.
         """
-        Iterates over all animals and check if they eat.
+
+        self.fodder = 0
+
+    def eat_all(self):
+        """Feed all animals in the cell.
 
         Herbivores eats in random order.
         Carnivores eats in order based on fitness. In the end,
@@ -92,8 +92,10 @@ class Landscape:
             self.list_herbs = sorted_herbs
 
     def migrate_all(self, cells_around):
-        """
-        Calls :meth: 'migrate()' and checks if animal migrate, puts animal in right list
+        """Decide what neighbour cell the animal will migrate to if it migrates.
+
+        Calls :meth: 'migrate()' and checks if animal migrate, then puts animal
+        in right list for later migration if the chosen cell is not of type water.
 
         :param cells_around: the cell north, south, east and west of the current cell
         """
@@ -124,11 +126,13 @@ class Landscape:
             self.list_carns = carns_stay
 
     def give_birth(self):
-        """
+        """Appends all the offsprings to the cell population for animals that give birth.
+
         Calls :meth: 'mate()' and checks if animal gets offspring, puts offspring into new list
 
         Animals give birth to an offspring of the same specie if mate method is fulfilled.
         """
+
         if len(self.list_herbs) > 1:
             offspring_herbs = []
             for herb in self.list_herbs:
@@ -145,7 +149,7 @@ class Landscape:
             self.list_carns.extend(offspring_carns)
 
     def ages(self):
-        """Species ages by one year each year"""
+        """Species ages by one year each year."""
 
         for animal in (self.list_herbs + self.list_carns):
             animal.aging()
@@ -157,8 +161,7 @@ class Landscape:
         self.list_carns = [animal for animal in self.list_carns if not animal.dies()]
 
     def lose_weight(self, pyvid=False):
-        """
-        Calls the weight_loss method on all animals in the cell.
+        """Calls the weight_loss method on all animals in the cell.
 
         :param pyvid: True if this is a year with pyvid (Pythonvirus disease).
         """
@@ -167,64 +170,52 @@ class Landscape:
             animal.weight_loss(pyvid, len(self.list_herbs + self.list_carns))
 
     def set_fodder(self, fodder):
-        """ Sets fodder """
+        """Sets new fodder value."""
+
         self.fodder = fodder
 
-    def get_population(self):
-        """
-        Returns of herbivores and carnivores as a tuple.
-        """
-
-        return len(self.list_herbs), len(self.list_carns)
-
-    def get_animals(self):
-        """
-        Returns list with all herbivores, carnivores and both together
-        """
-        return self.list_herbs, self.list_carns, self.list_herbs + self.list_carns
-
     def is_populated(self):
+        """checks if the cell is populated.
+
+        Returns True if cell is populated.
         """
-        Returns number of total animals
-        """
+
         return len(self.list_herbs + self.list_carns) > 0
 
     def get_herb_fitness(self):
-        """
-        Returns fitness for all herbivores
-        """
+        """Returns fitness of all herbivores in the cell as list."""
+
         return [herb.get_fitness() for herb in self.list_herbs]
 
     def get_carn_fitness(self):
-        """
-        Returns fitness for all carnivores
-        """
+        """Returns fitness of all carnivores in the cell as list."""
+
         return [carn.get_fitness() for carn in self.list_carns]
 
     def get_herb_age(self):
+        """Returns age of all herbivores in the cell as list."""
+
         return [herb.age for herb in self.list_herbs]
 
     def get_carn_age(self):
-        """
-        Returns age for all carnivores
-        """
+        """Returns age of all carnivores in the cell as list."""
+
         return [carn.age for carn in self.list_carns]
 
     def get_herb_weight(self):
-        """
-        Returns weight for all herbivores
-        """
+        """Returns weight of all herbivores in the cell as list."""
+
         return [herb.weight for herb in self.list_herbs]
 
     def get_carn_weight(self):
-        """
-        Returns weight for all carnivores as a list.
-        """
+        """Returns weight of all carnivores in the cell as a list."""
+
         return [carn.weight for carn in self.list_carns]
 
 
 class Water(Landscape):
     """Subclass for Landscape, water is not habitable for animals."""
+
     pass
 
     @staticmethod
@@ -234,6 +225,7 @@ class Water(Landscape):
 
 class Desert(Landscape):
     """Subclass for Landscape, habitable for animals, but contains no fodder."""
+
     pass
 
 
@@ -246,22 +238,20 @@ class Highland(Landscape):
         super().__init__()
 
     def update_fodder(self):
-        """
-        Updates fodder, used to update fodder each year. Overrides method in Landscape.
-        """
+        """Updates fodder to default value each year."""
 
         self.fodder = self.d_landscape['f_max']
 
 
 class Lowland(Landscape):
-    """Habitable for animals, and contains a fixed amount of fodder """
+    """Habitable for animals, and contains a fixed amount of fodder."""
+
     d_landscape = {'f_max': 800}
 
     def __init__(self):
         super().__init__()
 
     def update_fodder(self):
-        """
-        Updates fodder, used to update fodder each year. Overrides method in Landscape.
-        """
+        """Updates fodder to default value each year."""
+
         self.fodder = self.d_landscape['f_max']

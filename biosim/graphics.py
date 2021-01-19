@@ -368,7 +368,7 @@ class Graphics:
 
         ymax = self._ymax_animals
         if not ymax:
-            self._animal_count.set_ylim(0, (max(herb_data) + carn_data[year]) + 500)
+            self._animal_count.set_ylim(0, (max(herb_data)*1.1 + 500))
 
         color = {'H': (0.0, 0.0, 1.0),
                  'C': (1.0, 0.0, 0.0)}
