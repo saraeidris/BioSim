@@ -2,6 +2,16 @@ import textwrap
 
 from biosim.simulation import BioSim
 
+"""
+Check if migration works for both herbivores and carnivores in a 
+square island where chance of migration is nearly 100% and the 
+wanted fodder and chance of dying is set to 0 for both species.
+"""
+
+__author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
+__email__ = "said@nmbu.no & thon@nmbu.no"
+
+
 if __name__ == "__main__":
 
     geogr = """\

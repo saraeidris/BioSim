@@ -5,6 +5,7 @@ import random
 __author__ = "Sara Idris & Thorbjørn L Onsaker, NMBU"
 __email__ = "said@nmbu.no & thon@nmbu.no"
 
+
 class RossumIsland:
     def __init__(self, island_map, disease=False):
 
