@@ -28,7 +28,8 @@ class Animal:
                         randomly distributed weight if None
         :type weight: float
 
-        :raises ValueError: if age is 0 or weight is less than or equal to 0
+        :raises ValueError: if age is 0 or not of type int,
+                            or weight is less than or equal to 0
         """
 
         self.age = age
@@ -173,7 +174,7 @@ class Carnivore(Animal):
                 p = ((self.get_fitness() - herb.get_fitness()) / self.params['DeltaPhiMax'])
             else:
                 p = 1
-            if random.random() <= p:
+            if random.random() < p:
                 if wanted_food < herb.weight:
                     self.weight += self.params['beta'] * wanted_food
                     killed_herbs.append(herb)

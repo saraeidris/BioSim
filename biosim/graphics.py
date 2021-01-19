@@ -28,11 +28,18 @@ class Graphics:
 
     def __init__(self, hist_specs, cmax, ymax_animals, img_name=None, img_fmt='png'):
         """
+        :param hist_specs: properties for histograms for both species
+        :type hist_specs: dict
+        :param cmax: color-code limits for animal density
+        :type cmax: dict
+        :param ymax_animals: number specifying y-axis for graph showing animal count
+        :type ymax_animals: int
         :param img_name: beginning of name for image files
         :type img_name: str
         :param img_fmt: image file format suffix, default 'png'
         :type img_fmt: str
         """
+
         if img_name is None:
             img_name = _DEFAULT_GRAPHICS_NAME
 
