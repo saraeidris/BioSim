@@ -57,18 +57,25 @@ class Animal:
 
         .. math::
 
-        \begin{equation}
-        \Phi= (q^{+}*(a, a_{\frac{1}{2}}, \phi_{age})) * (q^{-}*(w, w_{1/2}, \phi_{weight}))
-        \end{equation}
+            \begin{equation}
+            \Phi
+            \begin{cases}
+            0 & w \leq 0 \\
+            q^{+}(a, a_{\frac{1}{2}}, \phi_{age}) \times (q^{-}(w, w_{1/2}, \phi_{weight})) & else
+            \end{cases}
+            \end{equation}
 
         where
 
-        .. math:: \begin{equation} \label{eq1}
-        q^{\pm}(x, x_{\frac{1}{2}}, \phi) = \frac{1}{1+\exp{\pm}(x-x_{\frac{1}{2}})}
-        \end{equation}
+        .. math::
+
+            \begin{equation}
+            q^{\pm}(x, x,_{\frac{1}{2}}, \phi) = \frac{1}{1+e^{\pm}\phi(x-x_{\frac{1}{2}})}
+            \end{equation}
 
         Returns Current fitness for specie.
         """
+
         if self.weight <= 0:
             return 0
         else:
@@ -166,6 +173,16 @@ class Carnivore(Animal):
     def consumed_herbs(self, herb_sorted):
         """
         Decides whether a carnivore kills and eat a herbivore.
+
+        .. math::
+            \begin{equation}
+            p =
+            \begin{cases}
+            0 & if  \Phi_{carn} \leq \Phi_{herb} \\
+            \frac{\Phi_{carn}-\Phi_{herb}}{\Delta\Phi_{max}}& if  0 < \Phi_{carn}-\Phi_{herb} < \Delta\Phi_{max} \\
+            1 & otherwise.
+            \end{cases}
+            \end{equation}
 
         :param herb_sorted: Herbivores sorted by fitness from low to high
         Returns list of killed herbs
