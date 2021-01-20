@@ -21,7 +21,7 @@ class Animal:
 
     def __init__(self, age=0, weight=None):
         """
-        Attributes:
+        .. attributes::
             :param age:  age of animal; age 0 if None.
             :type age: int
             :param weight:  weight of animal; randomly normal distributed weight if None
@@ -54,7 +54,7 @@ class Animal:
 
     def get_fitness(self):
         """Calculate fitness for specie.
-        ..math:: a = (3^3 + 3^4)/2
+        .. math:: 3^3
         Returns Current fitness for specie
         """
         if self.weight <= 0:
