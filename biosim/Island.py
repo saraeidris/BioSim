@@ -7,18 +7,19 @@ __email__ = "said@nmbu.no & thon@nmbu.no"
 
 
 class RossumIsland:
-    """Class for the full ecosystem on the island.
+    """Class for the full ecosystem on the island."""
 
+    island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
+
+    def __init__(self, island_map, disease=False):
+        """
         island_map: string
             Multi-line string with letters representing cells on the island
         disease: bool
             True if the chance for diseases are turned on for the simulation
         :raises ValueError: if no island map is given, rows in island are not
         of the same length or if island is not surrounded by water.
-    """
-    island_dict = {'W': Water, 'D': Desert, 'L': Lowland, 'H': Highland}
-
-    def __init__(self, island_map, disease=False):
+        """
 
         self.disease = disease
 
