@@ -177,7 +177,7 @@ class Landscape:
     def is_populated(self):
         """checks if the cell is populated.
 
-        Returns True if cell is populated.
+        :returns: True if cell is populated.
         """
 
         return len(self.list_herbs + self.list_carns) > 0

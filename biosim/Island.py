@@ -46,7 +46,7 @@ class RossumIsland:
     def splits(line, island_dict):
         """Turns characters into landscape objects and splits string into list.
 
-        Returns current fitness for specie
+        :returns: current fitness for specie
         :raises ValueError: if character not a part of the island dictionary.
         """
 
@@ -88,8 +88,8 @@ class RossumIsland:
     def get_pop_info(self):
         """Get the population density and total sum of animals for each species.
 
-        :return: tuple with 2 dimensional array for herbivore and carnivore
-        density and total number of herbivores and carnivores on the island.
+        :returns: tuple with 2 dimensional array for herbivore and carnivore
+                    density and total number of herbivores and carnivores on the island.
         """
         herb_array = [[len(cell.list_herbs) for cell in row] for row in self.island]
         carn_array = [[len(cell.list_carns) for cell in row] for row in self.island]
@@ -100,8 +100,8 @@ class RossumIsland:
     def get_stats(self):
         """Get weight, age and fitness for plotting.
 
-        :return: tuple with 6 lists containing weights, fitness and ages for
-         all herbivores and carnivores on the island.
+        :returns: tuple with 6 lists containing weights, fitness and ages for
+                    all herbivores and carnivores on the island.
         """
 
         age_herbs, age_carns = [], []
@@ -121,7 +121,7 @@ class RossumIsland:
     def pyvid(self):
         """checks if pyvid (Pythonvirus disease) occurs or not.
 
-        :return: True if pyvid occurs in current year.
+        :returns: True if pyvid occurs in current year.
         """
 
         return random.randint(1, 30) == 1

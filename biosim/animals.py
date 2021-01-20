@@ -15,6 +15,7 @@ class Animal:
         """Overrides animal parameters.
 
         :param new_params: new input parameters
+
         """
 
         cls.params.update(new_params)
@@ -29,11 +30,13 @@ class Animal:
             :raises ValueError: if age is 0 or not of type int,
                                 or weight is less than or equal to 0
         Animals are born with weight
+
         .. math::
 
             \begin{equation}
             w \sim N(w_{birth} + \sigma_{birth})
             \end{equation}
+
         """
 
         self.age = age
@@ -59,6 +62,7 @@ class Animal:
         r"""Calculate fitness for specie.
 
         The animals' fitness is calculated with the following formula:
+
         .. math::
 
             \begin{equation}
@@ -85,7 +89,8 @@ class Animal:
             0 \leq 0 \Phi \leq 1.
             \end{equation}
 
-        Returns Current fitness for specie.
+        :returns: Current fitness for specie.
+
         """
 
         if self.weight <= 0:
@@ -122,6 +127,9 @@ class Animal:
     def dies(self):
         r"""Decide whether the specie dies or not.
 
+        Animals die with certainty if its weight is w = 0.
+        Otherwise, the probability for death is
+
         .. math::
 
             \begin{equation}
@@ -137,11 +145,15 @@ class Animal:
     def mate(self, n):
         r"""Decide whether a specie gets an offspring or not.
 
+        The probability to give birth to an offspring in a year
+
         .. math::
 
             \begin{equation}
             min(1, \gamma \times \Phi \times (N-1))
             \end{equation}
+
+        The probability is also 0 if the weight is
 
         .. math::
 
@@ -150,7 +162,7 @@ class Animal:
             \end{equation}
 
         :param n: number of animals of the same specie
-        returns an offspring of the same specie if instance give birth
+        :returns: an offspring of the same specie if instance give birth
         """
 
         if self.weight < self.params['zeta'] * (self.params['w_birth'] +
@@ -176,7 +188,7 @@ class Herbivore(Animal):
         """Decide how much fodder a herbivore eats and adds the gained weight.
 
         :param available_fodder: Amount of available fodder left in current cell
-        Returns fodder left in current cell
+        :returns: fodder left in current cell
         """
 
         if available_fodder >= 0:
@@ -200,6 +212,7 @@ class Carnivore(Animal):
         r"""Decides whether a carnivore kills and eat a herbivore.
 
         Carnivores will kill a herbivore with probability
+
         .. math::
 
             \begin{equation}
@@ -213,7 +226,7 @@ class Carnivore(Animal):
             \end{equation}
 
         :param herb_sorted: Herbivores sorted by fitness from low to high
-        Returns list of killed herbs
+        :returns: list of killed herbs
         """
 
         wanted_food = self.params['F']
