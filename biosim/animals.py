@@ -20,8 +20,7 @@ class Animal:
         cls.params.update(new_params)
 
     def __init__(self, age=0, weight=None):
-        """
-        .. attributes::
+        r"""
             :param age:  age of animal; age 0 if None.
             :type age: int
             :param weight:  weight of animal; randomly normal distributed weight if None
@@ -29,6 +28,12 @@ class Animal:
 
             :raises ValueError: if age is 0 or not of type int,
                                 or weight is less than or equal to 0
+
+        .. math::
+
+            \begin{equation}
+            w \sim N(w_{birth} + \sigma_{birth})
+            \end{equation}
         """
 
         self.age = age
@@ -73,6 +78,14 @@ class Animal:
             q^{\pm}(x, x,_{\frac{1}{2}}, \phi) = \frac{1}{1+e^{\pm}\phi(x-x_{\frac{1}{2}})}
             \end{equation}
 
+        Note that
+
+        .. math::
+
+            \begin{equation}
+            0 \leq 0 \Phi \leq 1.
+            \end{equation}
+
         Returns Current fitness for specie.
         """
 
@@ -109,9 +122,11 @@ class Animal:
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
-        """
+        r"""
         Decide whether the specie dies or not.
+
         .. math::
+
             \begin{equation}
             \omega(1-\Phi)
             \end{equation}
@@ -123,8 +138,20 @@ class Animal:
                                       self.params['omega'] * (1 - self.get_fitness()))
 
     def mate(self, n):
-        """
+        r"""
         Decide whether a specie gets an offspring or not.
+
+        .. math::
+
+            \begin{equation}
+            min(1, \gamma \times \Phi \times (N-1))
+            \end{equation}
+
+        .. math::
+
+            \begin{equation}
+            w < \zeta (w_{birth} + \sigma_{birth})
+            \end{equation}
 
         :param n: number of animals of the same specie
         returns an offspring of the same specie if instance gave birth
@@ -175,10 +202,11 @@ class Carnivore(Animal):
               'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
     def consumed_herbs(self, herb_sorted):
-        """
+        r"""
         Decides whether a carnivore kills and eat a herbivore.
 
         .. math::
+
             \begin{equation}
             p =
             \begin{cases}
