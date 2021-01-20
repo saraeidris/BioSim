@@ -140,7 +140,8 @@ class Graphics:
 
     def setup(self, final_year, img_years, island_map):
         """Prepare graphics."""
-
+        island_row_length = len(island_map.splitlines()[0])
+        island_col_length = len(island_map.splitlines())
         self._img_years = img_years
 
         # create new figure window
@@ -190,7 +191,6 @@ class Graphics:
     def setup_map(self, island_map):
         self._map_ax = self._fig.add_axes([0.06, 0.7, 0.27, 0.25])
         self._map_img_axis = None
-        self._map_ax.set_xticks([1, 6, 11, 16, 21])
         self._map_ax.set_title('Island')
         self._map_ax.axis('off')
         #                   R    G    B
@@ -201,18 +201,17 @@ class Graphics:
         map_rgb = [[rgb_value[column] for column in row]
                    for row in island_map.splitlines()]
         self._map_ax.imshow(map_rgb)
-        self._map_ax.set_xticks(range(len(map_rgb[0])))
-        self._map_ax.set_xticklabels(range(1, 1 + len(map_rgb[0])))
-        self._map_ax.set_yticks(range(len(map_rgb)))
-        self._map_ax.set_yticklabels(range(1, 1 + len(map_rgb)))
         patches = []
         for name in ("Water", "Lowland", "Highland", "Desert"):
             patches.append(
                 mpatches.Patch(edgecolor="none", label=name, facecolor=rgb_value[name[0]])
             )
         self._map_ax.legend(
-            handles=patches, bbox_to_anchor=(0.8, 0.8, 0.57, 0.24), prop={"size": 7}
-        )
+            handles=patches, bbox_to_anchor=(0.8, 0.8, 0.57, 0.24), prop={"size": 7})
+        self._map_ax.set_xticks(range(len(map_rgb[0])))
+        self._map_ax.set_xticklabels(range(1, 1 + len(map_rgb[0])))
+        self._map_ax.set_yticks(range(len(map_rgb)))
+        self._map_ax.set_yticklabels(range(1, 1 + len(map_rgb)))
 
     def setup_animal_count(self, final_year):
         if self._animal_count_ax is None:
@@ -306,13 +305,13 @@ class Graphics:
     def setup_carn_heatmap(self):
         self._carn_heat_ax = self._fig.add_axes([0.6, 0.25, 0.35, 0.35])
         self._carn_img_axis = None
-        self._carn_heat_ax.set_xticks([1, 6, 11, 16, 21])
+        # self._carn_heat_ax.set_xticks([1, 6, 11, 16, 21])
         self._carn_heat_ax.set_title('Carnivore distribution')
 
     def setup_herb_heatmap(self):
         self._herb_heat_ax = self._fig.add_axes([0.06, 0.25, 0.35, 0.35])  # llx, lly, w, h
         self._herbivore_img_axis = None
-        self._herb_heat_ax.set_xticks([1, 6, 11, 16, 21])
+        # self._herb_heat_ax.set_xticks([1, 6, 11, 16, 21])
         self._herb_heat_ax.set_title('Herbivore distribution')
 
     def _pause_button_click(self, event):

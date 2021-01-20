@@ -27,7 +27,7 @@ class RossumIsland:
             raise ValueError('No island map was given')
 
         self.island_row_length = len(island_map.splitlines()[0])
-        self. island_col_length = len(island_map.splitlines())
+        self.island_col_length = len(island_map.splitlines())
 
         self.island = []
         for lines in island_map.splitlines():
