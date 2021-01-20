@@ -53,9 +53,21 @@ class Animal:
         self.age += 1
 
     def get_fitness(self):
-        """Calculate fitness for specie.
-        .. math:: 3^3
-        Returns Current fitness for specie
+        r"""Calculate fitness for specie.
+
+        .. math::
+
+        \begin{equation}
+        \Phi= (q^{+}*(a, a_{\frac{1}{2}}, \phi_{age})) * (q^{-}*(w, w_{1/2}, \phi_{weight}))
+        \end{equation}
+
+        where
+
+        .. math:: \begin{equation} \label{eq1}
+        q^{\pm}(x, x_{\frac{1}{2}}, \phi) = \frac{1}{1+\exp{\pm}(x-x_{\frac{1}{2}})}
+        \end{equation}
+
+        Returns Current fitness for specie.
         """
         if self.weight <= 0:
             return 0
