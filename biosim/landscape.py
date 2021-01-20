@@ -7,7 +7,6 @@ __email__ = "said@nmbu.no & thon@nmbu.no"
 class Landscape:
     """Baseclass for landscape types that may contain herbivore or carnivore.
 
-    Attributes:
         list_herbs: list
             List of all herbivores in the cell
         list_carns: list

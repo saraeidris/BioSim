@@ -9,7 +9,6 @@ __email__ = "said@nmbu.no & thon@nmbu.no"
 class RossumIsland:
     """Class for the full ecosystem on the island.
 
-    Attributes:
         island_map: string
             Multi-line string with letters representing cells on the island
         disease: bool
