@@ -73,15 +73,15 @@ class Graphics:
         self.carn_f_hist = None
         self._paused = False
 
-    def update(self, year, get_stats, two_d_darray_for_pop):
+    def update(self, year, get_stats, two_d_array_for_pop):
         """Updates graphics with current data."""
 
-        self._update_herb_heatmap(two_d_darray_for_pop)
-        self._update_carn_heatmap(two_d_darray_for_pop)
+        self._update_herb_heatmap(two_d_array_for_pop)
+        self._update_carn_heatmap(two_d_array_for_pop)
         self._update_animal_age(get_stats)
         self._update_animal_weight(get_stats)
         self._update_animal_fitness(get_stats)
-        self._update_animal_count(two_d_darray_for_pop, year)
+        self._update_animal_count(two_d_array_for_pop, year)
         self.update_count_years(year)
         self._fig.canvas.flush_events()
         self._save_graphics(year)

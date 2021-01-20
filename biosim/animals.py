@@ -28,7 +28,7 @@ class Animal:
 
             :raises ValueError: if age is 0 or not of type int,
                                 or weight is less than or equal to 0
-
+        Animals are born with weight
         .. math::
 
             \begin{equation}

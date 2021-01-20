@@ -98,6 +98,7 @@ class Landscape:
 
         :param cells_around: the cell north, south, east and west of the current cell
         """
+
         if len(self.list_herbs) > 0:
             herbs_stay = []
             for herb in self.list_herbs:
