@@ -120,7 +120,7 @@ class Animal:
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
-        """Decide whether the specie dies or not.
+        r"""Decide whether the specie dies or not.
 
         .. math::
 
