@@ -111,6 +111,10 @@ class Animal:
     def dies(self):
         """
         Decide whether the specie dies or not.
+        .. math::
+            \begin{equation}
+            \omega(1-\Phi)
+            \end{equation}
 
         Returns True if specie dies
         """
