@@ -3,6 +3,7 @@ import pytest
 
 
 class TestBioSim:
+    """Test class for the BioSim class."""
 
     @pytest.fixture
     def example_biosim(self):

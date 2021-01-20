@@ -64,6 +64,3 @@ class TestRossumIsland:
 
         with pytest.raises(ValueError):
             RossumIsland('')
-
-
-

@@ -51,15 +51,14 @@ class Animal:
             raise ValueError('Age of animal must be a non-negative value')
 
     def aging(self):
-        """
-        Updates the age with 1 for each year.
-        """
+        """Updates the age with 1 for each year."""
 
         self.age += 1
 
     def get_fitness(self):
         r"""Calculate fitness for specie.
 
+        The animals' fitness is calculated with the following formula:
         .. math::
 
             \begin{equation}
@@ -113,8 +112,7 @@ class Animal:
             self.weight -= self.params['eta'] * self.weight
 
     def migrate(self):
-        """
-        Decides whether a specie migrates or stay in the same cell.
+        """Decides whether a specie migrates or stay in the same cell.
 
         Returns True if specie migrate
         """
@@ -122,8 +120,7 @@ class Animal:
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
-        r"""
-        Decide whether the specie dies or not.
+        """Decide whether the specie dies or not.
 
         .. math::
 
@@ -138,8 +135,7 @@ class Animal:
                                       self.params['omega'] * (1 - self.get_fitness()))
 
     def mate(self, n):
-        r"""
-        Decide whether a specie gets an offspring or not.
+        r"""Decide whether a specie gets an offspring or not.
 
         .. math::
 
@@ -154,7 +150,7 @@ class Animal:
             \end{equation}
 
         :param n: number of animals of the same specie
-        returns an offspring of the same specie if instance gave birth
+        returns an offspring of the same specie if instance give birth
         """
 
         if self.weight < self.params['zeta'] * (self.params['w_birth'] +
@@ -177,8 +173,7 @@ class Herbivore(Animal):
               'omega': 0.4, 'F': 10.0}
 
     def consumed_fodder(self, available_fodder):
-        """
-        Decide how much fodder a herbivore eats and adds the gained weight.
+        """Decide how much fodder a herbivore eats and adds the gained weight.
 
         :param available_fodder: Amount of available fodder left in current cell
         Returns fodder left in current cell
@@ -202,16 +197,17 @@ class Carnivore(Animal):
               'omega': 0.8, 'F': 50.0, 'DeltaPhiMax': 10.0}
 
     def consumed_herbs(self, herb_sorted):
-        r"""
-        Decides whether a carnivore kills and eat a herbivore.
+        r"""Decides whether a carnivore kills and eat a herbivore.
 
+        Carnivores will kill a herbivore with probability
         .. math::
 
             \begin{equation}
             p =
             \begin{cases}
             0 & if  \Phi_{carn} \leq \Phi_{herb} \\
-            \frac{\Phi_{carn}-\Phi_{herb}}{\Delta\Phi_{max}}& if  0 < \Phi_{carn}-\Phi_{herb} < \Delta\Phi_{max} \\
+            \frac{\Phi_{carn}-\Phi_{herb}}{\Delta\Phi_{max}}& if
+            0 < \Phi_{carn}-\Phi_{herb} < \Delta\Phi_{max} \\
             1 & otherwise.
             \end{cases}
             \end{equation}

@@ -1,7 +1,8 @@
 from biosim.landscape import Water, Lowland, Highland, Desert
 from biosim.animals import Carnivore, Herbivore
 
-import pytest, random
+import pytest
+import random
 from scipy.stats import chisquare
 
 random.seed(123456)
@@ -104,38 +105,38 @@ class TestLandscape:
         fodder values get updated to 300 and 800 when update_fodder is called.
         """
 
-        l = lowland
-        h = highland
-        assert l.fodder == 0
-        assert h.fodder == 0
-        l.update_fodder()
-        h.update_fodder()
-        assert l.fodder == 800
-        assert h.fodder == 300
+        low = lowland
+        high = highland
+        assert low.fodder == 0
+        assert high.fodder == 0
+        low.update_fodder()
+        high.update_fodder()
+        assert low.fodder == 800
+        assert high.fodder == 300
 
     def test_set_landscape_params(self, lowland, highland):
         """Test that new landscape parameters can be set."""
 
-        l = lowland
-        h = highland
-        l.set_params({'f_max': 1000})
-        h.set_params({'f_max': 500})
-        l.update_fodder()
-        h.update_fodder()
-        assert l.fodder == 1000
-        assert h.fodder == 500
+        low = lowland
+        high = highland
+        low.set_params({'f_max': 1000})
+        high.set_params({'f_max': 500})
+        low.update_fodder()
+        high.update_fodder()
+        assert low.fodder == 1000
+        assert high.fodder == 500
 
     def test_set_landscape_params_errors(self, lowland, highland):
         """Test that wrong inputs to set_landscape_params raises errors."""
 
-        l = lowland
-        h = highland
+        low = lowland
+        high = highland
         with pytest.raises(ValueError):
-            l.set_params({'f_min': 1000})
+            low.set_params({'f_min': 1000})
         with pytest.raises(ValueError):
-            h.set_params({'f_max': -5})
+            high.set_params({'f_max': -5})
         with pytest.raises(ValueError):
-            h.set_params({'f_max': 'five'})
+            high.set_params({'f_max': 'five'})
 
     def test_no_migration_to_water(self, water, lowland, create_herbs, create_carns):
         """Test that no animals migrate to cells of class water."""
@@ -172,14 +173,3 @@ class TestLandscape:
         _, p_value = chisquare(expected, observed)
 
         assert p_value > 0.01
-
-
-
-
-
-
-
-
-
-
-
