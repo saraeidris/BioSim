@@ -179,12 +179,12 @@ def test_error_when_negative_weight_given():
 
 
 def test_age_raise_valueerror():
-    """Test that ValueError is raised if input age is less than 0."""
+    """Test that ValueError is raised if input age is less than 0 or not an int."""
 
     with pytest.raises(ValueError):
         Herbivore(-1, 20)
     with pytest.raises(ValueError):
-        Carnivore(-10, 20)
+        Carnivore(1.1, 20)
 
 
 def test_get_fitness():

@@ -27,6 +27,6 @@ if __name__ == '__main__':
                  ]
 
     sim = BioSim(island_map=geogr, ini_pop=ini_herbs,
-                 seed=123456, ymax_animals=240)
+                 seed=123456)
 
     sim.simulate(num_years=100, vis_years=1)
