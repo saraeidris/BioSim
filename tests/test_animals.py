@@ -133,7 +133,7 @@ def test_consumed_herbs(mocker):
     assert len(killed_herbs) == 5
 
 
-def test_consumed_F_amount_of_herbs(mocker):
+def test_consumed_fodder_amount_of_herbs(mocker):
     """
     Test that a carnivore will eat all possible herbivores until the
     carnivore has eaten an amount of F. the carnivore's fitness is

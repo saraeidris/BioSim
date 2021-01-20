@@ -99,8 +99,7 @@ class Animal:
             self.weight -= self.params['eta'] * self.weight
 
     def migrate(self):
-        """
-        Decides whether a specie migrates or stay in the same cell.
+        """Decides whether a specie migrates or stay in the same cell.
 
         Returns True if specie migrate
         """
@@ -108,8 +107,8 @@ class Animal:
         return random.random() < self.params['mu'] * self.get_fitness()
 
     def dies(self):
-        """
-        Decide whether the specie dies or not.
+        """Decide whether the specie dies or not.
+
         .. math::
             \begin{equation}
             \omega(1-\Phi)
@@ -122,11 +121,10 @@ class Animal:
                                       self.params['omega'] * (1 - self.get_fitness()))
 
     def mate(self, n):
-        """
-        Decide whether a specie gets an offspring or not.
+        """Decide whether a specie gets an offspring or not.
 
         :param n: number of animals of the same specie
-        returns an offspring of the same specie if instance gave birth
+        returns an offspring of the same specie if instance give birth
         """
 
         if self.weight < self.params['zeta'] * (self.params['w_birth'] +
