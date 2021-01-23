@@ -229,7 +229,7 @@ class Graphics:
         if self._herb_line is None:
             herbivore_plot = self._animal_count_ax.plot(np.arange(0, final_year + 1),
                                                         np.full(final_year + 1, np.nan),
-                                                        'b.', lw=2)
+                                                        'b', lw=2)
             self._herb_line = herbivore_plot[0]
 
         else:
@@ -243,7 +243,7 @@ class Graphics:
         if self._carn_line is None:
             carnivore_plot = self._animal_count_ax.plot(np.arange(0, final_year + 1),
                                                         np.full(final_year + 1, np.nan),
-                                                        'r.', lw=2)
+                                                        'r', lw=2)
             self._carn_line = carnivore_plot[0]
 
         else:
