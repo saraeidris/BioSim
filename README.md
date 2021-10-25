@@ -1,4 +1,8 @@
-# BioSim G13 Idris Onsaker
+# BioSim
+This is a modell of the ecosystem on the Rossum Island where carnivores and herbivores reside. 
+The ecosystem on Rossumøya is characterized by several different landscape types, lowland, highland and desert. The fauna includes only two species, one species of herbivores (plant eaters), and one of carnivores (predators).
+
+Me and my partner have worked with this project for 1 month only, before we ended the course with an oral presentation. 
 
 ### Pause button (GUI)
 Added pause button to stop and run simulation. 
